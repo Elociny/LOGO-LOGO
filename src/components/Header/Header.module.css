@@ -1,0 +1,15 @@
+header {
+    background-color: var(--cinza);
+
+    height: 10vh;
+    width: 100%;
+    
+    align-items: center;
+    justify-content: space-between;
+}
+
+ul {
+    list-style: none;
+    align-items: center;
+    gap: 1rem;
+}

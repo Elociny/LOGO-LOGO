@@ -1,0 +1,22 @@
+.user {
+    color: var(--laranja);
+
+    gap: .5rem;
+    align-items: center;
+}
+
+.infos h3 {
+    font-size: 1rem;
+}
+
+.infos p {
+    font-size: .8rem;
+}
+
+.infos p, .infos h3 {
+    width: 10rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

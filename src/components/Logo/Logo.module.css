@@ -1,0 +1,11 @@
+.logo {
+    color: var(--laranja);
+    text-transform: uppercase;
+
+    align-items: center;
+    gap: .5rem;
+}
+
+.logo img {
+    height: 2.5rem;
+}
