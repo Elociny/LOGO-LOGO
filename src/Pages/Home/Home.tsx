@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 import { Layout } from "../../components/Layout/Layout";
 
 

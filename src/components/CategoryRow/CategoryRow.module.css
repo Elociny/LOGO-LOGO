@@ -1,0 +1,59 @@
+.container {
+  width: 1080px;            /* conforme Auto layout do Figma */
+  height: 87px;             /* conforme Figma */
+  margin: 12px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* centraliza a linha */
+  gap: 72px;                /* espaçamento uniforme entre itens */
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  outline: none;
+}
+
+/* caixa branca arredondada com sombra (não altera o tamanho do SVG) */
+.iconWrap {
+  width: 120px;
+  height: 80px;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+  transition: transform .18s ease, box-shadow .18s ease;
+  overflow: hidden;
+}
+
+/* tamanho do SVG dentro da caixa - uniforme */
+.icon {
+  width: 150px;
+  height: 70px;
+  display: block;
+  object-fit: contain;
+}
+
+/* efeito hover/focus (opcional, fica sutil) */
+.item:focus .iconWrap,
+.item:hover .iconWrap {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+/* responsivo: reduce largura e gap em telas menores */
+@media (max-width: 1000px) {
+  .container {
+    width: 100%;
+    gap: 28px;
+    padding: 0 12px;
+  }
+  .iconWrap { width: 64px; height: 64px; }
+  .icon { width: 32px; height: 32px; }
+}
