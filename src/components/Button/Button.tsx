@@ -1,5 +1,3 @@
-
-
 import { NavLink } from "react-router"
 import style from "./Button.module.css"
 
@@ -14,11 +12,12 @@ interface ButtonProps {
     border: Border
     theme: Theme
     text: string
+    navegation: string
 }
 
-export function Button({ size, color, border, theme, text }: ButtonProps) {
+export function Button({ size, color, border, theme, text, navegation }: ButtonProps) {
     return (
-        <NavLink to={text}>
+        <NavLink to={navegation}>
             <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`}>
                 {text}
             </button>
