@@ -10,9 +10,9 @@ export function Layout({ children }: LayoutProps) {
     return (
         <>
             <Header />
-            <div className={`px-100`}>
+            <main className={`px-100 mg-top children`}>
                 {children}
-            </div>
+            </main>
             <Footer />
         </>
     )
