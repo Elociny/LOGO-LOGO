@@ -1,4 +1,7 @@
+# LOGOLOGO
+
 # 📁 Estrutura do projeto
+
 ```
 src/
 │
@@ -84,6 +87,21 @@ Cada componente tem que estar dentro de uma pasta de mesmo nome iniciado com a l
       ├── Button.tsx              --> Componente react(HTML)
       └── Button.module.css       --> Modulo css
 ```
+
+## 💡 Componentes Globais
+
+Alguns componentes são usados em várias páginas do projeto e podem ser considerados **globais**.
+
+Estes componentes possuem documentação própria, pois suas props e estilos afetam várias partes da aplicação.
+
+Atualmente, os componentes globais são:
+
+*  **`Button`** → Botão reutilizável com tamanhos, cores, bordas e temas configuráveis.
+  [Veja a documentação completa](./src/components/Button/README.md)
+
+* **`Layout`** → Estrutura base de todas as páginas, contendo Header, Footer e área principal para conteúdo.
+  [Veja a documentação completa](./src/components/Layout/README.md)
+
 
 # ✨ Como estilizar uma tag com classes
 
