@@ -223,10 +223,6 @@ Para criar um novo componente:
 import { Componente } from "../../components/Componente/Componente"
 ```
 
-# 🔗 Link do projeto
-
-{%preview https://github.com/Elociny/LOGO-LOGO %}
-
 # 📥 Como clonar e rodar o projeto localmente
 
 1. Abra o terminal e vá até a pasta onde quer salvar o projeto
@@ -259,6 +255,25 @@ npm run dev
 http://localhost:5173/
 ```
 
+### Atualizando sua branch dev e pessoal com mudanças da main
+
+Se alguém subiu alterações diretamente na main, primeiro sincronize a dev e depois sua branch pessoal:
+```
+# Atualize a dev com a main
+git checkout dev
+git pull origin main
+git push origin dev
+
+# Atualize sua branch pessoal (ex: nome-dev) com a dev
+git checkout nome-dev
+git pull origin dev
+
+# Resolva conflitos, se houver, e envie as alterações
+git add .
+git commit -m "Resolve conflitos da dev"
+git push origin nome-dev
+```
+
 * Dica: Se algo der erro, verifique se o Node.js está instalado (`node -v`).
 
 # 🤝 Como contribuir com o projeto no GitHub
@@ -272,7 +287,8 @@ git pull
 ```
 
 2. Crie sua branch pessoal
-```git checkout -b seu-nome-dev
+```
+git checkout -b seu-nome-dev
 git push -u origin seu-nome-dev
 ```
 3. Faça suas alterações
