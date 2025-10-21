@@ -42,7 +42,7 @@
   }
 }
 
-p span {
+p .span {
   font-weight: bold;
   text-decoration: underline;
   color: var(--cinza);

@@ -2,8 +2,8 @@ import { useState } from "react";
 import style from "./Input.module.css";
 
 type InputType = "text" | "password";
-type IconType = "bi bi-envelope" | "bi bi-eye";
-type ThemeType = "light" | "dark"
+type IconType = "bi bi-envelope" | "bi bi-eye" | "bi bi-eye-slash" | "bi bi-person";
+type ThemeType = "light" | "dark";
 
 interface InputProps {
   id: string;
@@ -11,23 +11,29 @@ interface InputProps {
   type: InputType;
   placeholder: string;
   icon: IconType;
-  theme: ThemeType
+  theme: ThemeType;
 }
 
-export function Input({ id, label, type, placeholder, icon, theme }: InputProps) {
+export function Input({
+  id,
+  label,
+  type,
+  placeholder,
+  icon,
+  theme,
+}: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const inputType = type === "password" && showPassword ? "text" : type;
 
-  const iconClass =
-    icon === "bi bi-envelope"
-      ? "bi bi-envelope"
-      : showPassword
-      ? "bi bi-eye-slash"
-      : "bi bi-eye";
+  let iconClass: IconType = icon;
+
+  if (icon === "bi bi-eye") {
+    iconClass = showPassword ? "bi bi-eye-slash" : "bi bi-eye";
+  }
 
   const handleTogglePassword = () => {
-    if (type === "password") {
+    if (type === "password" && icon === "bi bi-eye") {
       setShowPassword(!showPassword);
     }
   };
@@ -46,7 +52,7 @@ export function Input({ id, label, type, placeholder, icon, theme }: InputProps)
         <button
           type="button"
           onClick={handleTogglePassword}
-          disabled={type !== "password" && icon === "bi bi-envelope"}
+          disabled={icon !== "bi bi-eye"}
         >
           <i className={iconClass}></i>
         </button>

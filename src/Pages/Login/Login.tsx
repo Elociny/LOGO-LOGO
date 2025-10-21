@@ -51,7 +51,7 @@ export function Login() {
 
         <p>
           Primeiro acesso?
-          <span>
+          <span className={`${style.span}`}>
             <NavLink to="/cadastro">Crie uma conta!</NavLink>
           </span>
         </p>
