@@ -1,5 +1,5 @@
 import { NavLink } from "react-router"
-import { Input } from "../Input/Input"
+import { Search } from "../Search/Search"
 import { Logo } from "../Logo/Logo"
 import { Nav } from "../Nav/Nav"
 import User from "../User/User"
@@ -11,7 +11,7 @@ export function Header() {
         <header className={`px-100 row ${styles.header} ${styles.cabecalho}`}>
             <Logo />
 
-            <Input />
+            <Search />
 
             <ul className={`row`}>
                 <li>

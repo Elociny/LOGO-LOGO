@@ -1,109 +1,121 @@
 .big {
-    padding: .6rem 0;
-    min-width: 15rem;
+  padding: 0.6rem 0;
+  min-width: 15rem;
 
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    font-weight: bold;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  font-weight: bold;
 
-    cursor: pointer;
-    transition: .5s;
+  cursor: pointer;
+  transition: 0.5s;
 }
 
 .small {
-    padding: .6rem 0;
-    min-width: 9rem;
+  padding: 0.6rem 0;
+  min-width: 9rem;
 
-    font-size: 1rem;
-    text-transform: uppercase;
-    font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: 600;
 
-    cursor: pointer;
-    transition: .5s;
+  cursor: pointer;
+  transition: 0.5s;
 }
 
 .light {
-    &.laranja {
-        background-color: var(--laranja);
-        color: var(--branco);
+  &.laranja {
+    background-color: var(--laranja);
+    color: var(--branco);
 
-        border: 2px solid var(--laranja);
-        
-        &:hover {
-            border: 2px solid var(--cinza);
-            background-color: var(--cinza);
-        }
+    border: 2px solid var(--laranja);
+
+    &:hover {
+      border: 2px solid var(--cinza);
+      background-color: var(--cinza);
     }
+  }
 
-    &.cinza {
-        background-color: var(--cinza);
-        color: var(--branco);
+  &.branco {
+    background-color: transparent;
+    color: var(--cinza);
 
-        border: 2px solid var(--cinza);
-        
-        &:hover {
-            border: 2px solid var(--laranja);
-            background-color: var(--laranja);
-        }
+    border: 2px solid var(--cinza);
+
+    &:hover {
+      background-color: var(--cinza);
+      color: var(--branco);
     }
+  }
 
-    &.transparente {
-        background-color: transparent;
-        border: 2px solid var(--cinza);
+  &.cinza {
+    background-color: var(--cinza);
+    color: var(--branco);
 
-        &:hover {
-            background-color: var(--cinza);
-            color: var(--branco);
-        }
+    border: 2px solid var(--cinza);
+
+    &:hover {
+      border: 2px solid var(--laranja);
+      background-color: var(--laranja);
     }
+  }
+
+  &.transparente {
+    background-color: transparent;
+    border: 2px solid var(--cinza);
+
+    &:hover {
+      background-color: var(--cinza);
+      color: var(--branco);
+    }
+  }
 }
 
 .dark {
-    &.branco {
-        background-color: var(--branco);
-        border: 2px solid var(--branco);
+  &.branco {
+    background-color: var(--branco);
+    border: 2px solid var(--branco);
 
-        color: var(--cinza);
+    color: var(--cinza);
 
-        &:hover {
-            background-color: var(--laranja);
-            border-color: var(--laranja);
+    &:hover {
+      background-color: var(--laranja);
+      border-color: var(--laranja);
 
-            color: var(--branco);
-        }
+      color: var(--branco);
     }
+  }
 
-    &.laranja {
-        background-color: var(--laranja);
-        border: 2px solid var(--laranja);
+  &.laranja {
+    background-color: var(--laranja);
+    border: 2px solid var(--laranja);
 
-        color: var(--branco);
+    color: var(--branco);
 
-        &:hover {
-            background-color: var(--branco);
-            border: 2px solid var(--branco);
+    &:hover {
+      background-color: var(--branco);
+      border: 2px solid var(--branco);
 
-            color: var(--cinza);
-        }
+      color: var(--cinza);
     }
+  }
 
-    &.transparente {
-        background-color: transparent;
-        border: 2px solid var(--branco);
+  &.transparente {
+    background-color: transparent;
+    border: 2px solid var(--branco);
 
-        color: var(--branco);
+    color: var(--branco);
 
-        &:hover {
-            border-color: var(--laranja);
-            color: var(--laranja);
-        }
+    &:hover {
+      border-color: var(--laranja);
+      color: var(--laranja);
     }
+  }
 }
 
 .quadrada {
-    border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 .arredondada {
-    border-radius: 3rem;
+  border-radius: 3rem;
 }
