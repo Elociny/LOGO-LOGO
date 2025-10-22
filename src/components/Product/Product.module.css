@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&display=swap');
+
+.product {
+    color: var(--cinza);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: .3rem;
+
+    height: 62vh;
+}
+
+.product img {
+    width: 16vw;
+
+    border-radius: 1rem;
+}
+
+.product h3 {
+    font-weight: normal;
+    text-transform: capitalize;
+
+    max-width: 16vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.avaliacao {
+    gap: 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .stars {
+        color: var(--amarelo);
+    }
+
+    p,
+    span {
+        font-family: "Abhaya Libre", serif;
+    }
+
+    span {
+        color: var(--lilas);
+    }
+}
+
+.preco {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+
+    width: 16vw;
+}
+
+.preco p,
+.preco span {
+    font-family: "Abhaya Libre", serif;
+}
+
+.preco p {
+    font-size: 1.8rem;
+}
+
+.preco .oldPrice {
+    text-decoration: line-through;
+    color: var(--lilas);
+    font-size: 1.5rem;
+}
+
+.preco span {
+    background-color: rgba(255, 0, 0, 0.2);
+    padding: 4px 7px;
+
+    border-radius: 10rem;
+
+    color: var(--vermelho);
+}

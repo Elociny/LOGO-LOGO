@@ -41,3 +41,13 @@ a {
     display: flex;
     flex-direction: column;
 }
+
+.mg-top {
+    margin: 2rem 0;
+}
+
+.children {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}

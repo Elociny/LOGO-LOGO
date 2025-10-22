@@ -8,6 +8,16 @@ type LayoutProps = {
   className?: string;        // para estilos específicos da página
 };
 
+export function Layout({ children }: LayoutProps) {
+    return (
+        <>
+            <Header />
+            <main className={`px-100 mg-top children`}>
+                {children}
+            </main>
+            <Footer />
+        </>
+    )
 export function Layout({ children, pageTitle, className }: LayoutProps) {
   return (
     <>

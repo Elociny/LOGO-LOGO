@@ -1,0 +1,15 @@
+.categories {
+    justify-content: space-between;
+}
+
+main .banner img {
+    width: 100%;
+}
+
+.products {
+    justify-content: space-between;
+}
+
+.botoes {
+    justify-content: space-around;
+}
