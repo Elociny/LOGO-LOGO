@@ -36,7 +36,7 @@ export function Login() {
           />
 
           <p>
-            <NavLink to="esqueceu-senha">Esqueceu a senha?</NavLink>
+            <NavLink to="/esqueceu-senha">Esqueceu a senha?</NavLink>
           </p>
         </div>
 

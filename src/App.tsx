@@ -6,6 +6,7 @@ import { Login } from "./Pages/Login/Login";
 import { NotFound } from "./Pages/NotFound/NotFound";
 import { Maintenance } from "./Pages/Maintenance/Maintenance";
 import { Register } from "./Pages/Register/Register";
+import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
 
 export function App() {
 
@@ -16,6 +17,7 @@ export function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/manutencao" element={<Maintenance />}></Route>
         <Route path="/cadastro" element={<Register />}></Route>
+        <Route path="/esqueceu-senha" element={<ForgotPassword />}></Route>
 
         <Route path="/*" element={<NotFound />}></Route>
       </Routes>

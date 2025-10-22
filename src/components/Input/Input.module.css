@@ -11,11 +11,11 @@
 }
 
 .input input,
-  .input button {
-    background-color: transparent;
+.input button {
+  background-color: transparent;
 
-    color: var(--cinza-claro);
-  }
+  color: var(--cinza-claro);
+}
 
 .input input {
   height: 4rem;
