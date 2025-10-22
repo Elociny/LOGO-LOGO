@@ -1,4 +1,4 @@
-import { NavLink } from "react-router"
+import { NavLink } from "react-router-dom"
 import { Logo } from "../Logo/Logo"
 import style from "./Footer.module.css"
 
