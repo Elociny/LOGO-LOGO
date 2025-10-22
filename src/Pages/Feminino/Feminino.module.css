@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+/* ---- CATEGORIAS ---- */
+.categories {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1.5rem 0;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ---- CONTEÚDO PRINCIPAL ---- */
+.main {
+  display: flex;
+  padding: 2rem 3rem;
+  gap: 3rem;
+  flex: 1;
+}
+
+/* ---- FILTROS (LADO ESQUERDO) ---- */
+.filters {
+  width: 250px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+}
+
+.filterGroup {
+  margin-bottom: 1.5rem;
+}
+
+.filterGroup h4 {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.filterGroup label {
+  display: block;
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* ---- PRODUTOS (LADO DIREITO) ---- */
+.products {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.products h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+  gap: 1.5rem;
+  justify-items: center; /* centraliza os cards */
+}
+
+
+/* ---- RESPONSIVIDADE ---- */
+@media (max-width: 1024px) {
+  .main {
+    flex-direction: column;
+  }
+
+  .filters {
+    width: 100%;
+    position: static;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}

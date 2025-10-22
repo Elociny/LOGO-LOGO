@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import { Layout } from "../../components/Layout/Layout";
 import { Carousel } from "../../components/Carousel/Carousel";
 import { Category } from "../../components/Category/Category";
@@ -30,12 +29,12 @@ export function Home() {
             <Carousel />
 
             <div className={`row ${style.categories}`}>
-                <Category icon={Lightning} titulo="novidades" />
-                <Category icon={Dress} titulo="femino" />
-                <Category icon={Shirt} titulo="femino" />
-                <Category icon={Bear} titulo="femino" />
-                <Category icon={Shoe} titulo="femino" />
-                <Category icon={Necklace} titulo="femino" />
+                <Category icon={Lightning} titulo="Novidades" />
+                <Category icon={Dress} titulo="Feminino" />
+                <Category icon={Shirt} titulo="Masculino" />
+                <Category icon={Bear} titulo="Infantil" />
+                <Category icon={Shoe} titulo="Calçados" />
+                <Category icon={Necklace} titulo="Acessórios" />
             </div>
 
             <div className={`${style.banner}`}>
@@ -48,7 +47,7 @@ export function Home() {
                 <Product image={Product1} name="vertical striped shirt" price={212} discount={20} />
                 <Product image={Product2} name="Camisa laranja courage" price={154} />
                 <Product image={Product3} name="short jeans azul" price={75} discount={50} />
-                <Product image={Product4} name="calça jeans azul" price={125.69} />
+                <Product image={Product4} name="calça jeans preta" price={125.69} />
             </div>
 
             <div className={`${style.banner}`}>

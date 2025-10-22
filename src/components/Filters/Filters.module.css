@@ -1,0 +1,239 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&display=swap');
+
+.filters {
+  width: 250px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* espaçamento consistente entre blocos */
+}
+
+.breadcrumb {
+  font-family: "Poppins", sans-serif;
+  font-size: 19px;
+  font-weight: 400; /* Regular */
+  color: #888888;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 1px rgba(17, 14, 14, 0.205); /* simula o drop shadow do Figma */
+  line-height: 25px;
+}
+
+.breadcrumb .arrow {
+  color: #a8a8a8; /* setinha um pouco mais clara */
+}
+
+.breadcrumb .current {
+  font-weight: 600;
+  color: #777;
+}
+
+.breadcrumb .link {
+  text-decoration: none;
+  color: #888888;
+  transition: color 0.2s;
+}
+
+.breadcrumb .link:hover {
+  color: #555;
+}
+
+
+.link {
+  color: #b0b0b0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #555; /* muda levemente ao passar o mouse */
+}
+
+
+
+/* título */
+.title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.title h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-top: -2px; /* ajuste sutil para alinhar */
+}
+
+/* linha curta abaixo do título */
+.line {
+  width: 220px; /* linha curta igual ao texto */
+  height: 2px;
+  background-color: #e0e0e0;
+  margin: 6px 0 8px;
+}
+
+/* cada grupo/ seção */
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+/* título da seção */
+.filterGroup h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+}
+
+/* LABEL + custom checkbox */
+.chkLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.95rem;
+  color: #222;
+}
+
+/* esconder aparência padrão e criar visual custom */
+.chkLabel input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px; /* caixa maior */
+  height: 22px;
+  border-radius: 6px;
+  border: 1.6px solid #000;
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.14s ease;
+  display: inline-block;
+}
+
+/* estado marcado: fundo preto com ícone branco */
+.chkLabel input[type="checkbox"]:checked {
+  background-color: #000;
+  border-color: #000;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M6.1 10.8L3.3 8 2 9.3l4.1 4.1 7.9-8L13.9 4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 12px 12px;
+}
+
+/* hover para dar feedback */
+.chkLabel input[type="checkbox"]:hover {
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.03);
+}
+
+/* botão MAIS (pílula) */
+.moreButton {
+  display: block;
+  margin-top: 6px;
+  width: 100%;
+  padding: 8px 0;
+  background: transparent;
+  border: 1.3px solid #000;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+}
+.moreButton:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* tamanhos (botões) */
+.sizes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sizeBtn {
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.sizeBtn:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* cores (bolinhas) */
+.colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.color {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.color:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* limpar filtros */
+.clearButton {
+  margin-top: 6px;
+  width: 100%;
+  padding: 10px 12px;
+  background-color: var(--laranja);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* avaliação (estrelas preenchidas apenas) */
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stars {
+  display: flex;
+  gap: 4px;
+}
+.stars i {
+  color: #ffc107;
+  font-size: 14px;
+}
+.ratingText {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #333;
+  font-family: sans-serif; /* fonte padrão para o texto "/5" */
+}
+
+.ratingText strong {
+  font-family: "Abhaya Libre", serif; /* aplica apenas ao número */
+  font-weight: 700;
+  color: #111;
+}
+
