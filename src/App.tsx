@@ -7,6 +7,7 @@ import { NotFound } from "./Pages/NotFound/NotFound";
 import { Maintenance } from "./Pages/Maintenance/Maintenance";
 import { Register } from "./Pages/Register/Register";
 import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
+import { ChangePassword } from "./Pages/ChangePassword/ChangePassword";
 
 export function App() {
 
@@ -18,6 +19,7 @@ export function App() {
         <Route path="/manutencao" element={<Maintenance />}></Route>
         <Route path="/cadastro" element={<Register />}></Route>
         <Route path="/esqueceu-senha" element={<ForgotPassword />}></Route>
+        <Route path="/redefinir-senha" element={<ChangePassword />}></Route>
 
         <Route path="/*" element={<NotFound />}></Route>
       </Routes>

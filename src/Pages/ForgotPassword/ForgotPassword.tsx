@@ -17,7 +17,6 @@ export function ForgotPassword() {
 
                     <div className={`${style.group}`}>
                         <Input icon="bi bi-envelope" id="email" label="Endereço de email" placeholder="Digite aqui seu email" theme="light" type="text" />
-
                     </div>
 
                     <Button border="quadrada" color="cinza" navegation="/redefinir-senha" size="big" text="redefinir senha" theme="light" />
