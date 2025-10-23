@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import style from "./Filters.module.css";
 import FilterIcon from "../../assets/images/icons/Vector.svg";
 
@@ -45,6 +45,9 @@ export function Filters() {
         </label>
 
         <button className={style.moreButton}>MAIS</button>
+        {/*
+        <Button border="arredondada" color="cinza" size="big" text="mais" theme="light" />
+        */}
       </div>
       {/* TAMANHOS */}
       <div className={style.filterGroup}>

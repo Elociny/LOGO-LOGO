@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router"
 import logoImg from "../../assets/images/icons/LOGOLOGO ICON.svg"
 
 import style from "./Logo.module.css"
