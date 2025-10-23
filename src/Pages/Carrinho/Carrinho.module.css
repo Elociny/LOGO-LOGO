@@ -232,3 +232,7 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+input[type="checkbox"] {
+  accent-color: var(--cinza);
+}

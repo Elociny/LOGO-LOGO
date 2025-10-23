@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router"
 import { Input } from "../Input/Input"
 import { Logo } from "../Logo/Logo"
 import { Nav } from "../Nav/Nav"

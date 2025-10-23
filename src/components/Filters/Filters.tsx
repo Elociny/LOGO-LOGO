@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import style from "./Filters.module.css";
 import FilterIcon from "../../assets/images/icons/Vector.svg";
 
