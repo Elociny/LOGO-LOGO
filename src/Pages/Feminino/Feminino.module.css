@@ -73,20 +73,15 @@
   gap: 1.5rem;
   justify-items: center; /* centraliza os cards */
 }
-
-
-/* ---- RESPONSIVIDADE ---- */
-@media (max-width: 1024px) {
-  .main {
-    flex-direction: column;
-  }
-
-  .filters {
-    width: 100%;
-    position: static;
-  }
-
+@media (max-width: 1200px) {
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

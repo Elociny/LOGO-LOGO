@@ -107,3 +107,26 @@
 .arredondada {
     border-radius: 3rem;
 }
+@media (max-width: 1400px) {
+    .big {
+        min-width: 13rem;
+        padding: 0.5rem 0;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .big {
+        min-width: 11rem;
+        padding: 0.5rem 0;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .big {
+        min-width: 9rem;
+        padding: 0.4rem 0;
+        font-size: 0.9rem;
+    }
+}

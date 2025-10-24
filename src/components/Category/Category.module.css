@@ -3,33 +3,79 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: .5rem;
-    
-    width: 7rem;
-    
+    gap: .3rem;
+    width: 100%; /* OCUPA TODO O ESPAÇO DO categoryItem */
     text-transform: capitalize;
     color: var(--cinza);
-
-    transition: .5s;
+    transition: all 0.3s ease-in-out;
     cursor: pointer;
+    font-size: 1.2rem;
 }
 
 .box {
     border-radius: .5rem;
     border: 2px solid var(--cinza);
-
-    width: 4rem;
-    height: 4rem;
+    width: 100%; /* LARGURA RESPONSIVA */
+    max-width: 4rem; /* TAMANHO MÁXIMO */
+    aspect-ratio: 1/1; /* QUADRADO PERFEITO */
     display: flex;
     align-items: center;
     justify-content: center;
-    
     font-size: 2rem;
-
-    padding: .5rem 1rem;
-
+    padding: .3rem;
     box-shadow: 0 0 1rem rgb(0, 0, 0, .3);
-
-    transition: .5s;
+    transition: all 0.3s ease-in-out;
     cursor: pointer;
+}
+@media (max-width: 768px) {
+    .categoryItem {
+        max-width: 70px; /* REDUZI */
+        min-width: 35px; /* REDUZI */
+    }
+    
+    .category {
+        font-size: 0.65rem; /* REDUZI */
+        gap: 0.2rem; /* REDUZI */
+    }
+    
+    .box {
+        max-width: 2.5rem; /* REDUZI */
+        font-size: 1.1rem; /* REDUZI */
+        padding: 0.2rem; /* REDUZI */
+    }
+}
+
+@media (max-width: 480px) {
+    .categoryItem {
+        max-width: 60px; /* REDUZI */
+        min-width: 30px; /* REDUZI */
+    }
+    
+    .category {
+        font-size: 0.6rem; /* REDUZI */
+        gap: 0.15rem; /* REDUZI */
+    }
+    
+    .box {
+        max-width: 2.2rem; /* REDUZI */
+        font-size: 1rem; /* REDUZI */
+        padding: 0.15rem; /* REDUZI */
+    }
+}
+
+@media (max-width: 380px) {
+    .categoryItem {
+        max-width: 50px; /* REDUZI */
+        min-width: 25px; /* REDUZI MÍNIMO ABSOLUTO */
+    }
+    
+    .category {
+        font-size: 0.55rem; /* REDUZI MÍNIMO */
+    }
+    
+    .box {
+        max-width: 2rem; /* REDUZI MÍNIMO */
+        font-size: 0.9rem; /* REDUZI MÍNIMO */
+        padding: 0.1rem; /* REDUZI MÍNIMO */
+    }
 }
