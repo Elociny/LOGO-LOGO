@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Train+One&display=swap');
 
 :root {
     --laranja: #FA8E44;
     --cinza: #222222;
+    --cinza-claro: #a5a5a5;
     --lilas: #887BB1;
     --branco: #FFFAFF;
     --branco-fumaca: #EDEDED;         
@@ -10,6 +11,10 @@
     --vermelho: #CA1B1B;
     --verde: #1A9431;
     --azul: #009DB5;
+  --breakpoint-tablet: 1024px;
+  --breakpoint-mobile: 768px;
+  --breakpoint-small-mobile: 480px;
+
 }
 
 * {
@@ -26,11 +31,39 @@ a {
 }
 
 .px-100 {
-    padding: 0 100px;
+    padding: 2rem 100px;
 }
 
 .mx-100 {
     margin: 0 100px;
+}
+
+@media (max-width: 1024px) {
+    .px-100 {
+        padding: 0 50px;
+    }
+    
+    .mx-100 {
+        margin: 0 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .px-100 {
+        padding: 0 20px;
+    }
+    
+    .mx-100 {
+        margin: 0 20px;
+    }
+    
+    .mg-top {
+        margin: 1rem 0;
+    }
+    
+    .children {
+        gap: 1rem;
+    }
 }
 
 .row {
@@ -40,10 +73,6 @@ a {
 .column {
     display: flex;
     flex-direction: column;
-}
-
-.mg-top {
-    margin: 2rem 0;
 }
 
 .children {

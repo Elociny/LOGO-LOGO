@@ -1,6 +1,6 @@
 # Componente Button
 
-O Button é um componente reutilizável que permite criar botões estilizados de forma consistente em toda a aplicação. Ele suporta tamanhos diferentes, cores variadas, formatos de borda e temas, tornando-o flexível e fácil de manter.
+O `Button` é um componente reutilizável que permite criar botões estilizados e navegáveis em toda a aplicação. Ele suporta tamanhos diferentes, cores variadas, formatos de borda, temas, e também pode funcionar como link de navegação com o React Router.
 
 # Estrutura do componente
 
@@ -26,11 +26,12 @@ interface ButtonProps {
   border: Border;
   theme: Theme;
   text: string;
+  navegation: string; 
 }
 
 export function Button({ size, color, border, theme, text }: ButtonProps) {
   return (
-    <NavLink to={text}>
+    <NavLink to={navegation}>
       <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`}>
         {text}
       </button>
@@ -46,7 +47,8 @@ export function Button({ size, color, border, theme, text }: ButtonProps) {
 * `color:` define a cor base do botão (`laranja`, `cinza`, `transparente` ou `branco`).
 * `border`: define o formato da borda (`quadrada` ou `arredondada`).
 * `theme:` define o tema (`light` ou `dark`), alterando o comportamento do botão dependendo do fundo da página.
-* `text:` o texto que aparece no botão e também é usado no `NavLink` para navegar.
+* `text:` o texto que aparece no botão.
+* `navegation`: caminho do React Router para onde o botão deve navegar.
 
 **2. Uso do NavLink:**
 Permite que o botão funcione como um link de navegação no React Router, apontando para o caminho definido em `text`.
@@ -186,8 +188,8 @@ Tema Dark:
 # Como usar o Button
 
 ```.
-<Button theme="light" size="big" color="cinza" border="quadrada" text="Cupons" />
-<Button theme="dark" size="small" color="laranja" border="arredondada" text="Comprar" />
+<Button theme="light" size="big" color="cinza" border="quadrada" text="Cupons" navegation="/cupons" />
+<Button theme="dark" size="small" color="laranja" border="arredondada" text="Comprar" navegation="/comprar" />
 ```
 * Sempre combine o tema com o fundo da página.
 * Use size e border para ajustar o layout.

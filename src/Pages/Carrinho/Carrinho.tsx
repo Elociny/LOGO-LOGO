@@ -2,16 +2,16 @@ import { Header } from "../../components/Header/Header";
 import { Footer } from "../../components/Footer/Footer";
 import style from "./Carrinho.module.css";
 
-// IMAGENS DOS PRODUTOS (substitua pelos caminhos corretos)
+
 import ProductImg1 from "../../assets/images/products/produto1.svg";
 import ProductImg2 from "../../assets/images/products/produto2.svg";
 import ProductImg3 from "../../assets/images/products/produto3.svg";
 import ProductImg4 from "../../assets/images/products/produto4.svg";
 import ProductImg5 from "../../assets/images/products/produto5.svg";
-import TrashIcon from "../../assets/images/icons/trash.svg"; // Ícone da lixeira
+import TrashIcon from "../../assets/images/icons/trash.svg"; 
 
 export function Carrinho() {
-  // Dados dos produtos no carrinho (simulando dados de uma API)
+  
   const inStockItems = [
     {
       image: ProductImg1,
