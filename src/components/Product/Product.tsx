@@ -32,7 +32,7 @@ export function Product({ image, name, price, discount }: ProductProps) {
             <div className={style.preco}>
                 {discount ? (
                     <>
-                        {/* VALORES NA MESMA LINHA */}
+                        
                         <div className={style.linhaPreco}>
                             <p className={style.precoAtual}>
                                 R$ {price.toFixed(2)}
@@ -41,7 +41,7 @@ export function Product({ image, name, price, discount }: ProductProps) {
                                 R$ {calculateOldPrice(price, discount).toFixed(2)}
                             </p>
                         </div>
-                        {/* DESCONTO EMBAIXO */}
+                       
                         <div className={style.desconto}>
                             -{discount}%
                         </div>
@@ -52,7 +52,6 @@ export function Product({ image, name, price, discount }: ProductProps) {
                     </p>
                 )}
                 
-                {/* BOTÃO DE COMPRAR */}
                 <div className={style.botaoComprar}>
                     <Button 
                         theme="light" 

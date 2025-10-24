@@ -2,9 +2,9 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 60vh; /* ALTURA FLUIDA igual aos banners */
-  min-height: 300px; /* ALTURA MÍNIMA */
-  max-height: 600px; /* ALTURA MÁXIMA */
+  height: 60vh;
+  min-height: 300px;
+  max-height: 600px;
   border-radius: 1.2rem;
 }
 
@@ -18,7 +18,7 @@
 .image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* COBRE todo o espaço */
+  object-fit: cover;
   flex-shrink: 0;
 }
 
@@ -49,7 +49,7 @@
   right: 15px;
 }
 
-/* RESPONSIVIDADE - ALTURA FLUIDA */
+
 @media (max-width: 1400px) {
   .carousel {
     height: 55vh;

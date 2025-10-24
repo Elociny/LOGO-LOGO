@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     gap: .3rem;
-    width: 100%; /* OCUPA TODO O ESPAÇO DO categoryItem */
+    width: 100%;
     text-transform: capitalize;
     color: var(--cinza);
     transition: all 0.3s ease-in-out;
@@ -15,9 +15,9 @@
 .box {
     border-radius: .5rem;
     border: 2px solid var(--cinza);
-    width: 100%; /* LARGURA RESPONSIVA */
-    max-width: 4rem; /* TAMANHO MÁXIMO */
-    aspect-ratio: 1/1; /* QUADRADO PERFEITO */
+    width: 100%;
+    max-width: 4rem;
+    aspect-ratio: 1/1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -29,53 +29,53 @@
 }
 @media (max-width: 768px) {
     .categoryItem {
-        max-width: 70px; /* REDUZI */
-        min-width: 35px; /* REDUZI */
+        max-width: 70px;
+        min-width: 35px;
     }
     
     .category {
-        font-size: 0.65rem; /* REDUZI */
-        gap: 0.2rem; /* REDUZI */
+        font-size: 0.65rem;
+        gap: 0.2rem;
     }
     
     .box {
-        max-width: 2.5rem; /* REDUZI */
-        font-size: 1.1rem; /* REDUZI */
-        padding: 0.2rem; /* REDUZI */
+        max-width: 2.5rem;
+        font-size: 1.1rem;
+        padding: 0.2rem;
     }
 }
 
 @media (max-width: 480px) {
     .categoryItem {
-        max-width: 60px; /* REDUZI */
-        min-width: 30px; /* REDUZI */
+        max-width: 60px;
+        min-width: 30px;
     }
     
     .category {
-        font-size: 0.6rem; /* REDUZI */
-        gap: 0.15rem; /* REDUZI */
+        font-size: 0.6rem;
+        gap: 0.15rem;
     }
     
     .box {
-        max-width: 2.2rem; /* REDUZI */
-        font-size: 1rem; /* REDUZI */
-        padding: 0.15rem; /* REDUZI */
+        max-width: 2.2rem;
+        font-size: 1rem;
+        padding: 0.15rem;
     }
 }
 
 @media (max-width: 380px) {
     .categoryItem {
-        max-width: 50px; /* REDUZI */
-        min-width: 25px; /* REDUZI MÍNIMO ABSOLUTO */
+        max-width: 50px;
+        min-width: 25px;
     }
     
     .category {
-        font-size: 0.55rem; /* REDUZI MÍNIMO */
+        font-size: 0.55rem;
     }
     
     .box {
-        max-width: 2rem; /* REDUZI MÍNIMO */
-        font-size: 0.9rem; /* REDUZI MÍNIMO */
-        padding: 0.1rem; /* REDUZI MÍNIMO */
+        max-width: 2rem;
+        font-size: 0.9rem;
+        padding: 0.1rem;
     }
 }

@@ -10,7 +10,7 @@
     text-align: center;
 }
 
-/* LOGO NO FOOTER */
+
 .footer .logo {
     color: var(--laranja);
     margin-bottom: 0.5rem;
@@ -65,7 +65,7 @@ hr {
     transform: scale(1.2);
 }
 
-/* RESPONSIVIDADE - REDUÇÃO GRADUAL */
+
 @media (max-width: 1200px) {
     .footer {
         padding: 1.8rem 4%;

@@ -16,7 +16,7 @@
     flex-shrink: 0;
 }
 
-/* MENU HAMBURGER */
+
 .hamburger {
     cursor: pointer;
     display: flex;
@@ -24,7 +24,7 @@
     justify-content: center;
 }
 
-/* HAMBURGER GIGANTE - SOBRESCREVE TUDO */
+
 .hamburger i.bi-list {
     font-size: 3.5rem !important;
     color: var(--laranja) !important;
@@ -36,7 +36,7 @@
     transform: scale(1.1) !important;
 }
 
-/* CONTAINER DOS ÍCONES DE NAVEGAÇÃO */
+
 .navIcons {
     list-style: none;
     align-items: center;
@@ -55,7 +55,7 @@
     transform: scale(1.1);
 }
 
-/* RESPONSIVIDADE PARA REDUÇÃO PROPORCIONAL */
+
 @media (max-width: 1400px) {
     .cabecalho {
         padding: 0 4%;
@@ -96,14 +96,14 @@
         font-size: 1.5rem;
     }
     
-    /* HAMBURGER RESPONSIVO */
+   
     .hamburger i.bi-list {
         font-size: 3.2rem !important;
     }
 }
 
-/* AQUI O JAVASCRIPT ENTRA EM AÇÃO - 768px */
-/* Os ícones SOMEM e hamburger APARECE via JS */
+
+
 
 @media (max-width: 480px) {
     .cabecalho {
@@ -113,7 +113,7 @@
         padding: 0 3%;
     }
     
-    /* HAMBURGER MOBILE */
+   
     .hamburger i.bi-list {
         font-size: 3rem !important;
     }
@@ -128,7 +128,7 @@
         padding: 0 2%;
     }
     
-    /* HAMBURGER MOBILE PEQUENO */
+   
     .hamburger i.bi-list {
         font-size: 2.8rem !important;
     }
