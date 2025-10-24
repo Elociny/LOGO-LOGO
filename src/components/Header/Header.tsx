@@ -12,9 +12,7 @@ export function Header() {
 
     useEffect(() => {
         const checkScreenSize = () => {
-            const mobile = window.innerWidth <= 768
-            setIsMobile(mobile)
-            console.log('Largura:', window.innerWidth, 'isMobile:', mobile) // DEBUG
+            setIsMobile(window.innerWidth <= 768)
         }
 
         checkScreenSize()
@@ -23,15 +21,14 @@ export function Header() {
         return () => window.removeEventListener('resize', checkScreenSize)
     }, [])
 
-
-
     return (
         <header className={`px-100 row ${styles.cabecalho}`}>
             <Logo />
             
             <Input />
 
-            {!isMobile ? (
+            {/* ÍCONES - SOMEM EM MOBILE */}
+            {!isMobile && (
                 <ul className={`row ${styles.navIcons}`}>
                     <li>
                         <NavLink to="/login">
@@ -49,9 +46,12 @@ export function Header() {
                         </NavLink>
                     </li>
                 </ul>
-            ) : (
+            )}
+
+            {/* HAMBURGER - SÓ APARECE EM MOBILE */}
+            {isMobile && (
                 <div className={styles.hamburger}>
-                    <Nav icon="bi-list" />
+                    <i className="bi bi-list"></i>
                 </div>
             )}
         </header>

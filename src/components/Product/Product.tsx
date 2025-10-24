@@ -59,6 +59,7 @@ export function Product({ image, name, price, discount }: ProductProps) {
                         color="laranja" 
                         border="quadrada" 
                         text="comprar" 
+                        navegation="/carrinho"
                     />
                 </div>
             </div>

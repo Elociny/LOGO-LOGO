@@ -30,6 +30,7 @@ main .banner img {
     justify-content: space-around;
     flex-wrap: nowrap; 
     gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 .categoryItem {

@@ -25,7 +25,7 @@ import { Product } from "../../components/Product/Product";
 
 export function Home() {
     return (
-        <Layout>
+        <Layout theme="light">
             <Carousel />
 
             <div className={`row ${style.categories}`}>
@@ -55,9 +55,9 @@ export function Home() {
             </div>
 
             <div className={`row ${style.botoes}`}>
-                <Button theme="light" size="big" color="cinza" border="quadrada" text="cupons" />
-                <Button theme="light" size="big" color="cinza" border="quadrada" text="fale conosco" />
-                <Button theme="light" size="big" color="cinza" border="quadrada" text="frete grátis" />
+                <Button theme="light" size="big" color="cinza" border="quadrada" text="cupons" navegation="cupons" />
+                <Button theme="light" size="big" color="cinza" border="quadrada" text="fale conosco" navegation="fale-conosco" />
+                <Button theme="light" size="big" color="cinza" border="quadrada" text="frete grátis" navegation="frete-gratis" />
             </div>
         </Layout>
     )
