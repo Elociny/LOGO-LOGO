@@ -42,9 +42,9 @@ export function Feminino() {
         <section className={style.products}>
 
           <div className={style.grid}>
-            <Product image={Product1} name="Vertical Striped Shirt" price={212} discount={20} />
+            <Product image={Product1} name="Vertical Striped Shirt" price={240} discount={20} />
             <Product image={Product5} name="Camisa Verde Listrada" price={212} discount={20} />
-            <Product image={Product2} name="Camiseta Laranja Courage" price={154} />
+            <Product image={Product2} name="Camiseta Laranja" price={154} />
             <Product image={Product3} name="Short Jeans Azul" price={75} discount={50} />
             <Product image={Product4} name="Calça Jeans Preta" price={125.69} />
             <Product image={Product5} name="Camisa Verde Listrada" price={212} discount={20} />

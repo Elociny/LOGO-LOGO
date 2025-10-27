@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Button } from "../Button/Button"; // Import do seu Button
 import style from "./Filters.module.css";
 import FilterIcon from "../../assets/images/icons/Vector.svg";
 
@@ -20,6 +21,7 @@ export function Filters() {
       </div>
 
       <div className={style.line}></div>
+
       {/* CATEGORIAS */}
       <div className={style.filterGroup}>
         <h4>Categorias</h4>
@@ -33,61 +35,23 @@ export function Filters() {
         </label>
         <label className={style.chkLabel}>
           <input type="checkbox" />
-          <span>Calças</span>
-        </label>
-        <label className={style.chkLabel}>
-          <input type="checkbox" />
-          <span>Camisas</span>
-        </label>
-        <label className={style.chkLabel}>
-          <input type="checkbox" />
-          <span>Casacos</span>
+          <span>Jeans</span>
         </label>
 
-        <button className={style.moreButton}>MAIS</button>
-      </div>
-      {/* TAMANHOS */}
-      <div className={style.filterGroup}>
-        <h4>Tamanhos</h4>
-        <div className={style.sizes}>
-          <button className={style.sizeBtn}>P</button>
-          <button className={style.sizeBtn}>M</button>
-          <button className={style.sizeBtn}>G</button>
-          <button className={style.sizeBtn}>GG</button>
-        </div>
 
-        <button className={style.moreButton}>MAIS</button>
+        <Button
+          theme="light"
+          border="arredondada"
+          color="branco"
+          size="small"
+          text="MAIS"
+           className={style.add} 
+        />
       </div>
-      {/* CORES */}
-      <div className={style.filterGroup}>
-        <h4>Cores</h4>
-        <div className={style.colors}>
-          <button className={style.color} style={{ backgroundColor: "#000" }} />
-          <button
-            className={style.color}
-            style={{ backgroundColor: "#fff", border: "1px solid #ccc" }}
-          />
-          <button
-            className={style.color}
-            style={{ backgroundColor: "#e91e63" }}
-          />
-          <button
-            className={style.color}
-            style={{ backgroundColor: "#2196f3" }}
-          />
-          <button
-            className={style.color}
-            style={{ backgroundColor: "#4caf50" }}
-          />
-          <button
-            className={style.color}
-            style={{ backgroundColor: "#ff9800" }}
-          />
-        </div>
-      </div>
+
       {/* PREÇO */}
       <div className={style.filterGroup}>
-        <h4>Faixa de preço</h4>
+        <h4>Preços</h4>
         <label className={style.chkLabel}>
           <input type="checkbox" />
           <span>Até R$100</span>
@@ -98,15 +62,71 @@ export function Filters() {
         </label>
         <label className={style.chkLabel}>
           <input type="checkbox" />
-          <span>R$201 a R$400</span>
+          <span>Acima de R$200</span>
+        </label>
+
+        <Button
+          theme="light"
+          border="arredondada"
+          color="branco"
+          size="small"
+          text="MAIS"
+           className={style.add} 
+        />
+      </div>
+
+      {/* CATEGORIAS */}
+      <div className={style.filterGroup}>
+        <h4>Marcas</h4>
+        <label className={style.chkLabel}>
+          <input type="checkbox" defaultChecked />
+          <span>Hering</span>
+        </label>
+        <label className={style.chkLabel}>
+          <input type="checkbox" defaultChecked />
+          <span>Colcci</span>
         </label>
         <label className={style.chkLabel}>
           <input type="checkbox" />
-          <span>Acima de R$400</span>
+          <span>Nike</span>
         </label>
 
-        <button className={style.moreButton}>MAIS</button>
+        <Button
+          theme="light"
+          border="arredondada"
+          color="branco"
+          size="small"
+          text="MAIS"
+           className={style.add} 
+        />
       </div>
+
+      {/* TAMANHOS */}
+      <div className={style.filterGroup}>
+        <h4>Tamanhos</h4>
+        <label className={style.chkLabel}>
+          <input type="checkbox" defaultChecked />
+          <span>P - Pequeno</span>
+        </label>
+        <label className={style.chkLabel}>
+          <input type="checkbox" defaultChecked />
+          <span>M - Médio</span>
+        </label>
+        <label className={style.chkLabel}>
+          <input type="checkbox" />
+          <span>G - Grande</span>
+        </label>
+
+        <Button
+          theme="light"
+          border="arredondada"
+          color="branco"
+          size="small"
+          text="MAIS"
+          className={style.add} 
+        />
+      </div>
+
       {/* AVALIAÇÃO */}
       <div className={style.filterGroup}>
         <h4>Avaliação</h4>
@@ -166,7 +186,15 @@ export function Filters() {
           </p>
         </div>
       </div>
-      <button className={style.clearButton}>Limpar filtros</button>
+
+      {/* Botão Limpar Filtros */}
+      <Button
+        theme="light"
+        border="arredondada"
+        color="laranja"
+        size="small"
+        text="Limpar"
+      />
     </aside>
   );
 }

@@ -14,12 +14,13 @@ interface ButtonProps {
     border: Border
     theme: Theme
     text: string
+    className?: string; 
 }
 
-export function Button({ size, color, border, theme, text }: ButtonProps) {
+export function Button({ size, color, border, theme, text, className }: ButtonProps) {
     return (
         <NavLink to={text}>
-            <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`}>
+            <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]} ${className ?? ""}`}>
                 {text}
             </button>
         </NavLink>

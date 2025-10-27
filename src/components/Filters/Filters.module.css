@@ -1,12 +1,10 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&display=swap");
 
 .filters {
   width: 250px;
   padding: 16px;
   background-color: #fff;
   border-radius: 8px;
-
   display: flex;
   flex-direction: column;
   gap: 15px; /* espaçamento consistente entre blocos */
@@ -16,27 +14,30 @@
   font-family: "Poppins", sans-serif;
   font-size: 19px;
   font-weight: 400; /* Regular */
-  color: #888888;
+  color: #aaa;
   display: flex;
   align-items: center;
   gap: 6px;
   text-transform: uppercase;
-  text-shadow: 3px 3px 1px rgba(17, 14, 14, 0.205); /* simula o drop shadow do Figma */
+  text-shadow: 3px 3px 1px rgba(17, 14, 14, 0.205); 
   line-height: 25px;
 }
 
 .breadcrumb .arrow {
-  color: #a8a8a8; /* setinha um pouco mais clara */
+  margin: 0 5px;
+  color: #aaa; /* cinza */
+  font-weight: normal;
 }
 
 .breadcrumb .current {
-  font-weight: 600;
-  color: #777;
+  margin: 0 5px;
+  color: #aaa; /* cinza */
+  font-weight: normal;
 }
 
 .breadcrumb .link {
   text-decoration: none;
-  color: #888888;
+  color: #aaa;
   transition: color 0.2s;
 }
 
@@ -44,9 +45,25 @@
   color: #555;
 }
 
+.add {
+  background-color: #fff;
+  color: #222;
+  border: 2px solid #000;
+  border-radius: 25px;
+  padding: 10px 70px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  margin-top: 10px;
+}
+
+.add:hover {
+   background-color: var(--laranja);/* laranja */
+  color: #fff;
+}
+
 
 .link {
-  color: #b0b0b0;
+  color: #aaa;
   text-decoration: none;
   transition: color 0.2s;
 }
@@ -55,22 +72,22 @@
   color: #555; /* muda levemente ao passar o mouse */
 }
 
-
-
 /* título */
 .title {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.title h3 {
+h3 {
   font-size: 18px;
   font-weight: 700;
   margin: 0;
+  line-height: normal;
+  font-family: sans-serif
 }
 .icon {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 24px;
   margin-top: -2px; /* ajuste sutil para alinhar */
 }
 
@@ -78,7 +95,7 @@
 .line {
   width: 220px; /* linha curta igual ao texto */
   height: 2px;
-  background-color: #e0e0e0;
+  background-color: #c2c2c2;
   margin: 6px 0 8px;
 }
 
@@ -92,122 +109,58 @@
 
 /* título da seção */
 .filterGroup h4 {
-  font-size: 0.85rem;
+  font-size: 16px;
   font-weight: 700;
   color: #000;
   margin: 0 0 4px 0;
   text-transform: uppercase;
 }
 
-/* LABEL + custom checkbox */
-.chkLabel {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-  font-size: 0.95rem;
-  color: #222;
-}
-
-/* esconder aparência padrão e criar visual custom */
+/* Esconde o checkbox padrão */
 .chkLabel input[type="checkbox"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 22px; /* caixa maior */
-  height: 22px;
-  border-radius: 6px;
-  border: 1.6px solid #000;
-  background-color: transparent;
+  display: none;
+}
+
+/* Cria o quadrado customizado */
+.chkLabel span {
   position: relative;
+  padding-left: 40px; /* mais espaço pro quadrado maior */
   cursor: pointer;
-  transition: all 0.14s ease;
   display: inline-block;
+  font-size: 16px; /* aumenta o texto junto */
 }
 
-/* estado marcado: fundo preto com ícone branco */
-.chkLabel input[type="checkbox"]:checked {
-  background-color: #000;
-  border-color: #000;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M6.1 10.8L3.3 8 2 9.3l4.1 4.1 7.9-8L13.9 4z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  background-size: 12px 12px;
+/* Quadradinho preto maior e arredondado */
+.chkLabel span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px; /* maior */
+  height: 28px; /* maior */
+  border-radius: 8px; /* mais arredondado */
+  background-color: #fff; /* fundo branco padrão */
+  border: 1px solid #414141; /* borda preta */
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
-/* hover para dar feedback */
-.chkLabel input[type="checkbox"]:hover {
-  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.03);
+.chkLabel input[type="checkbox"]:checked + span::before {
+  background-color: #222; /* fundo preto */
+  border-color: #222;
 }
 
-/* botão MAIS (pílula) */
-.moreButton {
-  display: block;
-  margin-top: 6px;
-  width: 100%;
-  padding: 8px 0;
-  background: transparent;
-  border: 1.3px solid #000;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #000;
-  cursor: pointer;
-}
-.moreButton:hover {
-  background: #000;
-  color: #fff;
-}
-
-/* tamanhos (botões) */
-.sizes {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.sizeBtn {
-  border: 1px solid #ccc;
-  background: #f9f9f9;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-.sizeBtn:hover {
-  background: #000;
-  color: #fff;
-}
-
-/* cores (bolinhas) */
-.colors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.color {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid transparent;
-  cursor: pointer;
-  padding: 0;
-}
-.color:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-/* limpar filtros */
-.clearButton {
-  margin-top: 6px;
-  width: 100%;
-  padding: 10px 12px;
-  background-color: var(--laranja);
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 700;
+/* Check branco proporcional */
+.chkLabel input[type="checkbox"]:checked + span::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 40%;
+  width: 8px;
+  height: 14px;
+  border: solid #fff;
+  border-width: 0 3px 3px 0; /* grosso, estilo seta */
+  transform: translateY(-50%) rotate(45deg);
 }
 
 /* avaliação (estrelas preenchidas apenas) */
@@ -236,4 +189,3 @@
   font-weight: 700;
   color: #111;
 }
-
