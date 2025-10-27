@@ -1,0 +1,32 @@
+.fundo {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    width: 35%;
+}
+
+.box h1 {
+    font-size: 4rem;
+}
+
+.box h2 {
+    font-size: 1.5rem;
+}
+
+.image img {
+    width: 30rem;
+}
+
+.box h1, .number p {
+    font-family: "Train One", sans-serif;
+}
+
+.number p {
+    font-size: 8rem;
+}
