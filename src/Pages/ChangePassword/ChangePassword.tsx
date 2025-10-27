@@ -1,5 +1,5 @@
 import { Button } from "../../components/Button/Button"
-import { Input } from "../../components/Input/Input"
+import { Input } from "../../components/SearchInput/SearchInput"
 import { Layout } from "../../components/Layout/Layout"
 import style from "./ChangePassword.module.css"
 

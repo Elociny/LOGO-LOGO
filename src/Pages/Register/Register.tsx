@@ -1,7 +1,7 @@
 import { NavLink } from "react-router"
 import LoginIllustrator from "../../assets/images/login-illustrator.svg"
 import { Button } from "../../components/Button/Button"
-import { Input } from "../../components/Input/Input"
+import { Input } from "../../components/SearchInput/SearchInput"
 import { Logo } from "../../components/Logo/Logo"
 
 

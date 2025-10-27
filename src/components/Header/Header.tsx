@@ -1,5 +1,5 @@
 import { NavLink } from "react-router"
-import { Input } from "../Input/Input"
+import { Input } from "../SearchInput/SearchInput"
 import { Logo } from "../Logo/Logo"
 import { Nav } from "../Nav/Nav"
 import User from "../User/User"

@@ -5,7 +5,7 @@ import { Logo } from "../../components/Logo/Logo";
 import LoginImage from "../../assets/images/loginImage.svg";
 
 import style from "./Login.module.css";
-import { Input } from "../../components/Input/Input";
+import { FormInput } from "../../components/FormInput/FormInput";
 
 export function Login() {
   return (
@@ -17,7 +17,7 @@ export function Login() {
         </div>
 
         <div className={`row ${style.inputs}`}>
-          <Input
+          <FormInput
             icon="bi bi-envelope"
             id="email"
             label="Inserir e-mail"
@@ -26,7 +26,7 @@ export function Login() {
             theme="light"
           />
 
-          <Input
+          <FormInput
             icon="bi bi-eye"
             id="password"
             label="Insira sua senha"
