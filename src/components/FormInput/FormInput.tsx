@@ -43,8 +43,6 @@ export function FormInput({
       {label && <label htmlFor={id} className={styles.label}>{label}</label>}
       
       <div className={styles.inputWrapper}>
-        {icon && <i className={`${icon} ${styles.icon}`}></i>}
-        
         <input
           id={id}
           type={inputType}
@@ -52,8 +50,19 @@ export function FormInput({
           value={inputValue}
           onChange={handleChange}
           className={styles.formInput}
+          /* Adicione padding condicional */
+          style={{ 
+            paddingRight: type === 'password' ? '3rem' : '2.5rem',
+            paddingLeft: '1rem'
+          }}
         />
         
+        {/* Ícone principal - só mostra se NÃO for password */}
+        {icon && type !== 'password' && (
+          <i className={`${icon} ${styles.icon}`}></i>
+        )}
+        
+        {/* Ícone de password - só mostra se FOR password */}
         {type === 'password' && (
           <button 
             type="button" 
