@@ -6,6 +6,7 @@ import { Logo } from "../../components/Logo/Logo"
 
 
 import style from "./Register.module.css"
+import { FormInput } from "../../components/FormInput/FormInput"
 
 export function Register() {
     return (
@@ -21,13 +22,13 @@ export function Register() {
                 </div>
 
                 <div className={`row ${style.inputs}`}>
-                    <Input icon="bi bi-person" id="nome" label="Nos diga seu seu nome" placeholder="Digite aqui o seu nome completo" theme="dark" type="text" />
+                    <FormInput icon="bi bi-person" id="nome" label="Nos diga seu seu nome" placeholder="Digite aqui o seu nome completo" theme="dark" type="text" />
 
-                    <Input icon="bi bi-envelope" id="email" label="Cadastre seu email" placeholder="Digite aqui sem melhor email" theme="dark" type="text" />
+                    <FormInput icon="bi bi-envelope" id="email" label="Cadastre seu email" placeholder="Digite aqui sem melhor email" theme="dark" type="text" />
 
-                    <Input icon="bi bi-eye" id="senha" label="Crie sua senha" placeholder="Digite aqui sua senha" theme="dark" type="password" />
+                    <FormInput icon="bi bi-eye" id="senha" label="Crie sua senha" placeholder="Digite aqui sua senha" theme="dark" type="password" />
 
-                    <Input icon="bi bi-eye" id="senha" label="Confirme sua senha" placeholder="Digite novamente sua senha" theme="dark" type="password" />
+                    <FormInput icon="bi bi-eye" id="senha" label="Confirme sua senha" placeholder="Digite novamente sua senha" theme="dark" type="password" />
                 </div>
 
                 <Button border="quadrada" color="laranja" navegation="/" size="big" text="cadastrar" theme="dark" />

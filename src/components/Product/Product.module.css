@@ -47,7 +47,6 @@
     color: var(--lilas);
 }
 
-
 .preco {
     display: flex;
     flex-direction: column;
@@ -68,14 +67,14 @@
 
 .precoAtual {
     font-family: "Abhaya Libre", serif;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
     color: var(--cinza);
 }
 
 .precoAntigo {
     font-family: "Abhaya Libre", serif;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     text-decoration: line-through;
     color: var(--lilas);
 }
@@ -91,21 +90,18 @@
     margin-top: -5px;
 }
 
-
 .precoSemDesconto {
     font-family: "Abhaya Libre", serif;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
     color: var(--cinza);
     text-align: center;
     width: 100%;
 }
 
-
 .botaoComprar {
     margin-top: 0.5rem;
 }
-
 
 @media (max-width: 1400px) {
     .product img {
@@ -121,17 +117,24 @@
         width: 18vw;
     }
     
+   
     .precoAtual {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
     }
     
     .precoAntigo {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
     
     .desconto {
-        font-size: 0.85rem;
-        top: -22px;
+        font-size: 0.9rem;
+        top: -5px;
+    }
+    
+    .precoSemDesconto {
+        font-size: 1.5rem;
+        padding-bottom: 1.47rem;
+        
     }
 }
 
@@ -155,32 +158,39 @@
     
     .product h3 {
         max-width: 80%;
-        font-size: 0.9rem;
+        font-size: 0.rem;
     }
     
     .preco {
         width: 80%;
     }
     
+   
     .precoAtual {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
     
     .precoAntigo {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     
     .desconto {
-        font-size: 0.8rem;
-        padding: 3px 6px;
-        top: -20px;
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        top: -5px;
+    }
+    
+    .precoSemDesconto {
+        font-size: 1.4rem;
+        justify-content: center;
+        padding-bottom: 1.47rem;
     }
 }
 
 @media (max-width: 768px) {
     .products {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 1.1rem;
     }
     
     .product {
@@ -195,21 +205,22 @@
         font-size: 0.85rem;
     }
     
+   
     .precoAtual {
-        font-size: 1.4rem;
-    }
-    
-    .precoAntigo {
         font-size: 1.1rem;
     }
     
+    .precoAntigo {
+        font-size: 0.9rem;
+    }
+    
     .precoSemDesconto {
-        font-size: 1.4rem;
+        font-size: 1.1rem;
     }
     
     .desconto {
-        font-size: 0.75rem;
-        top: -18px;
+        font-size: 0.9rem;
+        top: -5px;
     }
 }
 
@@ -222,22 +233,23 @@
         width: 60%;
     }
     
+   
     .precoAtual {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
     
     .precoAntigo {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     
     .precoSemDesconto {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
     
     .desconto {
-        font-size: 0.7rem;
-        padding: 2px 5px;
-        top: -16px;
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        top: -5px;
     }
     
     .linhaPreco {
