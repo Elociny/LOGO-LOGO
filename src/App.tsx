@@ -25,6 +25,8 @@ export function App() {
         <Route path= "/register" element={<Register />}></Route>
         <Route path= "/forgotPassword" element={<ForgotPassword />}></Route>
         <Route path= "/changePassword" element={<ChangePassword />}></Route>
+        <Route path= "/maintenance" element={<Maintenance />}></Route>
+        
                 
         <Route path="/*" element={<NotFound />}></Route>
       </Routes>
