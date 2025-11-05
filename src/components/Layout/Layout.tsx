@@ -13,11 +13,12 @@ interface LayoutProps {
 }
 
 
-export function Layout({ children, theme }: LayoutProps) {
+export function Layout({ children, theme, pageTitle }: LayoutProps) {
     return (
         <>
             <Header />
             <main className={`px-100 children ${style[theme]}`}>
+                {pageTitle && <h1>{pageTitle}</h1>}
                 {children}
             </main>
             <Footer />
