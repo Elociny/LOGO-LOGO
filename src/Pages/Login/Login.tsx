@@ -36,7 +36,7 @@ export function Login() {
           />
 
           <p>
-            <NavLink to="/esqueceu-senha">Esqueceu a senha?</NavLink>
+            <NavLink to="/ForgotPassword">Esqueceu a senha?</NavLink>
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export function Login() {
         <p>
           Primeiro acesso?
           <span className={`${style.span}`}>
-            <NavLink to="/cadastro">Crie uma conta!</NavLink>
+            <NavLink to="/Register">Crie uma conta!</NavLink>
           </span>
         </p>
       </div>
