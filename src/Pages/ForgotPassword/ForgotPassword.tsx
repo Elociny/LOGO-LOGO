@@ -1,5 +1,5 @@
 import { Button } from "../../components/Button/Button"
-import { Input } from "../../components/SearchInput/SearchInput"
+import { FormInput } from "../../components/FormInput/FormInput"
 import { Layout } from "../../components/Layout/Layout"
 import style from "./ForgotPassword.module.css"
 
@@ -16,7 +16,7 @@ export function ForgotPassword() {
                     <hr className={`${style.dashed}`} />
 
                     <div className={`${style.group}`}>
-                        <Input icon="bi bi-envelope" id="email" label="Endereço de email" placeholder="Digite aqui seu email" theme="light" type="text" />
+                        <FormInput icon="bi bi-envelope" id="email" label="Endereço de email" placeholder="Digite aqui seu email" theme="light" type="text" />
                     </div>
 
                     <Button border="quadrada" color="cinza" navegation="/redefinir-senha" size="big" text="redefinir senha" theme="light" />

@@ -9,6 +9,7 @@ type Theme = "light" | "dark"
 interface LayoutProps {
   children: ReactNode;
   theme: Theme
+  pageTitle?:string;
 }
 
 
