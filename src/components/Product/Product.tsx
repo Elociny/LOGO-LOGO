@@ -2,48 +2,67 @@ import { Button } from "../Button/Button";
 import style from "./Product.module.css";
 
 interface ProductProps {
-  image: string;
-  name: string;
-  price: number;
-  discount?: number;
+    image: string;
+    name: string;
+    price: number;
+    discount?: number;
 }
 
 export function Product({ image, name, price, discount }: ProductProps) {
-  const discountedPrice = discount ? price - (price * discount) / 100 : price;
+    const calculateOldPrice = (currentPrice: number, discountPercent: number) => {
+        return currentPrice / (1 - discountPercent / 100);
+    };
 
-  return (
-    <div className={`${style.product}`}>
-      <img src={image} alt={`Imagem do produto ${name}`} />
-      <h3>{name}</h3>
+    return (
+        <div className={style.product}>
+            <img src={image} alt={name} />
+            <h3>{name}</h3>
+            
+            <div className={`row ${style.avaliacao}`}>
+                <div className={style.stars}>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-fill"></i>
+                    <i className="bi bi-star-half"></i>
+                </div>
+                <p>4.5<span>/5</span></p>
+            </div>
 
-      <div className={`${style.avaliacao}`}>
-        <div className={`row ${style.stars}`}>
-          <i className="bi bi-star-fill"></i>
-          <i className="bi bi-star-fill"></i>
-          <i className="bi bi-star-fill"></i>
-          <i className="bi bi-star-fill"></i>
-          <i className="bi bi-star-fill"></i>
+            <div className={style.preco}>
+                {discount ? (
+                    <>
+                        
+                        <div className={style.linhaPreco}>
+                            <p className={style.precoAtual}>
+                                R$ {price.toFixed(2)}
+                            </p>
+                            <p className={style.precoAntigo}>
+                                R$ {calculateOldPrice(price, discount).toFixed(2)}
+                            </p>
+                        </div>
+                       
+                        <div className={style.desconto}>
+                            -{discount}%
+                        </div>
+                    </>
+                ) : (
+                    <p className={style.precoSemDesconto}>
+                        R$ {price.toFixed(2)}
+                    </p>
+                )}
+                
+                <div className={style.botaoComprar}>
+                    <Button 
+                        theme="light" 
+                        size="small" 
+                        color="laranja" 
+                        border="quadrada" 
+                        text="comprar" 
+                        navegation="/carrinho"
+                    />
+                </div>
+            </div>
         </div>
-        <p>5.0/<span>5</span></p>
-      </div>
-
-      <div className={`${style.preco}`}>
-        <p>R$ {discountedPrice.toFixed(2)}</p>
-        {discount && (
-          <>
-            <p className={`${style.oldPrice}`}>R$ {price.toFixed(2)}</p>
-            <span className={`${style.discount}`}>-{discount}%</span>
-          </>
-        )}
-      </div>
-
-      <Button
-        theme="light"
-        border="arredondada"
-        color="laranja"
-        size="small"
-        text="comprar"
-      />
-    </div>
-  );
+    );
 }

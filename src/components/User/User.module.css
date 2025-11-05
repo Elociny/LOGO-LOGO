@@ -1,8 +1,9 @@
 .user {
     color: var(--laranja);
-
     gap: .5rem;
     align-items: center;
+    flex-shrink: 0;
+    
 }
 
 .infos h3 {
@@ -20,3 +21,41 @@
     text-overflow: ellipsis;
 }
 
+@media (max-width: 1200px) {
+    .infos h3 {
+        font-size: 0.9rem;
+    }
+    
+    .infos p {
+        font-size: 0.7rem;
+    }
+    
+    .infos p, .infos h3 {
+        width: 8rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .infos h3 {
+        font-size: 0.8rem;
+    }
+    
+    .infos p {
+        font-size: 0.6rem;
+    }
+    
+    .infos p, .infos h3 {
+        width: 6rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .infos {
+        display: none; 
+    }
+    
+    .user {
+        gap: 0; 
+        margin-left: 0.5rem;
+    }
+}

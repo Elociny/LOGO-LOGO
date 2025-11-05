@@ -1,0 +1,61 @@
+.input {
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    width: 40%;
+}
+
+@media (max-width: 1200px) {
+    .input {
+        width: 45%;
+    }
+}
+
+@media (max-width: 1024px) {
+    .input {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .input {
+        width: 55%;
+    }
+}
+
+@media (max-width: 480px) {
+    .input {
+        width: 60%;
+        height: 35px;
+        min-height: 35px;
+        max-height: 35px;
+    }
+}
+
+.input input, .input button {
+    height: 100%;
+    border: none;
+    background-color: var(--branco);
+}
+
+.input input {
+    width: 85%;
+    padding: 0 1rem;
+    border-radius: 100px 0 0 100px;
+    outline: none;
+    font-size: 1rem;
+}
+
+.input button {
+    border-radius: 0 100px 100px 0;
+    width: 15%;
+    font-size: 1.2rem;
+    color: var(--laranja);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.input button:hover {
+    background-color: var(--laranja);
+    color: var(--branco);
+}

@@ -1,0 +1,10 @@
+.box {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.box img {
+    width: 30rem;
+}
