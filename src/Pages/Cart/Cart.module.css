@@ -1,0 +1,51 @@
+.container {
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.left {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+
+    hr {
+        border: 1px solid var(--cinza);
+    }
+}
+
+.emptyCart {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    img {
+        width: 35%;
+    }
+}
+
+.clearButton {
+    background-color: var(--cinza);
+    padding: 0.6rem 0;
+
+    border: none;
+    border-radius: 0.25rem;
+
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--branco);
+
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    overflow: visible;
+}
