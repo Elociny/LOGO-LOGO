@@ -70,7 +70,6 @@
   justify-items: center;
 }
 
-/* UNIR AS MEDIA QUERIES DUPLICADAS DE 1024px */
 @media (max-width: 1200px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
