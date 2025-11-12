@@ -6,7 +6,7 @@ import FilterIcon from "../../assets/images/icons/Vector.svg";
 export function Filters() {
   return (
     <aside className={style.filters}>
-      {/* Breadcrumb */}
+
       <div className={style.breadcrumb}>
         <Link to="/" className={style.link}>
           Início
@@ -22,7 +22,6 @@ export function Filters() {
 
       <div className={style.line}></div>
 
-      {/* CATEGORIAS */}
       <div className={style.filterGroup}>
         <h4>Categorias</h4>
         <label className={style.chkLabel}>
@@ -42,14 +41,13 @@ export function Filters() {
         <Button
           theme="light"
           border="arredondada"
-          color="branco"
+          color="transparente"
           size="small"
           text="MAIS"
            className={style.add} 
         />
       </div>
 
-      {/* PREÇO */}
       <div className={style.filterGroup}>
         <h4>Preços</h4>
         <label className={style.chkLabel}>
@@ -68,14 +66,13 @@ export function Filters() {
         <Button
           theme="light"
           border="arredondada"
-          color="branco"
+          color="transparente"
           size="small"
           text="MAIS"
            className={style.add} 
         />
       </div>
 
-      {/* CATEGORIAS */}
       <div className={style.filterGroup}>
         <h4>Marcas</h4>
         <label className={style.chkLabel}>
@@ -94,14 +91,13 @@ export function Filters() {
         <Button
           theme="light"
           border="arredondada"
-          color="branco"
+          color="transparente"
           size="small"
           text="MAIS"
            className={style.add} 
         />
       </div>
 
-      {/* TAMANHOS */}
       <div className={style.filterGroup}>
         <h4>Tamanhos</h4>
         <label className={style.chkLabel}>
@@ -120,14 +116,14 @@ export function Filters() {
         <Button
           theme="light"
           border="arredondada"
-          color="branco"
+          color="transparente"
           size="small"
           text="MAIS"
           className={style.add} 
         />
       </div>
 
-      {/* AVALIAÇÃO */}
+
       <div className={style.filterGroup}>
         <h4>Avaliação</h4>
 
@@ -187,7 +183,6 @@ export function Filters() {
         </div>
       </div>
 
-      {/* Botão Limpar Filtros */}
       <Button
         theme="light"
         border="arredondada"
