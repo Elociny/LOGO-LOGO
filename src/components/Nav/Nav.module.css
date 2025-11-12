@@ -1,4 +1,26 @@
 .icon {
     font-size: 2rem;
     color: var(--laranja);
+    flex-shrink: 0;
+    margin-right:.5rem;
+    margin-left: 2rem;
+}
+
+
+@media (max-width: 1400px) {
+    .icon {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .icon {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .icon {
+        font-size: 1.4rem;
+    }
 }

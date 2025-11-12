@@ -5,18 +5,16 @@
   background-color: #fafafa;
 }
 
-/* ---- CATEGORIAS ---- */
 .categories {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 1.5rem 0;
+  padding: .9rem 0;
   background: #fff;
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* ---- CONTEÚDO PRINCIPAL ---- */
 .main {
   display: flex;
   padding: 2rem 3rem;
@@ -24,7 +22,6 @@
   flex: 1;
 }
 
-/* ---- FILTROS (LADO ESQUERDO) ---- */
 .filters {
   width: 250px;
   background: #fff;
@@ -53,7 +50,6 @@
   color: #444;
 }
 
-/* ---- PRODUTOS (LADO DIREITO) ---- */
 .products {
   flex: 1;
   display: flex;
@@ -69,24 +65,65 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  justify-items: center; /* centraliza os cards */
+  justify-items: center;
 }
 
-
-/* ---- RESPONSIVIDADE ---- */
-@media (max-width: 1024px) {
-  .main {
-    flex-direction: column;
-  }
-
-  .filters {
-    width: 100%;
-    position: static;
-  }
-
+@media (max-width: 1200px) {
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .filters {
+    width: 200px;
+    padding: 1.2rem;
+  }
+  
+  .main {
+    gap: 2rem;
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .filters {
+    width: 180px;
+    padding: 1rem;
+  }
+  
+  .main {
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .filterGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .filterGroup h4 {
+    font-size: 0.9rem;
+  }
+  
+  .filterGroup label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 468px) {
+  .filters {
+    display: none;
+  }
+  
+  .main {
+    padding: 1rem;
+    gap: 1rem;
   }
 }

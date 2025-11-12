@@ -1,4 +1,4 @@
-import styles from './Input.module.css'
+import styles from './SearchInput.module.css'
 
 export function Input() {
     return(
