@@ -12,6 +12,8 @@ import { ChangePassword } from "./Pages/ChangePassword/ChangePassword";
 import { Maintenance } from "./Pages/Maintenance/Maintenance";
 import { Carrinho } from "./Pages/Carrinho/Carrinho";
 import { Tracking } from "./Pages/Tracking/Tracking";
+import { Configuration } from "./Pages/Configuration/Configuration";
+import { AddAddress } from "./Pages/AddAddress/AddAddress";
 
 export function App() {
 
@@ -28,7 +30,8 @@ export function App() {
         <Route path= "/changePassword" element={<ChangePassword />}></Route>
         <Route path= "/maintenance" element={<Maintenance />}></Route>
         <Route path= "/rastreio" element={<Tracking />}></Route>
-        
+        <Route path= "/configuracoes" element={<Configuration />}></Route>
+        <Route path= "/configuracoes/adicionar-endereco" element={<AddAddress />}></Route>
                 
         <Route path="/*" element={<NotFound />}></Route>
       </Routes>

@@ -8,12 +8,12 @@ type Theme = "light" | "dark"
 
 interface LayoutProps {
   children: ReactNode;
-  theme: Theme;
+  theme?: Theme;
   pageTitle?:string;
 }
 
 
-export function Layout({ children, theme, pageTitle }: LayoutProps) {
+export function Layout({ children, theme = "light", pageTitle }: LayoutProps) {
     return (
         <>
             <Header />

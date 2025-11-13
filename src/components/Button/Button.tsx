@@ -20,14 +20,14 @@ export function Button({ size, color, border, theme, text, navegation, onClick }
 
     if (navegation) {
         return (
-            <NavLink to={navegation}>
-                <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`} onClick={onClick}>
+            <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`} onClick={onClick}>
+                <NavLink to={navegation}>
                     {text}
-                </button>
-            </NavLink>
+                </NavLink>
+            </button>
         )
     }
-    
+
     return (
         <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`} onClick={onClick}>
             {text}
