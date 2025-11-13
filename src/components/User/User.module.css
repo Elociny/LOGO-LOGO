@@ -1,9 +1,19 @@
 .user {
-    color: var(--laranja);
     gap: .5rem;
     align-items: center;
     flex-shrink: 0;
-    
+}
+
+.light {
+    color: var(--cinza);
+}
+
+.dark {
+    color: var(--laranja);
+}
+
+.fotoPerfil {
+    width: 3rem;
 }
 
 .infos h3 {

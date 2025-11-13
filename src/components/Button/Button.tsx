@@ -12,16 +12,25 @@ interface ButtonProps {
     border: Border
     theme: Theme
     text: string
-    navegation: string
+    navegation?: string
+    onClick?: () => void
 }
 
-export function Button({ size, color, border, theme, text, navegation }: ButtonProps) {
-    return (
-        <NavLink to={navegation}>
-            <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`}>
-                {text}
-            </button>
-        </NavLink>
+export function Button({ size, color, border, theme, text, navegation, onClick }: ButtonProps) {
 
+    if (navegation) {
+        return (
+            <NavLink to={navegation}>
+                <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`} onClick={onClick}>
+                    {text}
+                </button>
+            </NavLink>
+        )
+    }
+    
+    return (
+        <button className={`${style[size]} ${style[color]} ${style[border]} ${style[theme]}`} onClick={onClick}>
+            {text}
+        </button>
     )
 }

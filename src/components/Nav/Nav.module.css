@@ -2,10 +2,7 @@
     font-size: 2rem;
     color: var(--laranja);
     flex-shrink: 0;
-    margin-right:.5rem;
-    margin-left: 2rem;
 }
-
 
 @media (max-width: 1400px) {
     .icon {

@@ -1,0 +1,74 @@
+.track {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    
+    border: 1px solid var(--cinza-claro);
+    border-radius: .5rem;
+    
+    padding: .5rem;
+
+    .dashed {
+        border: 1px dashed var(--cinza);
+    }   
+    
+    .line {
+        border: 1px solid var(--cinza);
+    }
+}
+
+.track header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--cinza);
+    padding: 1.5rem;
+    width: 100%;
+    
+    border-radius: .5rem;
+
+    color: var(--branco);
+
+    .copy {
+        gap: 0.5rem;
+
+        cursor: pointer;
+
+        transition: .5s;
+
+        &:hover {
+            color: var(--laranja);
+        }
+    }
+}
+
+.left {
+    text-transform: uppercase;
+
+    gap: .5rem;
+}
+
+.endereco {
+    .nome {
+        color: var(--cinza-claro);
+    }
+}
+
+.itens {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    p {
+        color: var(--cinza-claro);
+    }
+}
+
+.total {
+    align-items: center;
+    justify-content: space-between;
+
+    h3 {
+        text-transform: uppercase;
+    }
+}

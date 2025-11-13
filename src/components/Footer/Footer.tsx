@@ -27,7 +27,7 @@ export function Footer() {
                 </li>
             </ul>
 
-            <hr />
+            <hr className={`${style.line}`} />
             
             <p>@ 2025 Todos os direitos reservados.</p>
         </footer>
