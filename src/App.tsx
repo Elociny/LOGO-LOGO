@@ -10,7 +10,8 @@ import { Register } from "./Pages/Register/Register";
 import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
 import { ChangePassword } from "./Pages/ChangePassword/ChangePassword";
 import { Maintenance } from "./Pages/Maintenance/Maintenance";
-import { Cart } from "./Pages/Cart/Cart";
+import { Carrinho } from "./Pages/Carrinho/Carrinho";
+import { Tracking } from "./Pages/Tracking/Tracking";
 
 export function App() {
 
@@ -21,11 +22,12 @@ export function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/feminino" element={<Feminino />}></Route>
         <Route path="/produto/:id" element={<Product />}></Route>
-        <Route path="/carrinho" element={<Cart />}></Route>
+        <Route path="/carrinho" element={<Carrinho />}></Route>
         <Route path= "/register" element={<Register />}></Route>
         <Route path= "/forgotPassword" element={<ForgotPassword />}></Route>
         <Route path= "/changePassword" element={<ChangePassword />}></Route>
         <Route path= "/maintenance" element={<Maintenance />}></Route>
+        <Route path= "/rastreio" element={<Tracking />}></Route>
         
                 
         <Route path="/*" element={<NotFound />}></Route>

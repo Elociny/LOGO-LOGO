@@ -1,0 +1,25 @@
+.tracking {
+    gap: 1rem;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+
+    position: sticky;
+    top: 1rem;
+    align-self: flex-start;
+}
+
+.cinza {
+    border: 1px solid var(--cinza-claro);
+}
+
+.right, .pedidos {
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
