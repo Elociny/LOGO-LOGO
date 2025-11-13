@@ -1,0 +1,59 @@
+.configuration {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.secao {
+    gap: 1rem;
+}
+
+.fotoPerfil {
+    border: 1px solid var(--cinza);
+    border-radius: 100px;
+
+    width: 12.5rem;
+    height: fit-content;
+}
+
+.perfil {
+    width: 100%;
+}
+
+.inputs {
+    gap: 1rem;
+    align-items: end;
+}
+
+.enderecoCompleto {
+    justify-content: space-between;
+}
+
+.group {
+    gap: 1.5rem;
+
+    margin-bottom: 1rem;
+
+    button {
+        border: none;
+
+        cursor: pointer;
+
+        background-color: transparent;
+
+        i {
+            font-size: 1.5rem;
+
+            transition: .5s;
+            
+            &:hover {
+                color: var(--laranja);
+            }
+        }
+    }
+
+
+
+
+
+}

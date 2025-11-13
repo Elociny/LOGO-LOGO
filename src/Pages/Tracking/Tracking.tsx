@@ -112,7 +112,15 @@ export function Tracking() {
                     <hr className={`${style.cinza}`} />
                     <Button
                         border="arredondada"
-                        color={ filtro === "preparando" ? "cinza" : "transparente" }
+                        color={filtro === "mostrar todos" ? "cinza" : "transparente"}
+                        size="big"
+                        text="mostrar todos"
+                        theme="light"
+                        onClick={() => setFiltro("mostrar todos")}
+                    />
+                    <Button
+                        border="arredondada"
+                        color={filtro === "preparando" ? "cinza" : "transparente"}
                         size="big"
                         text="preparando"
                         theme="light"
@@ -120,7 +128,7 @@ export function Tracking() {
                     />
                     <Button
                         border="arredondada"
-                        color={ filtro === "em rota de entrega" ? "cinza" : "transparente" }
+                        color={filtro === "em rota de entrega" ? "cinza" : "transparente"}
                         size="big"
                         text="a caminho"
                         theme="light"
@@ -128,19 +136,11 @@ export function Tracking() {
                     />
                     <Button
                         border="arredondada"
-                        color={ filtro === "entregue" ? "cinza" : "transparente" }
+                        color={filtro === "entregue" ? "cinza" : "transparente"}
                         size="big"
                         text="finalizado"
                         theme="light"
                         onClick={() => setFiltro("entregue")}
-                    />
-                    <Button
-                        border="arredondada"
-                        color={ filtro === "mostrar todos" ? "cinza" : "transparente" }
-                        size="big"
-                        text="mostrar todos"
-                        theme="light"
-                        onClick={() => setFiltro("mostrar todos")}
                     />
                 </div>
                 <div className={`${style.right}`}>
@@ -149,7 +149,7 @@ export function Tracking() {
                     <div className={`${style.pedidos}`}>
                         {pedidosFiltrados.map((pedido, index) => {
 
-                            return(
+                            return (
                                 <TrackOrder
                                     key={index}
                                     {...pedido}

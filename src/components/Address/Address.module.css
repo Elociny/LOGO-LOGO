@@ -1,0 +1,14 @@
+.address {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.userInfos {
+    gap: .5rem;
+}
+
+.endereco {
+    color: var(--cinza-claro);
+    width: 100%;
+}
