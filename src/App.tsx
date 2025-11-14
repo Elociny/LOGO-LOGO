@@ -5,12 +5,13 @@ import { Home } from "./Pages/Home/Home";
 import { Login } from "./Pages/Login/Login";
 import { NotFound } from "./Pages/NotFound/NotFound";
 import { Feminino }from './Pages/Feminino/Feminino';
-import { Carrinho } from "./Pages/Carrinho/Carrinho";
 import Product from './Pages/Product/Product';
 import { Register } from "./Pages/Register/Register";
 import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
 import { ChangePassword } from "./Pages/ChangePassword/ChangePassword";
 import { Maintenance } from "./Pages/Maintenance/Maintenance";
+import { Carrinho } from "./Pages/Carrinho/Carrinho";
+import { Tracking } from "./Pages/Tracking/Tracking";
 
 export function App() {
 
@@ -26,6 +27,7 @@ export function App() {
         <Route path= "/forgotPassword" element={<ForgotPassword />}></Route>
         <Route path= "/changePassword" element={<ChangePassword />}></Route>
         <Route path= "/maintenance" element={<Maintenance />}></Route>
+        <Route path= "/rastreio" element={<Tracking />}></Route>
         
                 
         <Route path="/*" element={<NotFound />}></Route>
