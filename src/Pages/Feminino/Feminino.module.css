@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  color: var(--text-color);
 }
 
 .categories {
@@ -11,6 +10,7 @@
   align-items: center;
   padding: var(--gap-small) 0;
   margin-bottom: 0;
+
 }
 
 .main {
@@ -28,6 +28,7 @@
   height: fit-content;
   margin-top: 0;
   padding-top: 0;
+
 }
 
 .products {
@@ -42,9 +43,9 @@
   gap: var(--gap-small);
   justify-items: center;
   padding-top: 0.5rem;
+
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
   .main {
     gap: var(--gap-medium);
