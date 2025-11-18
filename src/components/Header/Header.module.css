@@ -57,10 +57,6 @@
 
 /* RESPONSIVIDADE PARA REDUÇÃO PROPORCIONAL */
 @media (max-width: 1400px) {
-    .cabecalho {
-        padding: 0 4%;
-    }
-    
     .navIcons {
         gap: 1.2rem;
     }
