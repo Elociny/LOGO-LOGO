@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Button } from "../Button/Button"; 
+import { Button } from "../Button/Button";
 import style from "./Filters.module.css";
 import FilterIcon from "../../assets/images/icons/Vector.svg";
 
@@ -37,14 +37,12 @@ export function Filters() {
           <span>Jeans</span>
         </label>
 
-
         <Button
           theme="light"
           border="arredondada"
           color="transparente"
           size="small"
           text="MAIS"
-           className={style.add} 
         />
       </div>
 
@@ -69,7 +67,6 @@ export function Filters() {
           color="transparente"
           size="small"
           text="MAIS"
-           className={style.add} 
         />
       </div>
 
@@ -94,7 +91,6 @@ export function Filters() {
           color="transparente"
           size="small"
           text="MAIS"
-           className={style.add} 
         />
       </div>
 
@@ -119,10 +115,8 @@ export function Filters() {
           color="transparente"
           size="small"
           text="MAIS"
-          className={style.add} 
         />
       </div>
-
 
       <div className={style.filterGroup}>
         <h4>Avaliação</h4>

@@ -1,5 +1,3 @@
-import { Header } from "../../components/Header/Header";
-import { Footer } from "../../components/Footer/Footer";
 import { Product } from "../../components/Product/Product";
 import { Category } from "../../components/Category/Category";
 import { Filters } from "../../components/Filters/Filters";
