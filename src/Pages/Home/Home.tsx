@@ -1,15 +1,7 @@
 import { Layout } from "../../components/Layout/Layout";
 import { Carousel } from "../../components/Carousel/Carousel";
-import { Category } from "../../components/Category/Category";
 
 import style from "./Home.module.css"
-
-import Lightning from "../../assets/images/icons/lightning.svg"
-import Dress from "../../assets/images/icons/dress.svg"
-import Shirt from "../../assets/images/icons/shirt.svg"
-import Bear from "../../assets/images/icons/bear.svg"
-import Shoe from "../../assets/images/icons/shoe.svg"
-import Necklace from "../../assets/images/icons/necklace.svg"
 
 import Banner1 from "../../assets/images/banner1.svg"
 import Banner2 from "../../assets/images/banner2.svg"
@@ -20,25 +12,19 @@ import { useQuery } from "@tanstack/react-query";
 import { listarProdutos } from "../../services/produtoService";
 import { Spinner } from "../../components/Spinner/Spinner";
 import { Error } from "../../components/Error/Error";
+import { Categories } from "../../components/Categories/Categories";
 
 export function Home() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["produtos"],
         queryFn: listarProdutos,
     })
-    
+
     return (
         <Layout theme="light">
             <Carousel />
 
-            <div className={`row ${style.categories}`}>
-                <Category icon={Lightning} titulo="Novidades" />
-                <Category icon={Dress} titulo="Feminino" />
-                <Category icon={Shirt} titulo="Masculino" />
-                <Category icon={Bear} titulo="Infantil" />
-                <Category icon={Shoe} titulo="Calçados" />
-                <Category icon={Necklace} titulo="Acessórios" />
-            </div>
+            <Categories />
 
             <div className={`${style.banner}`}>
                 <img src={Banner1} alt="Banner 1 LOGOLOGO" />
