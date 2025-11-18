@@ -14,10 +14,7 @@
 
 .main {
   display: flex;
-  flex: 1;
-  gap: var(--gap-large);
-  align-items: flex-start;
-  margin-top: 0;
+  gap: 3rem;
 }
 
 .filters {
@@ -34,9 +31,9 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: var(--gap-small);
-  justify-items: right;
+  justify-items: left;
 }
 
 @media (max-width: 1024px) {

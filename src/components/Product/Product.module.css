@@ -4,20 +4,24 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    width: 15rem;
+    height: 30rem;
 }
 
 .product img {
-    width: 70%;
-    height: 50%;
+    width: 15rem;
+    height: 60%;
     object-fit: cover;
+    
     border-radius: 1rem;
-    object-fit: cover;
 }
-
 
 .product h3 {
     font-weight: normal;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+
+
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
@@ -109,7 +113,6 @@
     
     .product h3 {
         max-width: 18vw;
-        font-size: 0.95rem;
     }
     
     .preco {
@@ -151,7 +154,6 @@
     
     .product h3 {
         max-width: 80%;
-        font-size: 0.rem;
     }
     
     .preco {

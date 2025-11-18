@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Home } from "./Pages/Home/Home";
 import { Login } from "./Pages/Login/Login";
 import { NotFound } from "./Pages/NotFound/NotFound";
-import { Feminino } from './Pages/Feminino/Feminino';
+import { ListProducts } from './Pages/ListProducts/ListProducts';
 import Product from './Pages/Product/Product';
 import { Register } from "./Pages/Register/Register";
 import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
@@ -26,7 +26,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
-          <Route path="/feminino" element={<Feminino />}></Route>
+          <Route path="/listagem-de-produtos/:categoria" element={<ListProducts />}></Route>
           <Route path="/produto/:id" element={<Product />}></Route>
           <Route path="/carrinho" element={<Carrinho />}></Route>
           <Route path="/register" element={<Register />}></Route>
