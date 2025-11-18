@@ -1,0 +1,19 @@
+.error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    
+    text-align: center;
+}
+
+.error img {
+    width: 20%;
+}
+
+@media (max-width: 500px) {
+    .error img {
+        width: 50%;
+    }
+}

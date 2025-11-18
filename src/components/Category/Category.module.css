@@ -17,54 +17,58 @@
 }
 
 @media (max-width: 768px) {
-  .categoryItem {
-    max-width: 70px;
-    min-width: 35px;
-  }
+    .categoryItem {
+        max-width: 70px;
+        min-width: 35px;
+    }
 
-  .category {
-    font-size: 0.65rem;
-    gap: 0.2rem;
-  }
+    .category {
+        font-size: 0.65rem;
+        gap: 0.2rem;
+    }
 
-  .box {
-    max-width: 2.5rem;
-    font-size: 1.1rem;
-    padding: 0.2rem;
-  }
+    .box {
+        max-width: 2.5rem;
+        font-size: 1.1rem;
+        padding: 0.2rem;
+    }
 }
 
 @media (max-width: 480px) {
-  .categoryItem {
-    max-width: 60px;
-    min-width: 30px;
-  }
+    .categoryItem {
+        max-width: 60px;
+        min-width: 30px;
+    }
 
-  .category {
-    font-size: 0.6rem;
-    gap: 0.15rem;
-  }
+    .category {
+        font-size: 0.6rem;
+        gap: 0.15rem;
+    }
 
-  .box {
-    max-width: 2.2rem;
-    font-size: 1rem;
-    padding: 0.15rem;
-  }
+    .box {
+        max-width: 2.2rem;
+        font-size: 1rem;
+        padding: 0.15rem;
+    }
+
+    .icon {
+        width: 60%;
+    }
 }
 
 @media (max-width: 380px) {
-  .categoryItem {
-    max-width: 50px;
-    min-width: 25px;
-  }
+    .categoryItem {
+        max-width: 50px;
+        min-width: 25px;
+    }
 
-  .category {
-    font-size: 0.55rem;
-  }
+    .category {
+        font-size: 0.55rem;
+    }
 
-  .box {
-    max-width: 2rem;
-    font-size: 0.9rem;
-    padding: 0.1rem;
-  }
+    .box {
+        max-width: 2rem;
+        font-size: 0.9rem;
+        padding: 0.1rem;
+    }
 }

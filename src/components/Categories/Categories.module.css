@@ -1,0 +1,11 @@
+.categories {
+    justify-content: space-between;
+}
+
+@media (max-width: 400px) {
+    .categories {
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+}
