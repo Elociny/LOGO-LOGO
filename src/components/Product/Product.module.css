@@ -4,16 +4,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    gap: .3rem;
-    height: auto;
-    min-height: 450px;
-    margin-bottom: 2rem;
 }
 
 .product img {
-    width: 100%;
-    max-width: 200px;
-    min-width: 150px;
+    width: 70%;
+    height: 50%;
+    object-fit: cover;
     border-radius: 1rem;
 }
 
@@ -148,12 +144,6 @@
     .product {
         width: 100%;
         height: auto;
-        min-height: 420px;
-    }
-    
-    .product img {
-        width: 80%;
-        max-width: 180px;
     }
     
     .product h3 {
@@ -164,7 +154,6 @@
     .preco {
         width: 80%;
     }
-    
    
     .precoAtual {
         font-size: 1.4rem;
@@ -193,19 +182,10 @@
         gap: 1.1rem;
     }
     
-    .product {
-        min-height: 400px;
-    }
-    
-    .product img {
-        width: 70%;
-    }
-    
     .product h3 {
         font-size: 0.85rem;
     }
     
-   
     .precoAtual {
         font-size: 1.1rem;
     }
@@ -225,15 +205,6 @@
 }
 
 @media (max-width: 480px) {
-    .product {
-        min-height: 380px;
-    }
-    
-    .product img {
-        width: 60%;
-    }
-    
-   
     .precoAtual {
         font-size: 1.1rem;
     }

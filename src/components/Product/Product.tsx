@@ -4,7 +4,7 @@ import style from "./Product.module.css";
 interface ProductProps {
     image: string;
     name: string;
-    price: number;
+    price: number | undefined;
     discount?: number;
 }
 
@@ -12,6 +12,8 @@ export function Product({ image, name, price, discount }: ProductProps) {
     const calculateOldPrice = (currentPrice: number, discountPercent: number) => {
         return currentPrice / (1 - discountPercent / 100);
     };
+
+    const safePrice = Number(price ?? 0);
 
     return (
         <div className={style.product}>
@@ -32,13 +34,12 @@ export function Product({ image, name, price, discount }: ProductProps) {
             <div className={style.preco}>
                 {discount ? (
                     <>
-                        
                         <div className={style.linhaPreco}>
                             <p className={style.precoAtual}>
-                                R$ {price.toFixed(2)}
+                                R$ {safePrice.toFixed(2)}
                             </p>
                             <p className={style.precoAntigo}>
-                                R$ {calculateOldPrice(price, discount).toFixed(2)}
+                                R$ {calculateOldPrice(safePrice, discount).toFixed(2)}
                             </p>
                         </div>
                        
@@ -48,7 +49,7 @@ export function Product({ image, name, price, discount }: ProductProps) {
                     </>
                 ) : (
                     <p className={style.precoSemDesconto}>
-                        R$ {price.toFixed(2)}
+                        R$ {safePrice.toFixed(2)}
                     </p>
                 )}
                 
