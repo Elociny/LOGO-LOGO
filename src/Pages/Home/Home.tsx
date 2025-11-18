@@ -18,21 +18,15 @@ import { Product } from "../../components/Product/Product";
 
 import { useQuery } from "@tanstack/react-query";
 import { listarProdutos } from "../../services/produtoService";
+import { Spinner } from "../../components/Spinner/Spinner";
+import { Error } from "../../components/Error/Error";
 
 export function Home() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["produtos"],
         queryFn: listarProdutos,
     })
-
-    if(isLoading) {
-        return <p>Carregando...</p>
-    }
-
-    if(isError) {
-        return <p>Erro ao carregar produtos</p>
-    }
-
+    
     return (
         <Layout theme="light">
             <Carousel />
@@ -52,8 +46,16 @@ export function Home() {
 
             <h2>Você pode gostar</h2>
 
+            {isLoading && (
+                <Spinner />
+            )}
+
+            {isError && (
+                <Error />
+            )}
+
             <div className={`row ${style.products}`}>
-                {data?.slice(0, 4).map(produto => (
+                {!isLoading && data?.slice(0, 4).map(produto => (
                     <Product key={produto.id} image={produto.imageUrl} name={produto.nome} price={produto.preco} discount={produto.desconto} />
                 ))}
             </div>
