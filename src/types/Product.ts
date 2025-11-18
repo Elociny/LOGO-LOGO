@@ -7,4 +7,5 @@ export interface Product {
   unitPrice: number
   inStock: boolean
   quantity?: number
+  discount?: number
 }

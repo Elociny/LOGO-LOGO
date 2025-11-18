@@ -1,0 +1,21 @@
+.addAddress {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+
+}
+
+.cadastro {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+
+    .inputs {
+        gap: 1rem;
+    }
+}
+
+.inputNumero {
+    width: 16%;
+}
