@@ -37,7 +37,7 @@ export function App() {
           <Route path="/rastreio" element={<Tracking />}></Route>
           <Route path="/configuracoes" element={<Configuration />}></Route>
           <Route path="/configuracoes/adicionar-endereco" element={<AddAddress />}></Route>
-          <Route path="/detalhes-do-produto" element={<ProductDetails />}></Route>
+          <Route path="/detalhes-do-produto/:id" element={<ProductDetails />}></Route>
 
           <Route path="/*" element={<NotFound />}></Route>
         </Routes>

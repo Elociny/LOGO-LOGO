@@ -3,19 +3,39 @@ import { InfoProduct } from "../../components/InfoProduct/InfoProduct"
 import { Layout } from "../../components/Layout/Layout"
 import style from "./ProductDetails.module.css"
 
-import Blusa from "../../assets/images/products/produto1.svg";
 import { Comment } from "../../components/Comment/Comment";
+import { useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { buscarProdutoPorId } from "../../services/produtoService";
+import { Spinner } from "../../components/Spinner/Spinner";
+import { Error } from "../../components/Error/Error";
 
 export function ProductDetails() {
+    const { id } = useParams<{ id: string }>()
+
+    const { data: produto, isLoading, isError } = useQuery({
+        queryKey: ['produto', id],
+        queryFn: () => buscarProdutoPorId(Number(id)),
+        enabled: !!id,
+    })
+
     return (
         <Layout>
             <div className={`${style.product_details}`}>
                 <Categories />
 
-                <InfoProduct image={Blusa} name="nome" price={105} discount={50} />
+                {isLoading && <Spinner />}
+
+                {isError && <Error />}
+
+                {produto && (
+                    <InfoProduct
+                        produto={produto}
+                    />
+                )}
 
                 <hr />
-                
+
                 <div className={`${style.avaliacoes}`}>
                     <h2>Vejam o que estão falando desse produto</h2>
 
