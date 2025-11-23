@@ -5,7 +5,6 @@ import { Home } from "./Pages/Home/Home";
 import { Login } from "./Pages/Login/Login";
 import { NotFound } from "./Pages/NotFound/NotFound";
 import { ListProducts } from './Pages/ListProducts/ListProducts';
-import Product from './Pages/Product/Product';
 import { Register } from "./Pages/Register/Register";
 import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
 import { ChangePassword } from "./Pages/ChangePassword/ChangePassword";
@@ -28,7 +27,6 @@ export function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/listagem-de-produtos/:categoria" element={<ListProducts />}></Route>
-          <Route path="/produto/:id" element={<Product />}></Route>
           <Route path="/carrinho" element={<Carrinho />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/forgotPassword" element={<ForgotPassword />}></Route>

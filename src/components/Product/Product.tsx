@@ -1,24 +1,22 @@
+import type { ProductAPI } from "../../types/ProductAPI";
 import { Button } from "../Button/Button";
 import style from "./Product.module.css";
 
 interface ProductProps {
-    image: string;
-    name: string;
-    price: number | undefined;
-    discount?: number;
+    data: ProductAPI
 }
 
-export function Product({ image, name, price, discount }: ProductProps) {
+export function Product({ data }: ProductProps) {
     const calculateOldPrice = (currentPrice: number, discountPercent: number) => {
         return currentPrice / (1 - discountPercent / 100);
     };
 
-    const safePrice = Number(price ?? 0);
+    const safePrice = Number(data.preco ?? 0);
 
     return (
         <div className={style.product}>
-            <img src={image} alt={name} />
-            <h3>{name}</h3>
+            <img src={data.imageUrl} alt={`Imagem do produto ${data.nome}`} />
+            <h3>{data.nome}</h3>
             
             <div className={`row ${style.avaliacao}`}>
                 <div className={style.stars}>
@@ -32,19 +30,19 @@ export function Product({ image, name, price, discount }: ProductProps) {
             </div>
 
             <div className={style.preco}>
-                {discount ? (
+                {data.desconto ? (
                     <>
                         <div className={style.linhaPreco}>
                             <p className={style.precoAtual}>
                                 R$ {safePrice.toFixed(2)}
                             </p>
                             <p className={style.precoAntigo}>
-                                R$ {calculateOldPrice(safePrice, discount).toFixed(2)}
+                                R$ {calculateOldPrice(safePrice, data.desconto).toFixed(2)}
                             </p>
                         </div>
                        
                         <div className={style.desconto}>
-                            -{discount}%
+                            -{data.desconto}%
                         </div>
                     </>
                 ) : (
@@ -60,7 +58,7 @@ export function Product({ image, name, price, discount }: ProductProps) {
                         color="laranja" 
                         border="arredondada" 
                         text="Veja Mais" 
-                        navegation="/carrinho"
+                        navegation={`/detalhes-do-produto/${data.id}`}
                     />
                 </div>
             </div>

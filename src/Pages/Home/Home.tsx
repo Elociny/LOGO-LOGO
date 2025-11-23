@@ -39,11 +39,7 @@ export function Home() {
         {!isLoading &&
           data?.slice(0, 4).map(produto => (
             <Product
-              key={produto.id}
-              image={produto.imageUrl}
-              name={produto.nome}
-              price={produto.preco}
-              discount={produto.desconto}
+              data={produto}
             />
           ))}
       </div>

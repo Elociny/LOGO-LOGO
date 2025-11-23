@@ -46,11 +46,7 @@ export function ListProducts() {
             <div className={style.grid}>
               {!isLoading && produtosFiltrados?.map(produto => (
                 <Product
-                  key={produto.id}
-                  image={produto.imageUrl}
-                  name={produto.nome}
-                  price={produto.preco}
-                  discount={produto.desconto}
+                  data={produto}
                 />
               ))}
             </div>
