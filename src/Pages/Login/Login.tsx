@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { Button } from "../../components/Button/Button";
 import { Logo } from "../../components/Logo/Logo";
 
@@ -6,8 +6,39 @@ import LoginImage from "../../assets/images/loginImage.svg";
 
 import style from "./Login.module.css";
 import { FormInput } from "../../components/FormInput/FormInput";
+import { useState } from "react";
+import { login } from "../../services/authService";
 
 export function Login() {
+  const navigate = useNavigate()
+
+  const [email, setEmail] = useState("")
+  const [senha, setSenha] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const handleLogin = async () => {
+    if(!email || !senha) {
+      alert("Por favor, prencha email e senha")
+      return
+    }
+
+    try {
+      setLoading(true)
+
+      const usuario = await login({email, senha})
+
+      localStorage.setItem("usuario_logado", JSON.stringify(usuario))
+
+      navigate("/")
+    } catch(error) {
+      console.log(error)
+
+      alert("Email ou senha incorretos")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className={`row px-100 ${style.container}`}>
       <div className={`${style.left}`}>
@@ -24,6 +55,8 @@ export function Login() {
             placeholder="Digite seu email"
             type="text"
             theme="light"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <FormInput
@@ -33,6 +66,8 @@ export function Login() {
             placeholder="Digite sua senha"
             type="password"
             theme="light"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
           />
 
           <p>
@@ -43,10 +78,10 @@ export function Login() {
         <Button
           border="quadrada"
           color="laranja"
-          navegation="/"
           size="big"
-          text="entrar"
+          text={loading ? "Entrando..." : "entrar"}
           theme="light"
+          onClick={handleLogin}
         />
 
         <p>

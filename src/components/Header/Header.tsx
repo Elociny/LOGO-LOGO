@@ -7,19 +7,34 @@ import { useState, useEffect } from "react"
 
 import styles from "./Header.module.css"
 
+interface UsuarioLogado {
+    nome: string;
+    email: string;
+}
+
 export function Header() {
     const [isMobile, setIsMobile] = useState(false)
+    const [usuario, setUsuario] = useState<UsuarioLogado | null>(null)
 
     useEffect(() => {
         const checkScreenSize = () => {
             setIsMobile(window.innerWidth <= 768)
-        }
+        };
 
-        checkScreenSize()
+        checkScreenSize();
         window.addEventListener('resize', checkScreenSize)
 
+        const usuarioSalvo = localStorage.getItem("usuario_logado")
+        if (usuarioSalvo) {
+            try {
+                setUsuario(JSON.parse(usuarioSalvo))
+            } catch (error) {
+                console.error("Erro ao ler usuário", error)
+            }
+        }
+
         return () => window.removeEventListener('resize', checkScreenSize)
-    }, [])
+    }, []);
 
     return (
         <header className={`px-100 row ${styles.cabecalho}`}>
@@ -27,13 +42,26 @@ export function Header() {
             
             <Input />
 
-            {/* ÍCONES - SOMEM EM MOBILE */}
             {!isMobile && (
                 <ul className={`row ${styles.navIcons}`}>
                     <li>
-                        <NavLink to="/login">
-                            <User />
-                        </NavLink>
+                        {usuario ? (
+                            <NavLink to="/configuracoes">
+                                <User 
+                                    nome={usuario.nome} 
+                                    email={usuario.email} 
+                                    theme="dark"
+                                />
+                            </NavLink>
+                        ) : (
+                            <NavLink to="/login">
+                                <User 
+                                    nome="Entre ou" 
+                                    email="Cadastre-se" 
+                                    theme="light"
+                                />
+                            </NavLink>
+                        )}
                     </li>
                     <li>
                         <NavLink to="/carrinho">
@@ -48,12 +76,11 @@ export function Header() {
                 </ul>
             )}
 
-            {/* HAMBURGER - SÓ APARECE EM MOBILE */}
             {isMobile && (
                 <div className={styles.hamburger}>
                     <i className="bi bi-list"></i>
                 </div>
             )}
         </header>
-    )
+    );
 }

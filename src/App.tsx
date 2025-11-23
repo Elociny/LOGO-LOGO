@@ -9,12 +9,13 @@ import { Register } from "./Pages/Register/Register";
 import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
 import { ChangePassword } from "./Pages/ChangePassword/ChangePassword";
 import { Maintenance } from "./Pages/Maintenance/Maintenance";
-import { Carrinho } from "./Pages/Carrinho/Carrinho";
+
 import { Tracking } from "./Pages/Tracking/Tracking";
 import { Configuration } from "./Pages/Configuration/Configuration";
 import { AddAddress } from "./Pages/AddAddress/AddAddress";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ProductDetails } from "./Pages/ProductDetails/ProductDetails";
+import { Cart } from "./Pages/Cart/Cart";
 
 const queryClient = new QueryClient()
 
@@ -27,7 +28,7 @@ export function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/listagem-de-produtos/:categoria" element={<ListProducts />}></Route>
-          <Route path="/carrinho" element={<Carrinho />}></Route>
+          <Route path="/carrinho" element={<Cart />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
           <Route path="/changePassword" element={<ChangePassword />}></Route>

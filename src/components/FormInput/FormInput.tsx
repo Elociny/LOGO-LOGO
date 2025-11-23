@@ -16,7 +16,7 @@ interface FormInputProps {
 export function FormInput({ 
   type = 'text',
   placeholder = '',
-  value = '',
+  value,
   onChange,
   className = '',
   icon,
@@ -25,12 +25,6 @@ export function FormInput({
   theme = 'light'
 }: FormInputProps) {
   const [showPassword, setShowPassword] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    onChange?.(e);
-  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -47,22 +41,19 @@ export function FormInput({
           id={id}
           type={inputType}
           placeholder={placeholder}
-          value={inputValue}
-          onChange={handleChange}
+          value={value} 
+          onChange={onChange}
           className={styles.formInput}
-          /* Adicione padding condicional */
           style={{ 
             paddingRight: type === 'password' ? '3rem' : '2.5rem',
             paddingLeft: '1rem'
           }}
         />
         
-        {/* Ícone principal - só mostra se NÃO for password */}
         {icon && type !== 'password' && (
           <i className={`${icon} ${styles.icon}`}></i>
         )}
         
-        {/* Ícone de password - só mostra se FOR password */}
         {type === 'password' && (
           <button 
             type="button" 
