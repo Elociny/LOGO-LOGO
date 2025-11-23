@@ -39,6 +39,7 @@ export function Home() {
         {!isLoading &&
           data?.slice(0, 4).map(produto => (
             <Product
+              key={produto.id}
               data={produto}
             />
           ))}

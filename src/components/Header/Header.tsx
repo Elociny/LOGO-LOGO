@@ -56,9 +56,9 @@ export function Header() {
                         ) : (
                             <NavLink to="/login">
                                 <User 
-                                    nome="Entre ou" 
-                                    email="Cadastre-se" 
-                                    theme="light"
+                                    nome="Sejá bem vindo!" 
+                                    email="entre ou cadastre-se" 
+                                    theme="dark"
                                 />
                             </NavLink>
                         )}

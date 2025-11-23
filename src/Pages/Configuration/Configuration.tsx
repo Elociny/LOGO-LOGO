@@ -1,11 +1,11 @@
 import { Input } from "../../components/Input/Input"
 import { Layout } from "../../components/Layout/Layout"
-
 import style from "./Configuration.module.css"
-
 import FotoPerfil from "../../assets/images/foto-de-perfil.svg"
 import { Button } from "../../components/Button/Button"
 import { Address } from "../../components/Address/Address"
+import { useNavigate } from "react-router-dom" // 1. Import necessário
+import { useEffect, useState } from "react"
 
 type EnderecoData = {
     logradouro: string
@@ -18,10 +18,12 @@ type EnderecoData = {
 }
 
 export function Configuration() {
-    const nome = "Nicole Lins Coelho"
-    const telefone = "+55 (11) 9 7048-7095"
-    const email = "nicole.lcoelho@logologo.com"
+    const navigate = useNavigate();
 
+    const [nome, setNome] = useState("Usuário");
+    const [email, setEmail] = useState("email@exemplo.com");
+
+    const telefone = "+55 (11) 9 7048-7095"
     const enderecos: EnderecoData[] = [
         {
             logradouro: "Rua das Flores",
@@ -42,6 +44,23 @@ export function Configuration() {
             complemento: "Apartamento 94 torre E"
         },
     ]
+
+    useEffect(() => {
+        const usuarioSalvo = localStorage.getItem("usuario_logado");
+        if (usuarioSalvo) {
+            const dados = JSON.parse(usuarioSalvo);
+            setNome(dados.nome);
+            setEmail(dados.email);
+        } else {
+            navigate("/login");
+        }
+    }, [navigate]);
+
+    const handleLogout = () => {
+        localStorage.removeItem("usuario_logado");
+
+        navigate("/login");
+    };
 
     return (
         <Layout>
@@ -71,13 +90,12 @@ export function Configuration() {
 
                 <section className={`${style.enderecos}`}>
                     {enderecos.map((end, index) => (
-                        <div className={`row ${style.enderecoCompleto}`}>
+                        <div className={`row ${style.enderecoCompleto}`} key={index}>
                             <div className={`row ${style.group}`}>
                                 <button>
                                     <i className="bi bi-trash-fill"></i>
                                 </button>
                                 <Address
-                                    key={index}
                                     nome={nome}
                                     telefone={telefone}
                                     {...end}
@@ -90,6 +108,8 @@ export function Configuration() {
 
                     <Button border="quadrada" color="laranja" size="big" text="adicionar novo endereço" theme="light" navegation="adicionar-endereco" />
                 </section>
+
+                <Button border="arredondada" color="branco" size="big" text="sair da logologo" theme="light" onClick={handleLogout} />
             </div>
         </Layout>
     )
