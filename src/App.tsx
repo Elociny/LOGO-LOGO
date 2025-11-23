@@ -15,6 +15,7 @@ import { Tracking } from "./Pages/Tracking/Tracking";
 import { Configuration } from "./Pages/Configuration/Configuration";
 import { AddAddress } from "./Pages/AddAddress/AddAddress";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ProductDetails } from "./Pages/ProductDetails/ProductDetails";
 
 const queryClient = new QueryClient()
 
@@ -36,6 +37,7 @@ export function App() {
           <Route path="/rastreio" element={<Tracking />}></Route>
           <Route path="/configuracoes" element={<Configuration />}></Route>
           <Route path="/configuracoes/adicionar-endereco" element={<AddAddress />}></Route>
+          <Route path="/detalhes-do-produto" element={<ProductDetails />}></Route>
 
           <Route path="/*" element={<NotFound />}></Route>
         </Routes>

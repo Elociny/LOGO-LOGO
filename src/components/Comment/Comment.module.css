@@ -1,0 +1,48 @@
+.comentario {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.perfil {
+    gap: .5rem;
+    align-items: center;
+
+    text-transform: capitalize;
+
+    img {
+        width: 2rem;
+        border-radius: 50%;
+    }
+}
+
+.avaliacao {
+    display: flex;
+    gap: 1rem;
+}
+
+.avaliacao .stars {
+    color: var(--amarelo);
+
+    gap: .5rem;
+}
+
+.avaliacao p,
+.avaliacao span {
+    font-family: "Abhaya Libre", serif;
+}
+
+.avaliacao span {
+    color: var(--lilas);
+    text-decoration: none;
+
+    &:hover {
+        color: var(--lilas);
+    }
+}
+
+.comment {
+    p {
+        color: var(--cinza-claro);
+    }
+}

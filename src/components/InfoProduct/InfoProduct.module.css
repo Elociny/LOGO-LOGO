@@ -1,0 +1,147 @@
+.info_product {
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.right {
+    width: 40%;
+}
+
+.imagem_produto {
+    width: 100%;
+    border-radius: 1rem;;
+}
+
+.detalhes {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    width: 60%;
+}
+
+.avaliacao {
+    display: flex;
+    gap: 1rem;
+}
+
+.avaliacao .stars {
+    color: var(--amarelo);
+
+    gap: .5rem;
+}
+
+.avaliacao p,
+.avaliacao span {
+    font-family: "Abhaya Libre", serif;
+}
+
+.avaliacao span {
+    color: var(--lilas);
+    text-decoration: none;
+
+    &:hover {
+        color: var(--lilas);
+    }
+}
+
+.preco {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.linhaPreco {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.precoAtual {
+    font-family: "Abhaya Libre", serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--cinza);
+}
+
+.precoAntigo {
+    font-family: "Abhaya Libre", serif;
+    font-size: 1.1rem;
+    text-decoration: line-through;
+    color: var(--lilas);
+}
+
+.desconto {
+    background-color: rgba(255, 0, 0, 0.2);
+    padding: 4px 8px;
+    border-radius: 10rem;
+    color: var(--vermelho);
+    font-family: "Abhaya Libre", serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.precoSemDesconto {
+    font-family: "Abhaya Libre", serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--cinza);
+    text-align: center;
+    width: 100%;
+}
+
+.tamanho {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    .tamanhos {
+        gap: .5rem;
+
+        .size {
+            border: 2px solid var(--cinza-claro);
+            border-radius: 50px;
+
+            text-transform: uppercase;
+            font-weight: 500;
+
+            padding: .2rem .5rem;
+
+            transition: .5s;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.cores {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    .colors {
+        gap: .5rem;
+
+        .circle_color {
+            background-color: red;
+            width: 2.5rem;
+            height: 2.5rem;
+
+            border: 2px solid var(--cinza-claro);
+            border-radius: 100%;
+        }
+    }
+}
+
+.compra {
+    gap: .5rem;
+}
+
+.id {
+    color: var(--cinza-claro);
+    text-transform: uppercase;
+}
