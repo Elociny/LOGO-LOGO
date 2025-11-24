@@ -1,20 +1,40 @@
+import { useNavigate } from "react-router"; // 1. Importei o useNavigate
 import { Button } from "../Button/Button";
 import style from "./Product.module.css";
 
 interface ProductProps {
+    id: string | number; // 2. Adicionei o ID aqui pra parar o erro na Home
     image: string;
     name: string;
     price: number;
     discount?: number;
 }
 
-export function Product({ image, name, price, discount }: ProductProps) {
+export function Product({ id, image, name, price, discount }: ProductProps) {
+    const navigate = useNavigate(); // 3. Hook para navegar
+
+    // 4. Função que leva para a página do produto
+    const handleCardClick = (e: React.MouseEvent) => {
+        // Isso impede que o clique no card aconteça se você clicar no botão "Comprar"
+        // (Assumindo que o botão comprar leva pro carrinho direto)
+        const target = e.target as HTMLElement;
+        if (target.closest('button') || target.tagName === 'BUTTON') {
+            return;
+        }
+        navigate(`/produto/${id}`);
+    };
+
     const calculateOldPrice = (currentPrice: number, discountPercent: number) => {
         return currentPrice / (1 - discountPercent / 100);
     };
 
     return (
-        <div className={style.product}>
+        // 5. Adicionei o onClick no card inteiro e cursor pointer
+        <div 
+            className={style.product} 
+            onClick={handleCardClick}
+            style={{ cursor: "pointer" }} 
+        >
             <img src={image} alt={name} />
             <h3>{name}</h3>
             
@@ -32,7 +52,6 @@ export function Product({ image, name, price, discount }: ProductProps) {
             <div className={style.preco}>
                 {discount ? (
                     <>
-                        
                         <div className={style.linhaPreco}>
                             <p className={style.precoAtual}>
                                 R$ {price.toFixed(2)}

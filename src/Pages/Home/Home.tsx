@@ -1,6 +1,8 @@
 import { Layout } from "../../components/Layout/Layout";
 import { Carousel } from "../../components/Carousel/Carousel";
 import { Category } from "../../components/Category/Category";
+import { Button } from "../../components/Button/Button";
+import { Product } from "../../components/Product/Product";
 
 import style from "./Home.module.css"
 
@@ -11,17 +13,13 @@ import Bear from "../../assets/images/icons/bear.svg"
 import Shoe from "../../assets/images/icons/shoe.svg"
 import Necklace from "../../assets/images/icons/necklace.svg"
 
-
 import Product1 from "../../assets/images/products/produto1.svg"
-
 import Product2 from "../../assets/images/products/produto2.svg"
 import Product3 from "../../assets/images/products/produto3.svg"
 import Product4 from "../../assets/images/products/produto4.svg"
 
 import Banner1 from "../../assets/images/banner1.svg"
 import Banner2 from "../../assets/images/banner2.svg"
-import { Button } from "../../components/Button/Button";
-import { Product } from "../../components/Product/Product";
 
 export function Home() {
     return (
@@ -44,10 +42,10 @@ export function Home() {
             <h2>Você pode gostar</h2>
 
             <div className={`row ${style.products}`}>
-                <Product image={Product1} name="vertical striped shirt" price={212} discount={20} />
-                <Product image={Product2} name="Camisa laranja courage" price={154} />
-                <Product image={Product3} name="short jeans azul" price={75} discount={50} />
-                <Product image={Product4} name="calça jeans preta" price={125.69} />
+                <Product id="1" image={Product1} name="vertical striped shirt" price={212} discount={20} />
+                <Product id="2" image={Product2} name="Camisa laranja courage" price={154} />
+                <Product id="3" image={Product3} name="short jeans azul" price={75} discount={50} />
+                <Product id="4" image={Product4} name="calça jeans preta" price={125.69} />
             </div>
 
             <div className={`${style.banner}`}>

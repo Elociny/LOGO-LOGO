@@ -1,11 +1,12 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import { Home } from "./Pages/Home/Home";
 import { Login } from "./Pages/Login/Login";
 import { NotFound } from "./Pages/NotFound/NotFound";
 import { Feminino }from './Pages/Feminino/Feminino';
-import Product from './Pages/Product/Product';
+import { Product } from './Pages/Product/Product';
+import { Checkout } from "./Pages/Checkout/Checkout";
 import { Register } from "./Pages/Register/Register";
 import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
 import { ChangePassword } from "./Pages/ChangePassword/ChangePassword";
@@ -23,6 +24,7 @@ export function App() {
         <Route path="/feminino" element={<Feminino />}></Route>
         <Route path="/produto/:id" element={<Product />}></Route>
         <Route path="/carrinho" element={<Carrinho />}></Route>
+        <Route path="/checkout" element={<Checkout />}></Route>
         <Route path= "/register" element={<Register />}></Route>
         <Route path= "/forgotPassword" element={<ForgotPassword />}></Route>
         <Route path= "/changePassword" element={<ChangePassword />}></Route>
