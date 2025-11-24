@@ -52,8 +52,3 @@
     cursor: pointer;
     transition: all 0.3s ease;
 }
-
-.input button:hover {
-    background-color: var(--laranja);
-    color: var(--branco);
-}

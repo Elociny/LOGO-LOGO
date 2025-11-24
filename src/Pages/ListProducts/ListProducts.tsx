@@ -1,31 +1,48 @@
 import { Product } from "../../components/Product/Product";
 import { Filters } from "../../components/Filters/Filters";
 import style from "./ListProducts.module.css";
-
 import { Layout } from "../../components/Layout/Layout";
 import { Categories } from "../../components/Categories/Categories";
 import { useQuery } from "@tanstack/react-query";
-import { listarProdutos } from "../../services/produtoService";
+
+import { listarProdutos, buscarProdutosPorNome } from "../../services/produtoService";
 import { Error } from "../../components/Error/Error";
 import { Spinner } from "../../components/Spinner/Spinner";
 
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router";
+
+import type { ProductAPI } from "../../types/ProductAPI";
 
 export function ListProducts() {
   const { categoria } = useParams<{ categoria: string }>();
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["produtos"],
-    queryFn: listarProdutos,
+  const [searchParams] = useSearchParams();
+  const termoBusca = searchParams.get("q");
+
+  const queryFn = termoBusca
+    ? () => buscarProdutosPorNome(termoBusca)
+    : listarProdutos;
+
+  const queryKey = termoBusca
+    ? ["produtos", "busca", termoBusca]
+    : ["produtos", "todos"];
+
+  const { data, isLoading, isError } = useQuery<ProductAPI[]>({
+    queryKey: queryKey,
+    queryFn: queryFn,
   });
 
   const categoriaSelecionada = categoria?.toUpperCase();
+  let produtosExibidos = data;
 
-  const produtosFiltrados =
-    categoriaSelecionada && categoriaSelecionada !== "NOVIDADES"
+  if (termoBusca) {
+    produtosExibidos = data;
+  } else {
+    produtosExibidos = categoriaSelecionada && categoriaSelecionada !== "NOVIDADES"
       ? data?.filter(p => p.categoria?.toUpperCase() === categoriaSelecionada)
       : data;
-      
+  }
+
   return (
     <Layout theme="light">
       <div className={style.container}>
@@ -38,14 +55,32 @@ export function ListProducts() {
           </aside>
 
           <section className={style.products}>
-            {isLoading && <Spinner />}
-            {isError && <Error />}
 
-            {!isLoading && !isError && produtosFiltrados?.length === 0 && <Error type="empty" />}
+            {termoBusca && !isLoading && (
+              <>
+                <h3 className="mb-4">Resultados para: "{termoBusca}"</h3>
+                <br />
+              </>
+            )}
+
+            {isLoading && <Spinner />}
+
+            {isError && (
+              <div className={`${style.sticky}`}>
+                <Error />
+              </div>
+            )}
+
+            {!isLoading && !isError && produtosExibidos?.length === 0 && (
+              <div className={`${style.sticky}`}>
+                <Error type="empty" />
+              </div>
+            )}
 
             <div className={style.grid}>
-              {!isLoading && produtosFiltrados?.map(produto => (
+              {!isLoading && produtosExibidos?.map(produto => (
                 <Product
+                  key={produto.id}
                   data={produto}
                 />
               ))}

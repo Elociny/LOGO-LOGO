@@ -6,7 +6,7 @@ import { Logo } from "../../components/Logo/Logo";
 import style from "./Register.module.css";
 import { FormInput } from "../../components/FormInput/FormInput";
 import { cadastrar } from "../../services/authService";
-import { AxiosError } from "axios"; // Importe o tipo de erro do Axios
+import { AxiosError } from "axios";
 
 export function Register() {
     const navigate = useNavigate();

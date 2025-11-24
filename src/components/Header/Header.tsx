@@ -1,5 +1,5 @@
 import { NavLink } from "react-router"
-import { Input } from "../SearchInput/SearchInput"
+import { SearchInput } from "../SearchInput/SearchInput"
 import { Logo } from "../Logo/Logo"
 import { Nav } from "../Nav/Nav"
 import User from "../User/User"
@@ -40,7 +40,7 @@ export function Header() {
         <header className={`px-100 row ${styles.cabecalho}`}>
             <Logo />
             
-            <Input />
+            <SearchInput />
 
             {!isMobile && (
                 <ul className={`row ${styles.navIcons}`}>

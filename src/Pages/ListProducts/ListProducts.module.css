@@ -23,6 +23,12 @@
   height: fit-content;
 }
 
+.sticky {
+  position: sticky;
+  top: 2rem;
+  z-index: 10;
+}
+
 .products {
   flex: 1;
   display: flex;

@@ -37,6 +37,7 @@ export function App() {
           <Route path="/configuracoes" element={<Configuration />}></Route>
           <Route path="/configuracoes/adicionar-endereco" element={<AddAddress />}></Route>
           <Route path="/detalhes-do-produto/:id" element={<ProductDetails />}></Route>
+          <Route path="/busca" element={<ListProducts />}></Route>
 
           <Route path="/*" element={<NotFound />}></Route>
         </Routes>

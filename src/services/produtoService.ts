@@ -11,3 +11,10 @@ export async function buscarProdutoPorId(id: number) {
 
   return response.data
 }
+
+export async function buscarProdutosPorNome(termo: string): Promise<ProductAPI[]> {
+  const response = await api.get('/produtos/buscar', {
+    params: { nome: termo } 
+  });
+  return response.data;
+}
