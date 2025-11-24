@@ -1,0 +1,458 @@
+.pageContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+}
+
+.main {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+
+.checkoutLayout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.leftColumn {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.rightColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .checkoutLayout {
+    flex-direction: column;
+  }
+}
+
+
+.sectionCard {
+  background: var(--branco, #fff);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1e1e1e;
+}
+
+.editButton {
+  background: transparent;
+  border: 1px solid #1e1e1e;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.editButton:hover {
+  background: #f0f0f0;
+}
+
+.addressText p {
+  margin: 0.2rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.addressName {
+  font-weight: bold;
+  color: #1e1e1e;
+}
+
+
+.productHeader {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 30px;
+  background-color: var(--laranja, #F28D44);
+  color: white;
+  padding: 0.8rem;
+  border-radius: 8px 8px 0 0;
+  font-weight: bold;
+  text-align: center;
+}
+
+.productRow {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 30px;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-top: none;
+  background: #fff;
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.productImg {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.productDetails h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.productDetails span {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.cellCenter {
+  text-align: center;
+  font-weight: 500;
+  color: #333;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #999;
+}
+
+.removeBtn:hover {
+  color: red;
+}
+
+
+.paymentToggle {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.paymentOption {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: white;
+  transition: 0.3s;
+}
+
+.activeMethod {
+  background-color: var(--laranja, #F28D44);
+}
+
+.inactiveMethod {
+  background-color: #1e1e1e;
+  opacity: 0.9;
+}
+.inactiveMethod:hover {
+  opacity: 1;
+}
+
+.cardForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.inputGroup input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.rowInputs {
+  display: flex;
+  gap: 1rem;
+}
+.rowInputs .inputGroup {
+  flex: 1;
+}
+
+.pixContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.qrCode {
+  width: 180px;
+  height: 180px;
+  background: #000;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.pixTimer {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.summaryTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.summaryDark {
+  background-color: #1e1e1e;
+  color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.summaryTotal {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #444;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: var(--laranja, #F28D44);
+}
+
+.checkoutButton {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border: none;
+  border-radius: 4px;
+  background-color: white;
+  color: #1e1e1e;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.checkoutButton:hover {
+  background-color: #f0f0f0;
+}
+
+.couponSection {
+  background-color: var(--laranja, #F28D44);
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: #1e1e1e;
+}
+
+.couponHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.couponInputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.couponInput {
+  padding: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #1e1e1e;
+  background: transparent;
+  font-weight: bold;
+}
+.couponInput::placeholder {
+  color: #1e1e1e;
+  opacity: 0.7;
+}
+
+.addCouponBtn {
+  background-color: #1e1e1e;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.modalIcon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  font-size: 1.5rem;
+}
+
+.iconInfo { color: #17a2b8; border: 2px solid #17a2b8; }
+.iconError { color: #dc3545; border: 2px solid #dc3545; background: #fff5f5;}
+.iconSuccess { color: #28a745; border: 2px solid #28a745; background: #f0fff4;}
+
+.modalTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #1e1e1e;
+}
+
+.modalText {
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btnCancel {
+  background: #1e1e1e;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  flex: 1;
+}
+
+.btnConfirm {
+  background: var(--laranja, #F28D44);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  flex: 1;
+}
+
+.btnClose {
+  background: #1e1e1e;
+  color: white;
+  border: none;
+  padding: 0.8rem 3rem;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.successPage {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: white;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.successIcon {
+  font-size: 4rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.backBtn {
+  background: var(--laranja, #F28D44);
+  color: white;
+  border: none;
+  padding: 1rem 3rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 2rem;
+}

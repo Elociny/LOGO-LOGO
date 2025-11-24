@@ -1,6 +1,7 @@
 import { Header } from "../../components/Header/Header";
 import { Footer } from "../../components/Footer/Footer";
 import style from "./Carrinho.module.css";
+import { useNavigate } from "react-router-dom";
 
 
 import ProductImg1 from "../../assets/images/products/produto1.svg";
@@ -11,12 +12,14 @@ import ProductImg5 from "../../assets/images/products/produto5.svg";
 import TrashIcon from "../../assets/images/icons/trash.svg"; 
 
 export function Carrinho() {
+
+  const navigate = useNavigate();
   
   const inStockItems = [
     {
       image: ProductImg1,
       name: "Blusa de ombro único assimétrica preta",
-      unitPrice: 75.0,
+      unitPrice: 150.0,
       totalPrice: 150.0,
       size: "P",
       color: "#000000",
@@ -24,7 +27,7 @@ export function Carrinho() {
     {
       image: ProductImg2,
       name: "Camiseta verde listrada",
-      unitPrice: 75.0,
+      unitPrice: 150.0,
       totalPrice: 150.0,
       size: "M",
       color: "#695751",
@@ -32,7 +35,7 @@ export function Carrinho() {
     {
       image: ProductImg3,
       name: "Camiseta laranja courage",
-      unitPrice: 75.0,
+      unitPrice: 150.0,
       totalPrice: 150.0,
       size: "M",
       color: "#D96E32",
@@ -43,7 +46,7 @@ export function Carrinho() {
     {
       image: ProductImg4,
       name: "Short jeans azul lavado",
-      unitPrice: 75.0,
+      unitPrice: 150.0,
       totalPrice: 150.0,
       size: "52",
       color: "#5975A5",
@@ -51,7 +54,7 @@ export function Carrinho() {
     {
       image: ProductImg5,
       name: "Calça jeans skin preta",
-      unitPrice: 75.0,
+      unitPrice: 150.0,
       totalPrice: 150.0,
       size: "48",
       color: "#1E1E1E",
@@ -150,7 +153,10 @@ export function Carrinho() {
               <span>Total:</span>
               <span>R$ 450,00</span>
             </div>
-            <button className={style.checkoutButton}>COMPRAR</button>
+
+            <button className={style.checkoutButton}
+            onClick={() => navigate("/checkout")}>COMPRAR</button>
+            
           </div>
         </div>
       </main>
