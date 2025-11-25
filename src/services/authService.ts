@@ -42,3 +42,12 @@ export async function cadastrar(dados: CadastroDTO): Promise<UserLogged> {
     return response.data
     
 }
+
+export async function alterarSenha(email: string, novaSenha: string): Promise<string> {
+    const response = await api.put("/clientes/alterar-senha", {
+        email: email,
+        novaSenha: novaSenha
+    })
+
+    return response.data
+}

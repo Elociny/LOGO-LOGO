@@ -80,7 +80,7 @@ export function Configuration() {
                         <Input id="email" label="Email" placeholder="Seu endereço de email" type="text" value={email} enable={false} />
 
                         <div className={`row ${style.inputs}`}>
-                            <Input id="nome" label="Senha" placeholder="Seu nome completo" type="password" value="********" enable={true} />
+                            <Input id="nome" label="Senha" placeholder="Sua senha" type="password" value="********" enable={false} />
                             <Button border="arredondada" color="laranja" size="small" text="alterar senha" theme="light" navegation="/changePassword" />
                         </div>
                     </div>
