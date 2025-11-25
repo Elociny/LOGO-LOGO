@@ -12,8 +12,8 @@
 }
 
 .small {
-  padding: 0.6rem 0;
-  min-width: 9rem;
+  padding: 0.6rem;
+  min-width: 10rem;
   height: fit-content;
 
   font-size: 1rem;

@@ -7,7 +7,7 @@ interface ErrorProps {
 
 export function Error({ type = "error" }: ErrorProps) {
   const message = type === "empty"
-    ? "Nenhum produto encontrado."
+    ? "Nada para mostrar por aqui"
     : "Pode ser um problema temporário. Atualize a página ou tente novamente mais tarde.";
 
   const title = type === "empty"
