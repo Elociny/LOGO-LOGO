@@ -4,6 +4,13 @@
     padding: .75rem;
 }
 
+.cartImage {
+    width: 14rem;
+    aspect-ratio: 1 / 1;
+    border-radius: .75rem;
+    object-fit: cover;
+}
+
 .cartProduct input {
     width: 1.8rem;
     height: 1.8rem;

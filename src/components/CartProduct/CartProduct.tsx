@@ -46,7 +46,7 @@ export function CartProduct({ produto,
                 onChange={handleCheckboxChange} 
             />
             <label htmlFor={`product-${produto.id}`} className={`row ${style.label}`}>
-                <img src={produto.image} alt={`Imagem do produto ${produto.name}`} />
+                <img src={produto.image} alt={`Imagem do produto ${produto.name}`} className={`${style.cartImage}`} />
 
                 <div className={`${style.infos}`}>
                     <h3>{produto.name}</h3>

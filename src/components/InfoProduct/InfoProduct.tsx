@@ -1,23 +1,72 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import type { ProductAPI } from "../../types/ProductAPI";
 import { Button } from "../Button/Button";
 import { Counter } from "../Counter/Counter";
-import style from "./InfoProduct.module.css"
+import { adicionarAoCarrinho } from "../../services/carrinhoService";
+
+import style from "./InfoProduct.module.css";
 
 interface InfoProductProps {
     produto: ProductAPI
 }
 
 export function InfoProduct({ produto }: InfoProductProps) {
+    const navigate = useNavigate();
+
+    const [quantidade, setQuantidade] = useState(1);
+    const [loading, setLoading] = useState(false);
+
     const calculateOldPrice = (currentPrice: number, discountPercent: number) => {
         return currentPrice / (1 - discountPercent / 100);
     };
 
     const safePrice = Number(produto.preco ?? 0);
+
+    async function handleAdicionar(redirecionarImediatamente: boolean) {
+        const usuarioSalvo = localStorage.getItem("usuario_logado");
+        
+        if (!usuarioSalvo) {
+            const desejaLogar = window.confirm("Você precisa estar logado para comprar. Deseja fazer login agora?");
+            if (desejaLogar) {
+                navigate("/login");
+            }
+            return;
+        }
+
+        const usuario = JSON.parse(usuarioSalvo);
+
+        try {
+            setLoading(true);
+
+            await adicionarAoCarrinho(usuario.id, produto.id, quantidade);
+
+            if (redirecionarImediatamente) {
+                navigate("/carrinho");
+            } else {
+                const irParaCarrinho = window.confirm("Produto adicionado ao carrinho! Deseja finalizar a compra agora?");
+                if (irParaCarrinho) {
+                    navigate("/carrinho");
+                }
+            }
+
+        } catch (error) {
+            console.error("Erro ao adicionar ao carrinho:", error);
+            alert("Não foi possível adicionar o produto. Tente novamente.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <div className={`row ${style.info_product}`}>
             <div className={`${style.right}`}>
-                <img src={produto.imageUrl} className={`${style.imagem_produto}`} alt={`Imagem do produto ${produto.nome}`}/>
+                <img 
+                    src={produto.imageUrl} 
+                    className={`${style.imagem_produto}`} 
+                    alt={`Imagem do produto ${produto.nome}`}
+                />
             </div>
 
             <div className={`${style.detalhes}`}>
@@ -62,7 +111,6 @@ export function InfoProduct({ produto }: InfoProductProps) {
 
                 <div className={`${style.tamanho}`}>
                     <h3>Tamanhos</h3>
-
                     <div className={`row ${style.tamanhos}`}>
                         <p className={`${style.size}`}>{produto.tamanho}</p>
                     </div>
@@ -74,15 +122,35 @@ export function InfoProduct({ produto }: InfoProductProps) {
                         <div
                             className={style.circle_color}
                             style={{ backgroundColor: produto.cor }}
+                            title={produto.cor}
                         ></div>
                     </div>
                 </div>
 
                 <div className={`row ${style.compra}`}>
-                    <Counter />
-                    <Button border="arredondada" color="cinza" size="big" text="adicionar ao carrinho" theme="light" />
+                    <Counter 
+                        inicio={1}
+                        maximo={produto.quantidade} 
+                        onChange={(novaQtd) => setQuantidade(novaQtd)} 
+                    />
 
-                    <Button border="arredondada" color="laranja" size="big" text="comprar" theme="light" />
+                    <Button 
+                        border="arredondada" 
+                        color="cinza" 
+                        size="big" 
+                        text={loading ? "Adicionando..." : "adicionar ao carrinho"} 
+                        theme="light"
+                        onClick={() => handleAdicionar(false)}
+                    />
+
+                    <Button 
+                        border="arredondada" 
+                        color="laranja" 
+                        size="big" 
+                        text="comprar" 
+                        theme="light" 
+                        onClick={() => handleAdicionar(true)}
+                    />
                 </div>
 
                 <hr />

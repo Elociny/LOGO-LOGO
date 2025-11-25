@@ -1,84 +1,149 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router"; // ou react-router-dom
 import { CartProduct } from "../../components/CartProduct/CartProduct";
 import { Layout } from "../../components/Layout/Layout";
 import { ResumeOrder } from "../../components/ResumeOrder/ResumeOrder";
-
-import ProductImg1 from "../../assets/images/products/produto1.svg";
-import ProductImg2 from "../../assets/images/products/produto2.svg";
-import ProductImg3 from "../../assets/images/products/produto3.svg";
-import EmptyCartImg from "../../assets/images/empty-cart.svg";
-
-import style from "./Cart.module.css"
-import type { Product } from "../../types/Product";
-import { useState } from "react";
 import { Button } from "../../components/Button/Button";
+import { Spinner } from "../../components/Spinner/Spinner";
+import EmptyCartImg from "../../assets/images/empty-cart.svg";
+import style from "./Cart.module.css";
+import type { Product } from "../../types/Product";
 
-const produtosIniciais: Product[] = [
-    {
-        id: 1,
-        name: "Blusa de ombro único assimétrica preta",
-        image: ProductImg1,
-        color: "black",
-        size: "M",
-        unitPrice: 79.0,
-        inStock: true,
-        quantity: 1
-    },
-    {
-        id: 2,
-        name: "Camiseta laranja Courage",
-        image: ProductImg2,
-        color: "orange",
-        size: "M",
-        unitPrice: 69.99,
-        inStock: true,
-        quantity: 1
-    },
-    {
-        id: 3,
-        name: "Shorts jeans azul",
-        image: ProductImg3,
-        color: "blue",
-        size: "M",
-        unitPrice: 55.0,
-        inStock: false,
-        quantity: 1
-    }
-]
+import {
+    listarCarrinho,
+    removerItem,
+    atualizarQuantidade,
+    limparCarrinhoCompleto,
+    type CarrinhoItemDTO
+} from "../../services/carrinhoService";
+
+interface ProductInCart extends Product {
+    cartItemId: number;
+}
 
 export function Cart() {
-    const [produtosSelecionados, setProdutosSelecionados] = useState<Product[]>(produtosIniciais.filter(p => p.inStock))
+    const navigate = useNavigate();
 
-    const [produtos, setProdutos] = useState<Product[]>(produtosIniciais);
+    const [produtos, setProdutos] = useState<ProductInCart[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [clienteId, setClienteId] = useState<number | null>(null);
 
-    const handleToggleProduto = (produto: Product, selecionado: boolean) => {
-        if (selecionado) {
-            setProdutosSelecionados(prev => [...prev, produto])
+    const [selecionadosIds, setSelecionadosIds] = useState<number[]>([]);
+
+    useEffect(() => {
+        const usuarioSalvo = localStorage.getItem("usuario_logado");
+        if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+            setClienteId(usuario.id);
+            carregarCarrinho(usuario.id);
         } else {
-            setProdutosSelecionados(prev => prev.filter(p => p.id !== produto.id))
+            navigate("/login");
+        }
+    }, [navigate]);
+
+    async function carregarCarrinho(id: number) {
+        try {
+            setLoading(true);
+            const dados = await listarCarrinho(id);
+
+            const produtosFormatados = dados.itens.map(item => converterParaProduct(item));
+
+            setProdutos(produtosFormatados);
+
+            setSelecionadosIds(produtosFormatados.map(p => p.id));
+        } catch (error) {
+            console.error("Erro ao carregar carrinho", error);
+        } finally {
+            setLoading(false);
         }
     }
 
-    const handleChangeQuantity = (produto: Product, novaQuantidade: number) => {
-        setProdutosSelecionados(prev =>
-            prev.map(p =>
-                p.id === produto.id ? { ...p, quantity: novaQuantidade } : p
-            )
-        )
+    const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
+        return {
+            id: item.produtoId,
+            name: item.nomeProduto,
+            image: item.imageUrl || "",
+            color: item.cor,
+            size: item.tamanho,
+            unitPrice: item.preco,
+            inStock: true,
+            quantity: item.quantidade,
+            cartItemId: item.id
+        };
+    };
+
+    const handleToggleProduto = (produto: Product, selecionado: boolean) => {
+        if (selecionado) {
+            setSelecionadosIds(prev => [...prev, produto.id]);
+        } else {
+            setSelecionadosIds(prev => prev.filter(id => id !== produto.id));
+        }
+    };
+
+    const handleRemoverProduto = async (produto: Product) => {
+        if (!clienteId) return;
+
+        const itemParaRemover = produto as ProductInCart;
+
+        try {
+            await removerItem(clienteId, itemParaRemover.cartItemId);
+
+            setProdutos(prev => prev.filter(p => p.id !== produto.id));
+            setSelecionadosIds(prev => prev.filter(id => id !== produto.id));
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao remover produto.");
+        }
+    };
+
+    const handleChangeQuantity = async (produto: Product, novaQuantidade: number) => {
+        if (!clienteId || novaQuantidade < 1) return;
+
+        const itemParaAtualizar = produto as ProductInCart;
+
+        try {
+            await atualizarQuantidade(clienteId, itemParaAtualizar.cartItemId, novaQuantidade);
+
+            setProdutos(prev =>
+                prev.map(p =>
+                    p.id === produto.id ? { ...p, quantity: novaQuantidade } : p
+                )
+            );
+        } catch (error) {
+            console.error("Erro ao atualizar quantidade", error);
+        }
+    };
+
+    const produtosParaResumo = produtos.filter(p => selecionadosIds.includes(p.id));
+
+    if (loading) {
+        return (
+            <Layout theme="light">
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>
+                    <Spinner />
+                </div>
+            </Layout>
+        );
     }
 
-    const handleLimparCarrinho = () => {
-        setProdutos([])
-        setProdutosSelecionados([])
-    }
+    const handleLimparCarrinho = async () => {
+        if (!clienteId) return;
 
-    const handleRemoverProduto = (produto: Product) => {
-        setProdutosSelecionados(prev => prev.filter(p => p.id !== produto.id))
-    }
+        const confirmacao = window.confirm("Tem certeza que deseja remover todos os itens do carrinho?");
 
-    const temItens = produtosSelecionados.length > 0
+        if (confirmacao) {
+            try {
+                await limparCarrinhoCompleto(clienteId);
 
-    const produtosEmEstoque = produtosIniciais.filter((p) => p.inStock)
-    const produtosSemEstoque = produtosIniciais.filter((p) => !p.inStock)
+                setProdutos([]);
+                setSelecionadosIds([]);
+
+            } catch (error) {
+                console.error("Erro ao limpar carrinho", error);
+                alert("Erro ao limpar o carrinho. Tente novamente.");
+            }
+        }
+    };
 
     return (
         <Layout theme="light">
@@ -90,49 +155,36 @@ export function Cart() {
                         <div className={`row ${style.emptyCart}`}>
                             <h2>Seu carrinho está vazio.</h2>
                             <img src={EmptyCartImg} alt="Carrinho vazio" />
-                            <Button border="quadrada" color="laranja" navegation="/" size="big" text="voltar" theme="light" />
+                            <Button border="quadrada" color="laranja" navegation="/" size="big" text="voltar às compras" theme="light" />
                         </div>
                     ) : (
                         <>
-                            {produtosEmEstoque.map((produto) => (
+                            {produtos.map((produto) => (
                                 <CartProduct
-                                    key={`${produto.id}-${produto.name}`}
+                                    key={`${produto.id}-${produto.size}`}
                                     produto={produto}
                                     onToggle={handleToggleProduto}
-                                    selecionado={produtosSelecionados.some(
-                                        (p) => p.id === produto.id
-                                    )}
+                                    selecionado={selecionadosIds.includes(produto.id)}
                                     onQuantityChange={handleChangeQuantity}
                                     onRemove={handleRemoverProduto}
-                                />
-                            ))}
-
-                            <hr />
-
-                            {produtosSemEstoque.map((produto) => (
-                                <CartProduct
-                                    key={`${produto.id}-${produto.name}`}
-                                    produto={produto}
-                                    onToggle={handleToggleProduto}
-                                    selecionado={false}
                                 />
                             ))}
                         </>
                     )}
 
                     {produtos.length > 0 && (
-                        <>
-                            <button
-                                className={style.clearButton}
-                                onClick={handleLimparCarrinho}
-                            >
-                                Limpar carrinho
-                            </button>
-                        </>
+                        <Button
+                            border="quadrada"
+                            color="cinza"
+                            size="big"
+                            text="limpar carinho"
+                            theme="light"
+                            onClick={handleLimparCarrinho}
+                        />
                     )}
                 </div>
                 <div className={`${style.right}`}>
-                    <ResumeOrder produtos={produtosSelecionados} ativo={temItens} />
+                    <ResumeOrder produtos={produtosParaResumo} ativo={produtosParaResumo.length > 0} />
                 </div>
             </div>
         </Layout>

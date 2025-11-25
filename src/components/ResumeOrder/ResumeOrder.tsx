@@ -34,7 +34,7 @@ export function ResumeOrder({ produtos, ativo }: ResumeOrderProps) {
         </p>
       </div>
 
-      <hr />
+      <hr className={`${style.line}`} />
 
       <div className={`row ${style.gap} ${style.total}`}>
         <h3>Total</h3>
