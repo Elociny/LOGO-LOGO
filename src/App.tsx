@@ -18,6 +18,7 @@ import { ProductDetails } from "./Pages/ProductDetails/ProductDetails";
 import { Cart } from "./Pages/Cart/Cart";
 import { PrivateRoute } from "./guards/PrivateRoute/PrivateRoute";
 import { Payment } from "./Pages/Payment/Payment";
+import { ScrollToTop } from "./utils/ScrollToTop";
 
 const queryClient = new QueryClient()
 
@@ -26,6 +27,7 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+      <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>

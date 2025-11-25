@@ -1,24 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios"; // 1. Importe isso para tipar o erro
 import { Address } from "../../components/Address/Address";
 import { Layout } from "../../components/Layout/Layout";
 import { ResumeOrder } from "../../components/ResumeOrder/ResumeOrder";
-import { Button } from "../../components/Button/Button"; 
 import style from "./Payment.module.css";
 
-import type { ProductAPI } from "../../types/ProductAPI"; 
+import type { ProductAPI } from "../../types/ProductAPI";
 import { listarEnderecos, type EnderecoDTO } from "../../services/enderecoService";
-import { 
-    listarCarrinho, 
-    removerItem, 
-    atualizarQuantidade, 
+import {
+    listarCarrinho,
+    removerItem,
+    atualizarQuantidade,
     type CarrinhoItemDTO,
     limparCarrinhoCompleto
 } from "../../services/carrinhoService";
 import { cadastrarCartao } from "../../services/cartaoService";
 
+import { salvarCompra } from "../../services/compraService";
+
 import { PayProduct } from "../../components/PayProduct/PayProduct";
 import { PayMethod, type DadosCartao } from "../../components/PayMethod/PayMethod";
+import { Button } from "../../components/Button/Button";
 
 interface ProductAPIInCart extends ProductAPI {
     cartItemId: number;
@@ -65,7 +68,7 @@ export function Payment() {
             ]);
 
             setEnderecos(listaEnderecos);
-            
+
             if (listaEnderecos.length > 0) {
                 setEnderecoSelecionadoId(listaEnderecos[0].id || null);
             }
@@ -84,14 +87,14 @@ export function Payment() {
         return {
             id: item.produtoId,
             nome: item.nomeProduto,
-            imageUrl: item.imageUrl || "", 
-            cor: item.cor,    
-            tamanho: item.tamanho, 
-            preco: item.preco,    
+            imageUrl: item.imageUrl || "",
+            cor: item.cor,
+            tamanho: item.tamanho,
+            preco: item.preco,
             quantidade: item.quantidade,
             cartItemId: item.id,
             categoria: "",
-            descricao: "", 
+            descricao: "",
             desconto: 0,
             precoComDesconto: item.preco
         };
@@ -103,12 +106,9 @@ export function Payment() {
 
     const handleRemoverProduto = async (produto: ProductAPI) => {
         if (!clienteId) return;
-
         const item = produto as ProductAPIInCart;
-
         try {
             await removerItem(clienteId, item.cartItemId);
-            
             setProdutos(prev => prev.filter(p => p.id !== produto.id));
         } catch (error) {
             console.error(error);
@@ -118,13 +118,12 @@ export function Payment() {
 
     const handleChangeQuantity = async (produto: ProductAPI, novaQuantidade: number) => {
         if (!clienteId || novaQuantidade < 1) return;
-
         const itemParaAtualizar = produto as ProductAPIInCart;
         const produtosAnteriores = [...produtos];
 
         setProdutos(prev =>
             prev.map(p =>
-                p.id === produto.id ? { ...p, quantidade: novaQuantidade } : p
+                p.id === produto.id ? { ...p, quantity: novaQuantidade } : p
             )
         );
 
@@ -140,7 +139,7 @@ export function Payment() {
         if (!clienteId) return;
 
         if (!enderecoSelecionadoId) {
-            alert("Por favor, selecione ou cadastre um endereço de entrega.");
+            alert("Por favor, selecione um endereço de entrega.");
             return;
         }
 
@@ -151,6 +150,7 @@ export function Payment() {
 
         try {
             setLoading(true);
+            let idCartaoParaCompra: number | null = null;
 
             if (metodoPagamento === "cartao") {
                 if (!dadosCartao.numero || !dadosCartao.titular || !dadosCartao.validadeMes || !dadosCartao.validadeAno || !dadosCartao.codigoSeguranca) {
@@ -159,28 +159,54 @@ export function Payment() {
                     return;
                 }
 
-                const validadeFormatada = `${dadosCartao.validadeMes}/${dadosCartao.validadeAno}`; 
+                const validadeFormatada = `${dadosCartao.validadeMes}/${dadosCartao.validadeAno}`;
                 const numeroLimpo = dadosCartao.numero.replace(/\s/g, "");
 
-                await cadastrarCartao({
+                const cartaoSalvo = await cadastrarCartao({
                     clienteId: clienteId,
                     numero: numeroLimpo,
                     nomeTitular: dadosCartao.titular,
                     validade: validadeFormatada,
                     cvv: dadosCartao.codigoSeguranca,
-                    tipo: "CREDITO", 
-                    bandeira: "MASTERCARD" 
+                    tipo: "CREDITO",
+                    bandeira: "MASTERCARD"
                 });
+
+                idCartaoParaCompra = cartaoSalvo.id;
             }
+
+            const listaIdsProdutos: number[] = [];
+            produtos.forEach(p => {
+                for (let i = 0; i < p.quantidade; i++) {
+                    listaIdsProdutos.push(p.id);
+                }
+            });
+
+            await salvarCompra({
+                clienteId: clienteId,
+                produtosIds: listaIdsProdutos,
+                formaPagamento: metodoPagamento === "cartao" ? "CARTAO" : "PIX",
+                cartaoId: idCartaoParaCompra
+            });
 
             await limparCarrinhoCompleto(clienteId);
 
             alert("Pedido realizado com sucesso! Obrigado pela compra.");
-            navigate("/"); 
+            navigate("/");
 
-        } catch (error) {
-            console.error(error);
-            alert("Erro ao processar o pedido. Verifique os dados.");
+        } catch (error) { 
+            const err = error as AxiosError; 
+            console.error("Erro detalhado:", err);
+
+            let mensagemErro = "Erro ao processar o pedido.";
+            
+            if (err.response && err.response.data) {
+                mensagemErro = typeof err.response.data === 'string'
+                    ? err.response.data
+                    : JSON.stringify(err.response.data);
+            }
+
+            alert(`Ops! ${mensagemErro}`);
         } finally {
             setLoading(false);
         }
@@ -213,14 +239,13 @@ export function Payment() {
                                         cep={end.cep}
                                         complemento={end.complemento}
                                     />
-                                    
                                     <label>
-                                        <input 
-                                            type="radio" 
-                                            name="enderecoSelecionado" 
+                                        <input
+                                            type="radio"
+                                            name="enderecoSelecionado"
                                             checked={enderecoSelecionadoId === end.id}
                                             onChange={() => setEnderecoSelecionadoId(end.id || null)}
-                                        /> 
+                                        />
                                         Entregar aqui
                                     </label>
                                 </div>
@@ -233,8 +258,8 @@ export function Payment() {
                     <div className={`${style.produto}`}>
                         <h3 className={`${style.titulo}`}>Resumo dos Itens</h3>
                         {produtos.map(produto => (
-                            <PayProduct 
-                                key={produto.id} 
+                            <PayProduct
+                                key={produto.id}
                                 produto={produto}
                                 onRemove={handleRemoverProduto}
                                 onQuantityChange={handleChangeQuantity}
@@ -246,7 +271,7 @@ export function Payment() {
 
                     <div className={`${style.metodoPagamento}`}>
                         <h2>Método de pagamento</h2>
-                        <PayMethod 
+                        <PayMethod
                             metodo={metodoPagamento}
                             onMetodoChange={setMetodoPagamento}
                             dadosCartao={dadosCartao}
@@ -257,17 +282,13 @@ export function Payment() {
                 </div>
 
                 <div className={`${style.left}`}>
-                    <ResumeOrder produtos={produtos} ativo={produtos.length > 0} />
-                     <div style={{marginTop: '20px'}}>
-                         <Button 
-                            border="arredondada" 
-                            color="laranja" 
-                            text={loading ? "PROCESSANDO..." : "FINALIZAR PEDIDO"} 
-                            theme="light" 
-                            size="big"
-                            onClick={handleFinalizarPedido} 
-                        />
-                    </div>
+                    <ResumeOrder
+                        produtos={produtos}
+                        ativo={produtos.length > 0}
+                        onClick={handleFinalizarPedido}
+                        textoBotao="FINALIZAR PEDIDO"
+                        loading={loading}
+                    />
                 </div>
             </div>
         </Layout>
