@@ -48,7 +48,15 @@ export function Register() {
 
             if (err.response && err.response.data) {
                 const dadosDoErro = err.response.data;
-                const msg = dadosDoErro.message || JSON.stringify(dadosDoErro);
+                let msg = "";
+
+                if (typeof dadosDoErro === "string") {
+                    msg = dadosDoErro;
+                } else if (typeof dadosDoErro === "object" && dadosDoErro.message) {
+                    msg = dadosDoErro.message;
+                } else {
+                    msg = JSON.stringify(dadosDoErro);
+                }
 
                 alert(`Erro no servidor: ${msg}`);
             } else {
@@ -56,6 +64,12 @@ export function Register() {
             }
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleCadastro();
         }
     };
 
@@ -71,7 +85,7 @@ export function Register() {
                     <Logo nome="logologo" />
                 </div>
 
-                <div className={`row ${style.inputs}`}>
+                <div className={`row ${style.inputs}`} onKeyDown={handleKeyDown}>
                     <FormInput
                         icon="bi bi-person"
                         id="nome"

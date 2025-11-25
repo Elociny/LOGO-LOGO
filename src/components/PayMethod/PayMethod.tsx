@@ -29,6 +29,37 @@ export function PayMethod({
     valorTotal 
 }: PayMethodProps) {
 
+    const handleNumeroChange = (valor: string | number) => {
+        const v = String(valor).replace(/\D/g, "");
+        
+        const mascarado = v.replace(/(\d{4})(?=\d)/g, "$1 "); 
+    
+        onDadosCartaoChange("numero", mascarado.slice(0, 19));
+    };
+
+    // 2. Máscara de CPF (000.000.000-00)
+    const handleCpfChange = (valor: string | number) => {
+        let v = String(valor).replace(/\D/g, "");
+        
+        if (v.length > 11) v = v.slice(0, 11); 
+
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+        v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+        onDadosCartaoChange("cpf", v);
+    };
+
+    const handleLimitado = (campo: keyof DadosCartao, valor: string | number, limite: number) => {
+        const v = String(valor).replace(/\D/g, "").slice(0, limite);
+        onDadosCartaoChange(campo, v);
+    };
+
+    const handleNomeChange = (valor: string | number) => {
+        const v = String(valor).replace(/[^a-zA-Z\s]/g, "").toUpperCase();
+        onDadosCartaoChange("titular", v);
+    }
+
     return (
         <div className={style.payMethod}>
 
@@ -68,7 +99,7 @@ export function PayMethod({
                         placeholder="Como está no cartão"
                         type="text"
                         value={dadosCartao.titular}
-                        onChange={(val) => onDadosCartaoChange("titular", String(val))}
+                        onChange={(val) => handleNomeChange(val)}
                     />
 
                     <Input
@@ -77,7 +108,7 @@ export function PayMethod({
                         placeholder="000.000.000-00"
                         type="text"
                         value={dadosCartao.cpf}
-                        onChange={(val) => onDadosCartaoChange("cpf", String(val))}
+                        onChange={(val) => handleCpfChange(val)}
                     />
 
                     <Input
@@ -86,7 +117,7 @@ export function PayMethod({
                         placeholder="0000 0000 0000 0000"
                         type="text"
                         value={dadosCartao.numero}
-                        onChange={(val) => onDadosCartaoChange("numero", String(val))}
+                        onChange={(val) => handleNumeroChange(val)}
                     />
 
                     <div className={`row ${style.dadosCartao}`}>
@@ -97,7 +128,7 @@ export function PayMethod({
                                 placeholder="123"
                                 type="text"
                                 value={dadosCartao.codigoSeguranca}
-                                onChange={(val) => onDadosCartaoChange("codigoSeguranca", String(val))}
+                                onChange={(val) => handleLimitado("codigoSeguranca", val, 4)}
                             />
                         </div>
 
@@ -105,19 +136,19 @@ export function PayMethod({
                             <Input
                                 id="validadeMes"
                                 label="Validade"
-                                placeholder="Mês"
-                                type="number"
+                                placeholder="MM"
+                                type="text"
                                 value={dadosCartao.validadeMes}
-                                onChange={(val) => onDadosCartaoChange("validadeMes", String(val))}
+                                onChange={(val) => handleLimitado("validadeMes", val, 2)}
                             />
 
                             <Input
                                 id="validadeAno"
                                 label=""
-                                placeholder="Ano"
-                                type="number"
+                                placeholder="AAAA"
+                                type="text"
                                 value={dadosCartao.validadeAno}
-                                onChange={(val) => onDadosCartaoChange("validadeAno", String(val))}
+                                onChange={(val) => handleLimitado("validadeAno", val, 4)}
                             />
                         </div>
                     </div>

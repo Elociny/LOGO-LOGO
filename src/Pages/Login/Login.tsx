@@ -32,12 +32,17 @@ export function Login() {
       navigate("/")
     } catch(error) {
       console.log(error)
-
       alert("Email ou senha incorretos")
     } finally {
       setLoading(false)
     }
   }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
 
   return (
     <div className={`row px-100 ${style.container}`}>
@@ -47,7 +52,7 @@ export function Login() {
           <Logo nome="logologo" />
         </div>
 
-        <div className={`row ${style.inputs}`}>
+        <div className={`row ${style.inputs}`} onKeyDown={handleKeyDown}>
           <FormInput
             icon="bi bi-envelope"
             id="email"

@@ -14,7 +14,6 @@ export function AddAddress() {
     const [clienteId, setClienteId] = useState<number | null>(null);
     const [enderecoId, setEnderecoId] = useState<number | null>(null);
 
-    // Estados do formulário
     const [cep, setCep] = useState("");
     const [estado, setEstado] = useState("");
     const [cidade, setCidade] = useState("");
@@ -50,6 +49,36 @@ export function AddAddress() {
             setComplemento(end.complemento || "");
         }
     }, [location, navigate]);
+
+    const handleCepChange = (valor: string | number) => {
+        let v = String(valor).replace(/\D/g, "");
+        if (v.length > 8) v = v.slice(0, 8);
+        
+        v = v.replace(/(\d{5})(\d)/, "$1-$2");
+        
+        setCep(v);
+    };
+
+    const handlePhoneChange = (valor: string | number) => {
+        let v = String(valor).replace(/\D/g, "");
+        if (v.length > 11) v = v.slice(0, 11);
+
+        v = v.replace(/^(\d{2})(\d)/g, "($1) $2"); 
+        v = v.replace(/(\d)(\d{4})$/, "$1-$2"); 
+
+        setTelefoneContato(v);
+    };
+
+    const handleEstadoChange = (valor: string | number) => {
+        let v = String(valor).replace(/[^a-zA-Z]/g, ""); 
+        if (v.length > 2) v = v.slice(0, 2);
+        setEstado(v.toUpperCase());
+    };
+
+    const handleNumeroChange = (valor: string | number) => {
+        const v = String(valor).replace(/\D/g, "");
+        setNumero(v);
+    };
 
     async function handleSalvar() {
         if (!clienteId) return;
@@ -97,18 +126,19 @@ export function AddAddress() {
                     <section className={`row ${style.inputs}`}>
                         <Input id="nome" label="Nome" type="text" placeholder="Digite seu nome completo"
                             value={nomeContato} enable={false} onChange={() => { }} />
-                        <Input id="telefone" label="Telefone" type="text" placeholder="Digite seu telefone"
-                            value={telefoneContato} enable={true} onChange={(val) => setTelefoneContato(String(val))} />
+                        
+                        <Input id="telefone" label="Telefone" type="text" placeholder="(XX) XXXXX-XXXX"
+                            value={telefoneContato} enable={true} onChange={(val) => handlePhoneChange(val)} />
                     </section>
 
                     <h3>Endereço</h3>
 
                     <section className={`row ${style.inputs}`}>
                         <Input id="cep" label="CEP" type="text" placeholder="00000-000" enable={true}
-                            value={cep} onChange={(val) => setCep(String(val))} />
+                            value={cep} onChange={(val) => handleCepChange(val)} />
 
                         <Input id="estado" label="Estado" type="text" placeholder="UF" enable={true}
-                            value={estado} onChange={(val) => setEstado(String(val))} />
+                            value={estado} onChange={(val) => handleEstadoChange(val)} />
 
                         <Input id="cidade" label="Cidade" type="text" placeholder="Sua cidade" enable={true}
                             value={cidade} onChange={(val) => setCidade(String(val))} />
@@ -119,8 +149,8 @@ export function AddAddress() {
                             value={logradouro} onChange={(val) => setLogradouro(String(val))} />
 
                         <div className={`${style.inputNumero}`}>
-                            <Input id="numero" label="Número" type="number" placeholder="Nº" enable={true}
-                                value={numero} onChange={(val) => setNumero(String(val))} />
+                            <Input id="numero" label="Número" type="text" placeholder="Nº" enable={true}
+                                value={numero} onChange={(val) => handleNumeroChange(val)} />
                         </div>
                     </section>
 
