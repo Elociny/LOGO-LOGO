@@ -6,9 +6,12 @@ import { Button } from "../../components/Button/Button"
 import { Address } from "../../components/Address/Address"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { Error } from "../../components/Error/Error"
 
 import { listarEnderecos, excluirEndereco, type EnderecoDTO } from "../../services/enderecoService"
-import { Error } from "../../components/Error/Error"
+
+import { CardInfo } from "../../components/CardInfo/CardInfo"
+import { listarCartoes, excluirCartao, type CartaoResponseDTO } from "../../services/cartaoService"
 
 export function Configuration() {
     const navigate = useNavigate();
@@ -16,8 +19,8 @@ export function Configuration() {
     const [nome, setNome] = useState("Usuário");
     const [email, setEmail] = useState("email@exemplo.com");
 
-
     const [enderecos, setEnderecos] = useState<EnderecoDTO[]>([]);
+    const [cartoes, setCartoes] = useState<CartaoResponseDTO[]>([]);
 
     const telefone = "+55 (11) 9 7048-7095"
 
@@ -27,7 +30,9 @@ export function Configuration() {
             const dados = JSON.parse(usuarioSalvo);
             setNome(dados.nome);
             setEmail(dados.email);
+
             carregarEnderecos(dados.id);
+            carregarCartoes(dados.id);
         } else {
             navigate("/login");
         }
@@ -42,6 +47,15 @@ export function Configuration() {
         }
     }
 
+    async function carregarCartoes(id: number) {
+        try {
+            const lista = await listarCartoes(id);
+            setCartoes(lista);
+        } catch (error) {
+            console.error("Erro ao buscar cartões", error);
+        }
+    }
+
     const handleLogout = () => {
         localStorage.removeItem("usuario_logado");
         navigate("/login");
@@ -51,11 +65,22 @@ export function Configuration() {
         if (window.confirm("Tem certeza que deseja excluir este endereço?")) {
             try {
                 if (!enderecoId) return;
-
                 await excluirEndereco(enderecoId);
                 setEnderecos(prev => prev.filter(end => end.id !== enderecoId));
             } catch {
                 alert("Erro ao excluir endereço.");
+            }
+        }
+    }
+
+    const handleExcluirCartao = async (cartaoId: number) => {
+        if (window.confirm("Tem certeza que deseja remover este cartão?")) {
+            try {
+                if (!cartaoId) return;
+                await excluirCartao(cartaoId);
+                setCartoes(prev => prev.filter(c => c.id !== cartaoId));
+            } catch {
+                alert("Erro ao excluir cartão.");
             }
         }
     }
@@ -68,19 +93,15 @@ export function Configuration() {
         <Layout>
             <div className={`${style.configuration}`}>
                 <h2>Informações pessoais</h2>
-
                 <section className={`row ${style.secao}`}>
                     <img src={FotoPerfil} alt="Foto de perfil" className={`${style.fotoPerfil}`} />
-
                     <div className={`${style.perfil}`}>
                         <div className={`row ${style.inputs}`}>
                             <Input id="nome" label="Nome" placeholder="Seu nome completo" type="text" value={nome} enable={false} onChange={() => { }} />
                             <Input id="telefone" label="Telefone" placeholder="Seu número de telefone" type="text" value={telefone} enable={true} onChange={() => { }} />
                             <Button border="arredondada" color="cinza" size="small" text="alterar dados" theme="light" />
                         </div>
-
                         <Input id="email" label="Email" placeholder="Seu endereço de email" type="text" value={email} enable={false} onChange={() => { }} />
-
                         <div className={`row ${style.inputs}`}>
                             <Input id="senha_fake" label="Senha" placeholder="Sua senha" type="password" value="********" enable={false} onChange={() => { }} />
                             <Button border="arredondada" color="laranja" size="small" text="alterar senha" theme="light" navegation="/mudar-senha" />
@@ -89,10 +110,8 @@ export function Configuration() {
                 </section>
 
                 <h2>Endereços salvos </h2>
-
                 <section className={`${style.enderecos}`}>
                     {enderecos.length === 0 && <Error type="empty" />}
-
                     {enderecos.map((end) => (
                         <div className={`row ${style.enderecoCompleto}`} key={end.id}>
                             <div className={`row ${style.group}`}>
@@ -111,29 +130,49 @@ export function Configuration() {
                                     complemento={end.complemento}
                                 />
                             </div>
+                            <div className={`row ${style.btns}`}>
+                                <Button border="arredondada" color="cinza" size="small" text="editar endereço" theme="light" onClick={() => handleEditar(end)} />
+                                <Button border="arredondada" color="transparente" size="small" text="apagar endereço" theme="light" onClick={() => handleExcluir(end.id!)} />
+                            </div>
+                        </div>
+                    ))}
+                    <Button border="quadrada" color="laranja" size="big" text="adicionar novo endereço" theme="light" navegation="/configuracoes/adicionar-endereco" />
+                </section>
+
+                <h2>Cartões salvos</h2>
+                <section className={`${style.enderecos}`}>
+                    {cartoes.length === 0 && (
+                        <Error type="empty" />
+                    )}
+
+                    {cartoes.map((card) => (
+                        <div className={`row ${style.enderecoCompleto}`} key={card.id}>
+                            <div className={`row ${style.group}`}>
+                                <button onClick={() => handleExcluirCartao(card.id)}>
+                                    <i className="bi bi-trash-fill"></i>
+                                </button>
+
+                                <CardInfo
+                                    bandeira={card.bandeira}
+                                    tipo={card.tipo}
+                                    numeroMascarado={card.numeroMascarado}
+                                    nomeTitular={card.nomeTitular}
+                                    validade={card.validade}
+                                />
+                            </div>
 
                             <div className={`row ${style.btns}`}>
                                 <Button
                                     border="arredondada"
-                                    color="cinza"
-                                    size="small"
-                                    text="editar endereço"
-                                    theme="light"
-                                    onClick={() => handleEditar(end)}
-                                />
-                                <Button
-                                    border="arredondada"
                                     color="transparente"
                                     size="small"
-                                    text="apagar endereço"
+                                    text="remover cartão"
                                     theme="light"
-                                    onClick={() => handleExcluir(end.id!)}
+                                    onClick={() => handleExcluirCartao(card.id)}
                                 />
                             </div>
                         </div>
                     ))}
-
-                    <Button border="quadrada" color="laranja" size="big" text="adicionar novo endereço" theme="light" navegation="/configuracoes/adicionar-endereco" />
                 </section>
 
                 <Button border="arredondada" color="branco" size="big" text="sair da logologo" theme="light" onClick={handleLogout} />

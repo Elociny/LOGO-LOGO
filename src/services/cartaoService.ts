@@ -32,3 +32,7 @@ export async function listarCartoes(clienteId: number): Promise<CartaoResponseDT
     const response = await api.get(`/cartoes/cliente/${clienteId}`);
     return response.data;
 }
+
+export async function excluirCartao(id: number): Promise<void> {
+    await api.delete(`/cartoes/${id}`);
+}

@@ -1,0 +1,22 @@
+.cardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    color: #333;
+    font-size: 1rem;
+}
+
+.numero {
+    font-family: monospace;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
