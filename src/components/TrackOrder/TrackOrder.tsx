@@ -12,7 +12,6 @@ type TrackItensData = {
     unitPrice: number
 }
 
-
 interface TrackOrderProps {
     trackingCode: string
     status: string

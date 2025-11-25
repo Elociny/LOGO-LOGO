@@ -20,6 +20,8 @@
     border-radius: .5rem;
 
     width: 9rem;
+    aspect-ratio: 1 / 1; 
+    object-fit: cover;
 }
 
 .infoProduct strong {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios"; // 1. Importe isso para tipar o erro
+import { AxiosError } from "axios";
 import { Address } from "../../components/Address/Address";
 import { Layout } from "../../components/Layout/Layout";
 import { ResumeOrder } from "../../components/ResumeOrder/ResumeOrder";
@@ -22,6 +22,7 @@ import { salvarCompra } from "../../services/compraService";
 import { PayProduct } from "../../components/PayProduct/PayProduct";
 import { PayMethod, type DadosCartao } from "../../components/PayMethod/PayMethod";
 import { Button } from "../../components/Button/Button";
+import { Spinner } from "../../components/Spinner/Spinner";
 
 interface ProductAPIInCart extends ProductAPI {
     cartItemId: number;
@@ -106,10 +107,13 @@ export function Payment() {
 
     const handleRemoverProduto = async (produto: ProductAPI) => {
         if (!clienteId) return;
+        
         const item = produto as ProductAPIInCart;
+        
         try {
             await removerItem(clienteId, item.cartItemId);
-            setProdutos(prev => prev.filter(p => p.id !== produto.id));
+            
+            setProdutos(prev => prev.filter(p => p.cartItemId !== item.cartItemId));
         } catch (error) {
             console.error(error);
             alert("Erro ao remover produto.");
@@ -118,12 +122,15 @@ export function Payment() {
 
     const handleChangeQuantity = async (produto: ProductAPI, novaQuantidade: number) => {
         if (!clienteId || novaQuantidade < 1) return;
+
         const itemParaAtualizar = produto as ProductAPIInCart;
         const produtosAnteriores = [...produtos];
 
         setProdutos(prev =>
             prev.map(p =>
-                p.id === produto.id ? { ...p, quantity: novaQuantidade } : p
+                p.cartItemId === itemParaAtualizar.cartItemId
+                    ? { ...p, quantidade: novaQuantidade }
+                    : p
             )
         );
 
@@ -182,7 +189,7 @@ export function Payment() {
                 }
             });
 
-            await salvarCompra({
+            const compraRealizada = await salvarCompra({
                 clienteId: clienteId,
                 produtosIds: listaIdsProdutos,
                 formaPagamento: metodoPagamento === "cartao" ? "CARTAO" : "PIX",
@@ -191,15 +198,14 @@ export function Payment() {
 
             await limparCarrinhoCompleto(clienteId);
 
-            alert("Pedido realizado com sucesso! Obrigado pela compra.");
-            navigate("/");
+            navigate(`/pagamento-concluido/${compraRealizada.id}`);
 
-        } catch (error) { 
-            const err = error as AxiosError; 
+        } catch (error) {
+            const err = error as AxiosError;
             console.error("Erro detalhado:", err);
 
             let mensagemErro = "Erro ao processar o pedido.";
-            
+
             if (err.response && err.response.data) {
                 mensagemErro = typeof err.response.data === 'string'
                     ? err.response.data
@@ -212,8 +218,16 @@ export function Payment() {
         }
     };
 
-    if (loading) return <Layout>Carregando...</Layout>;
-
+    if (loading) {
+        return (
+            <Layout>
+                <div>
+                    <Spinner />
+                </div>
+            </Layout>
+        )
+    }
+    
     return (
         <Layout>
             <div className={`row ${style.payment}`}>
@@ -259,7 +273,7 @@ export function Payment() {
                         <h3 className={`${style.titulo}`}>Resumo dos Itens</h3>
                         {produtos.map(produto => (
                             <PayProduct
-                                key={produto.id}
+                                key={produto.cartItemId}
                                 produto={produto}
                                 onRemove={handleRemoverProduto}
                                 onQuantityChange={handleChangeQuantity}
