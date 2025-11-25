@@ -1,9 +1,17 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .light {
+    flex: 1;
     background-color: var(--branco);
     color: var(--cinza);    
 }
 
 .dark {
+    flex: 1;
     background-color: var(--cinza);
 
     color: var(--branco);

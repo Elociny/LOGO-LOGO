@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router"; // ou react-router-dom
 import { CartProduct } from "../../components/CartProduct/CartProduct";
 import { Layout } from "../../components/Layout/Layout";
@@ -21,6 +21,20 @@ interface ProductInCart extends Product {
     cartItemId: number;
 }
 
+const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
+    return {
+        id: item.produtoId,
+        name: item.nomeProduto,
+        image: item.imageUrl || "",
+        color: item.cor,
+        size: item.tamanho,
+        unitPrice: item.preco,
+        inStock: true,
+        quantity: item.quantidade,
+        cartItemId: item.id
+    };
+};
+
 export function Cart() {
     const navigate = useNavigate();
 
@@ -30,18 +44,7 @@ export function Cart() {
 
     const [selecionadosIds, setSelecionadosIds] = useState<number[]>([]);
 
-    useEffect(() => {
-        const usuarioSalvo = localStorage.getItem("usuario_logado");
-        if (usuarioSalvo) {
-            const usuario = JSON.parse(usuarioSalvo);
-            setClienteId(usuario.id);
-            carregarCarrinho(usuario.id);
-        } else {
-            navigate("/login");
-        }
-    }, [navigate]);
-
-    async function carregarCarrinho(id: number) {
+    const carregarCarrinho = useCallback(async (id: number) => {
         try {
             setLoading(true);
             const dados = await listarCarrinho(id);
@@ -56,21 +59,18 @@ export function Cart() {
         } finally {
             setLoading(false);
         }
-    }
+    }, []);
 
-    const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
-        return {
-            id: item.produtoId,
-            name: item.nomeProduto,
-            image: item.imageUrl || "",
-            color: item.cor,
-            size: item.tamanho,
-            unitPrice: item.preco,
-            inStock: true,
-            quantity: item.quantidade,
-            cartItemId: item.id
-        };
-    };
+    useEffect(() => {
+        const usuarioSalvo = localStorage.getItem("usuario_logado");
+        if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+            setClienteId(usuario.id);
+            carregarCarrinho(usuario.id);
+        } else {
+            navigate("/login");
+        }
+    }, [navigate, carregarCarrinho]);
 
     const handleToggleProduto = (produto: Product, selecionado: boolean) => {
         if (selecionado) {
@@ -119,7 +119,7 @@ export function Cart() {
     if (loading) {
         return (
             <Layout theme="light">
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>
+                <div className={`${style.spinner}`}>
                     <Spinner />
                 </div>
             </Layout>

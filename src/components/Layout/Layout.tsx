@@ -15,13 +15,13 @@ interface LayoutProps {
 
 export function Layout({ children, theme = "light", pageTitle }: LayoutProps) {
     return (
-        <>
+        <div className={`${style.container}`}>
             <Header />
             <main className={`px-100 children ${style[theme]}`}>
                 {pageTitle && <h1>{pageTitle}</h1>}
                 {children}
             </main>
             <Footer />
-        </>
+        </div>
     )
 }
