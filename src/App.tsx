@@ -16,6 +16,7 @@ import { AddAddress } from "./Pages/AddAddress/AddAddress";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ProductDetails } from "./Pages/ProductDetails/ProductDetails";
 import { Cart } from "./Pages/Cart/Cart";
+import { PrivateRoute } from "./guards/PrivateRoute/PrivateRoute";
 
 const queryClient = new QueryClient()
 
@@ -28,16 +29,19 @@ export function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/listagem-de-produtos/:categoria" element={<ListProducts />}></Route>
-          <Route path="/carrinho" element={<Cart />}></Route>
           <Route path="/register" element={<Register />}></Route>
-          <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
-          <Route path="/changePassword" element={<ChangePassword />}></Route>
           <Route path="/maintenance" element={<Maintenance />}></Route>
-          <Route path="/rastreio" element={<Tracking />}></Route>
-          <Route path="/configuracoes" element={<Configuration />}></Route>
-          <Route path="/configuracoes/adicionar-endereco" element={<AddAddress />}></Route>
           <Route path="/detalhes-do-produto/:id" element={<ProductDetails />}></Route>
           <Route path="/busca" element={<ListProducts />}></Route>
+
+          <Route element={<PrivateRoute />}>
+            <Route path="/configuracoes" element={<Configuration />}></Route>
+            <Route path="/carrinho" element={<Cart />}></Route>
+            <Route path="/configuracoes/adicionar-endereco" element={<AddAddress />}></Route>
+            <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
+            <Route path="/changePassword" element={<ChangePassword />}></Route>
+            <Route path="/rastreio" element={<Tracking />}></Route>
+          </Route>
 
           <Route path="/*" element={<NotFound />}></Route>
         </Routes>
