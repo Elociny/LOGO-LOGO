@@ -30,16 +30,16 @@ export function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/listagem-de-produtos/:categoria" element={<ListProducts />}></Route>
           <Route path="/register" element={<Register />}></Route>
-          <Route path="/maintenance" element={<Maintenance />}></Route>
+          <Route path="/manutencao" element={<Maintenance />}></Route>
           <Route path="/detalhes-do-produto/:id" element={<ProductDetails />}></Route>
           <Route path="/busca" element={<ListProducts />}></Route>
+          <Route path="/esqueceu-senha" element={<ForgotPassword />}></Route>
+          <Route path="/mudar-senha" element={<ChangePassword />}></Route>
 
           <Route element={<PrivateRoute />}>
             <Route path="/configuracoes" element={<Configuration />}></Route>
             <Route path="/carrinho" element={<Cart />}></Route>
             <Route path="/configuracoes/adicionar-endereco" element={<AddAddress />}></Route>
-            <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
-            <Route path="/changePassword" element={<ChangePassword />}></Route>
             <Route path="/rastreio" element={<Tracking />}></Route>
           </Route>
 

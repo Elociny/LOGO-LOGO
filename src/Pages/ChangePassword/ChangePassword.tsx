@@ -13,8 +13,9 @@ export function ChangePassword() {
     const [email, setEmail] = useState("")
     const [novaSenha, setNovaSenha] = useState("")
     const [confirmarSenha, setConfirmarSenha] = useState("")
-
     const [loading, setLoading] = useState(false)
+
+    const [isEmailEditable, setIsEmailEditable] = useState(true)
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado")
@@ -22,14 +23,15 @@ export function ChangePassword() {
         if (usuarioSalvo) {
             const dados = JSON.parse(usuarioSalvo)
             setEmail(dados.email)
+            setIsEmailEditable(false)
         } else {
-            navigate("/login")
+            setIsEmailEditable(true)
         }
-    }, [navigate])
+    }, [])
 
     async function handleAlterarSenha() {
-        if(!email) {
-            alert("Usuário não identificado")
+        if (!email) {
+            alert("Por favor, informe o email.")
             return
         }
 
@@ -52,13 +54,13 @@ export function ChangePassword() {
             setLoading(true)
             await alterarSenha(email, novaSenha)
 
-            alert("Senha alterada com sucesso! Por favor faça login novamente")
+            alert("Senha alterada com sucesso! Faça login com a nova senha.")
 
             localStorage.removeItem("usuario_logado")
             navigate("/login")
         } catch (error) {
             console.log(error)
-            alert("Erro ao alterar a senha. Tente novamente")
+            alert("Erro ao alterar a senha. Verifique se o email está correto.")
         } finally {
             setLoading(false)
         }
@@ -81,8 +83,9 @@ export function ChangePassword() {
                             theme="light"
                             type="text"
                             value={email}
-                            
-                            onChange={() => { }}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                if (isEmailEditable) setEmail(e.target.value)
+                            }}
                         />
                     </div>
 

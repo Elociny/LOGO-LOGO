@@ -71,7 +71,7 @@ export function Login() {
           />
 
           <p>
-            <NavLink to="/ForgotPassword">Esqueceu a senha?</NavLink>
+            <NavLink to="/mudar-senha">Esqueceu a senha?</NavLink>
           </p>
         </div>
 

@@ -83,7 +83,7 @@ export function Configuration() {
 
                         <div className={`row ${style.inputs}`}>
                             <Input id="senha_fake" label="Senha" placeholder="Sua senha" type="password" value="********" enable={false} onChange={() => { }} />
-                            <Button border="arredondada" color="laranja" size="small" text="alterar senha" theme="light" navegation="/changePassword" />
+                            <Button border="arredondada" color="laranja" size="small" text="alterar senha" theme="light" navegation="/mudar-senha" />
                         </div>
                     </div>
                 </section>
