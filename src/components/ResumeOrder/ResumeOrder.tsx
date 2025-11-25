@@ -1,19 +1,19 @@
 import { Button } from "../Button/Button";
 import style from "./ResumeOrder.module.css";
-import type { Product } from "../../types/Product";
+import type { ProductAPI } from "../../types/ProductAPI";
 
 interface ResumeOrderProps {
-  produtos: Product[];
+  produtos: ProductAPI[];
   ativo: boolean;
 }
 
 export function ResumeOrder({ produtos, ativo }: ResumeOrderProps) {
   const quantidadeTotal = produtos.reduce(
-    (acc, p) => acc + (p.quantity ?? 1),
+    (acc, p) => acc + (p.quantidade ?? 1),
     0
   );
   const total = produtos.reduce(
-    (acc, p) => acc + p.unitPrice * (p.quantity ?? 1),
+    (acc, p) => acc + p.preco * (p.quantidade ?? 1),
     0
   );
 
@@ -48,7 +48,7 @@ export function ResumeOrder({ produtos, ativo }: ResumeOrderProps) {
         <Button
           border="quadrada"
           color="branco"
-          navegation="/"
+          navegation="/compra"
           size="big"
           text="comprar"
           theme="dark"

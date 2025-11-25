@@ -17,6 +17,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ProductDetails } from "./Pages/ProductDetails/ProductDetails";
 import { Cart } from "./Pages/Cart/Cart";
 import { PrivateRoute } from "./guards/PrivateRoute/PrivateRoute";
+import { Payment } from "./Pages/Payment/Payment";
 
 const queryClient = new QueryClient()
 
@@ -35,6 +36,7 @@ export function App() {
           <Route path="/busca" element={<ListProducts />}></Route>
           <Route path="/esqueceu-senha" element={<ForgotPassword />}></Route>
           <Route path="/mudar-senha" element={<ChangePassword />}></Route>
+          <Route path="/compra" element={<Payment />}></Route>
 
           <Route element={<PrivateRoute />}>
             <Route path="/configuracoes" element={<Configuration />}></Route>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router"; // ou react-router-dom
+import { useNavigate } from "react-router";
 import { CartProduct } from "../../components/CartProduct/CartProduct";
 import { Layout } from "../../components/Layout/Layout";
 import { ResumeOrder } from "../../components/ResumeOrder/ResumeOrder";
@@ -7,7 +7,7 @@ import { Button } from "../../components/Button/Button";
 import { Spinner } from "../../components/Spinner/Spinner";
 import EmptyCartImg from "../../assets/images/empty-cart.svg";
 import style from "./Cart.module.css";
-import type { Product } from "../../types/Product";
+import type { ProductAPI } from "../../types/ProductAPI";
 
 import {
     listarCarrinho,
@@ -17,21 +17,26 @@ import {
     type CarrinhoItemDTO
 } from "../../services/carrinhoService";
 
-interface ProductInCart extends Product {
+interface ProductInCart extends ProductAPI {
     cartItemId: number;
+    inStock: boolean
 }
 
 const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
     return {
         id: item.produtoId,
-        name: item.nomeProduto,
-        image: item.imageUrl || "",
-        color: item.cor,
-        size: item.tamanho,
-        unitPrice: item.preco,
+        nome: item.nomeProduto,   
+        imageUrl: item.imageUrl || "",
+        cor: item.cor,          
+        tamanho: item.tamanho,   
+        preco: item.preco, 
+        quantidade: item.quantidade,
+        cartItemId: item.id,
         inStock: true,
-        quantity: item.quantidade,
-        cartItemId: item.id
+        descricao: "", 
+        categoria: "", 
+        desconto: 0,
+        precoComDesconto: item.preco
     };
 };
 
@@ -72,7 +77,7 @@ export function Cart() {
         }
     }, [navigate, carregarCarrinho]);
 
-    const handleToggleProduto = (produto: Product, selecionado: boolean) => {
+    const handleToggleProduto = (produto: ProductAPI, selecionado: boolean) => {
         if (selecionado) {
             setSelecionadosIds(prev => [...prev, produto.id]);
         } else {
@@ -80,7 +85,7 @@ export function Cart() {
         }
     };
 
-    const handleRemoverProduto = async (produto: Product) => {
+    const handleRemoverProduto = async (produto: ProductAPI) => {
         if (!clienteId) return;
 
         const itemParaRemover = produto as ProductInCart;
@@ -96,21 +101,26 @@ export function Cart() {
         }
     };
 
-    const handleChangeQuantity = async (produto: Product, novaQuantidade: number) => {
+    const handleChangeQuantity = async (produto: ProductAPI, novaQuantidade: number) => {
         if (!clienteId || novaQuantidade < 1) return;
+
+        const produtosAnteriores = [...produtos];
+
+        setProdutos(prev =>
+            prev.map(p =>
+                p.id === produto.id ? { ...p, quantidade: novaQuantidade } : p
+            )
+        );
 
         const itemParaAtualizar = produto as ProductInCart;
 
         try {
             await atualizarQuantidade(clienteId, itemParaAtualizar.cartItemId, novaQuantidade);
-
-            setProdutos(prev =>
-                prev.map(p =>
-                    p.id === produto.id ? { ...p, quantity: novaQuantidade } : p
-                )
-            );
         } catch (error) {
             console.error("Erro ao atualizar quantidade", error);
+            
+            setProdutos(produtosAnteriores);
+            alert("Não foi possível atualizar a quantidade.");
         }
     };
 
@@ -161,7 +171,7 @@ export function Cart() {
                         <>
                             {produtos.map((produto) => (
                                 <CartProduct
-                                    key={`${produto.id}-${produto.size}`}
+                                    key={`${produto.id}-${produto.tamanho}`}
                                     produto={produto}
                                     onToggle={handleToggleProduto}
                                     selecionado={selecionadosIds.includes(produto.id)}

@@ -8,6 +8,8 @@
     input {
         padding: .75rem;
 
+        width: 100%;
+
         background-color: transparent;
 
         border: 2px solid;
