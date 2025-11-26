@@ -4,6 +4,8 @@ import { AxiosError } from "axios";
 import { Address } from "../../components/Address/Address";
 import { Layout } from "../../components/Layout/Layout";
 import { ResumeOrder } from "../../components/ResumeOrder/ResumeOrder";
+import { Button } from "../../components/Button/Button";
+import { Spinner } from "../../components/Spinner/Spinner";
 import style from "./Payment.module.css";
 
 import type { ProductAPI } from "../../types/ProductAPI";
@@ -16,13 +18,12 @@ import {
     limparCarrinhoCompleto
 } from "../../services/carrinhoService";
 import { cadastrarCartao } from "../../services/cartaoService";
-
 import { salvarCompra } from "../../services/compraService";
 
 import { PayProduct } from "../../components/PayProduct/PayProduct";
 import { PayMethod, type DadosCartao } from "../../components/PayMethod/PayMethod";
-import { Button } from "../../components/Button/Button";
-import { Spinner } from "../../components/Spinner/Spinner";
+
+import { Modal } from "../../components/Modal/Modal";
 
 interface ProductAPIInCart extends ProductAPI {
     cartItemId: number;
@@ -47,6 +48,22 @@ export function Payment() {
         validadeMes: "",
         validadeAno: ""
     });
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState({
+        type: "success" as "success" | "error" | "warning",
+        title: "",
+        message: ""
+    });
+
+    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+        setModalConfig({ type, title, message });
+        setModalOpen(true);
+    };
+
+    const fecharModal = () => {
+        setModalOpen(false);
+    };
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
@@ -78,7 +95,6 @@ export function Payment() {
             setProdutos(produtosFormatados);
         } catch (error) {
             console.error("Erro ao carregar dados", error);
-            alert("Erro ao carregar informações.");
         } finally {
             setLoading(false);
         }
@@ -107,16 +123,13 @@ export function Payment() {
 
     const handleRemoverProduto = async (produto: ProductAPI) => {
         if (!clienteId) return;
-        
         const item = produto as ProductAPIInCart;
-        
         try {
             await removerItem(clienteId, item.cartItemId);
-            
             setProdutos(prev => prev.filter(p => p.cartItemId !== item.cartItemId));
         } catch (error) {
             console.error(error);
-            alert("Erro ao remover produto.");
+            abrirModal("error", "Erro", "Erro ao remover produto.");
         }
     };
 
@@ -146,12 +159,12 @@ export function Payment() {
         if (!clienteId) return;
 
         if (!enderecoSelecionadoId) {
-            alert("Por favor, selecione um endereço de entrega.");
+            abrirModal("warning", "Endereço", "Por favor, selecione um endereço de entrega.");
             return;
         }
 
         if (produtos.length === 0) {
-            alert("Seu carrinho está vazio.");
+            abrirModal("warning", "Carrinho Vazio", "Adicione produtos antes de finalizar.");
             return;
         }
 
@@ -161,7 +174,7 @@ export function Payment() {
 
             if (metodoPagamento === "cartao") {
                 if (!dadosCartao.numero || !dadosCartao.titular || !dadosCartao.validadeMes || !dadosCartao.validadeAno || !dadosCartao.codigoSeguranca) {
-                    alert("Preencha todos os dados do cartão.");
+                    abrirModal("warning", "Dados do Cartão", "Preencha todos os dados do cartão para continuar.");
                     setLoading(false);
                     return;
                 }
@@ -207,12 +220,33 @@ export function Payment() {
             let mensagemErro = "Erro ao processar o pedido.";
 
             if (err.response && err.response.data) {
-                mensagemErro = typeof err.response.data === 'string'
-                    ? err.response.data
-                    : JSON.stringify(err.response.data);
+                const dadosErro = err.response.data;
+
+                interface SpringValidationError {
+                    errors?: Array<{ defaultMessage: string }>;
+                    message?: string;
+                    error?: string;
+                }
+
+                if (typeof dadosErro === 'string') {
+                    if (dadosErro.trim().startsWith("<") || dadosErro.length > 200) {
+                        mensagemErro = "Ocorreu um erro interno no servidor.";
+                    } else {
+                        mensagemErro = dadosErro;
+                    }
+                } else if (typeof dadosErro === 'object' && dadosErro !== null) {
+                    const erroObjeto = dadosErro as SpringValidationError;
+
+                    if (erroObjeto.errors && Array.isArray(erroObjeto.errors) && erroObjeto.errors.length > 0) {
+                        mensagemErro = erroObjeto.errors[0].defaultMessage;
+                    } 
+                    else {
+                        mensagemErro = erroObjeto.message || erroObjeto.error || JSON.stringify(dadosErro);
+                    }
+                }
             }
 
-            alert(`Ops! ${mensagemErro}`);
+            abrirModal("error", "Atenção", mensagemErro);
         } finally {
             setLoading(false);
         }
@@ -221,13 +255,13 @@ export function Payment() {
     if (loading) {
         return (
             <Layout>
-                <div>
+                <div style={{ display: 'flex', justifyContent: 'center', padding: '100px' }}>
                     <Spinner />
                 </div>
             </Layout>
         )
     }
-    
+
     return (
         <Layout>
             <div className={`row ${style.payment}`}>
@@ -305,6 +339,26 @@ export function Payment() {
                     />
                 </div>
             </div>
+
+            <Modal
+                isOpen={modalOpen}
+                onClose={fecharModal}
+                type={modalConfig.type}
+                title={modalConfig.title}
+            >
+                <p>{modalConfig.message}</p>
+
+                <div style={{ marginTop: '20px' }}>
+                    <Button
+                        border="arredondada"
+                        color="cinza"
+                        size="small"
+                        text="Fechar"
+                        theme="light"
+                        onClick={fecharModal}
+                    />
+                </div>
+            </Modal>
         </Layout>
     )
 }

@@ -11,11 +11,9 @@ api.interceptors.response.use(
     (error) => {
         if (error.response) {
             const status = error.response.status;
-            const mensagem = error.response.data;
-
-            if (status === 403 || (status === 400 && typeof mensagem === 'string' && mensagem.includes("não encontrado"))) {
+            
+            if (status === 403) {
                 localStorage.removeItem("usuario_logado");
-                alert("Sessão expirada ou usuário não encontrado. Faça login novamente.");
                 window.location.href = "/login";
             }
         }

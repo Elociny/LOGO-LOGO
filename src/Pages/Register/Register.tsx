@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router-dom";
 import LoginIllustrator from "../../assets/images/login-illustrator.svg";
 import { Button } from "../../components/Button/Button";
 import { Logo } from "../../components/Logo/Logo";
@@ -7,6 +7,8 @@ import style from "./Register.module.css";
 import { FormInput } from "../../components/FormInput/FormInput";
 import { cadastrar } from "../../services/authService";
 import { AxiosError } from "axios";
+
+import { Modal } from "../../components/Modal/Modal";
 
 export function Register() {
     const navigate = useNavigate();
@@ -17,19 +19,35 @@ export function Register() {
     const [confirmarSenha, setConfirmarSenha] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState({
+        type: "success" as "success" | "error" | "warning",
+        title: "",
+        message: ""
+    });
+
+    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+        setModalConfig({ type, title, message });
+        setModalOpen(true);
+    };
+
+    const fecharModal = () => {
+        setModalOpen(false);
+    };
+
     const handleCadastro = async () => {
         if (!nome || !email || !senha || !confirmarSenha) {
-            alert("Por favor, preencha todos os campos.");
+            abrirModal("warning", "Atenção", "Por favor, preencha todos os campos.");
             return;
         }
 
         if (senha !== confirmarSenha) {
-            alert("As senhas não coincidem!");
+            abrirModal("error", "Erro nas senhas", "As senhas não coincidem!");
             return;
         }
 
         if (senha.length < 6) {
-            alert("A senha deve ter pelo menos 6 caracteres.");
+            abrirModal("warning", "Senha Curta", "A senha deve ter pelo menos 6 caracteres.");
             return;
         }
 
@@ -40,27 +58,32 @@ export function Register() {
 
             localStorage.setItem("usuario_logado", JSON.stringify(usuarioCriado));
 
-            navigate("/")
+            navigate("/");
         } catch (error) {
-            const err = error as AxiosError<{ message: string }>;
+            const err = error as AxiosError;
 
             console.error("ERRO DETALHADO:", err);
 
+            let msg = "Erro desconhecido.";
+
             if (err.response && err.response.data) {
                 const dadosDoErro = err.response.data;
-                let msg = "";
 
                 if (typeof dadosDoErro === "string") {
                     msg = dadosDoErro;
-                } else if (typeof dadosDoErro === "object" && dadosDoErro.message) {
-                    msg = dadosDoErro.message;
+                } else if (
+                    typeof dadosDoErro === "object" &&
+                    dadosDoErro !== null &&
+                    "message" in dadosDoErro
+                ) {
+                    msg = String((dadosDoErro as Record<string, unknown>).message);
                 } else {
                     msg = JSON.stringify(dadosDoErro);
                 }
 
-                alert(`Erro no servidor: ${msg}`);
+                abrirModal("error", "Erro no Cadastro", msg);
             } else {
-                alert("Erro de conexão. Verifique se o Backend está rodando.");
+                abrirModal("error", "Erro de Conexão", "Não foi possível conectar ao servidor. Verifique se o Backend está rodando.");
             }
         } finally {
             setLoading(false);
@@ -147,6 +170,26 @@ export function Register() {
                     </span>
                 </p>
             </div>
+
+            <Modal
+                isOpen={modalOpen}
+                onClose={fecharModal}
+                type={modalConfig.type}
+                title={modalConfig.title}
+            >
+                <p>{modalConfig.message}</p>
+
+                <div style={{ marginTop: '20px' }}>
+                    <Button
+                        border="arredondada"
+                        color="cinza"
+                        size="small"
+                        text="Fechar"
+                        theme="light"
+                        onClick={fecharModal}
+                    />
+                </div>
+            </Modal>
         </div>
     )
 }

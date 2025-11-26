@@ -8,6 +8,8 @@ import { adicionarAoCarrinho } from "../../services/carrinhoService";
 
 import style from "./InfoProduct.module.css";
 
+import { Modal } from "../Modal/Modal";
+
 interface InfoProductProps {
     produto: ProductAPI
 }
@@ -17,6 +19,34 @@ export function InfoProduct({ produto }: InfoProductProps) {
 
     const [quantidade, setQuantidade] = useState(1);
     const [loading, setLoading] = useState(false);
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState({
+        type: "success" as "success" | "error" | "warning",
+        title: "",
+        message: ""
+    });
+    
+    const [actionType, setActionType] = useState<'login' | 'carrinho' | null>(null);
+
+    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+        setModalConfig({ type, title, message });
+        setModalOpen(true);
+    };
+
+    const fecharModal = () => {
+        setModalOpen(false);
+        setActionType(null);
+    };
+
+    const handleConfirmAction = () => {
+        if (actionType === 'login') {
+            navigate("/login");
+        } else if (actionType === 'carrinho') {
+            navigate("/carrinho");
+        }
+        fecharModal();
+    };
 
     const calculateOldPrice = (currentPrice: number, discountPercent: number) => {
         return currentPrice / (1 - discountPercent / 100);
@@ -28,10 +58,8 @@ export function InfoProduct({ produto }: InfoProductProps) {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
         
         if (!usuarioSalvo) {
-            const desejaLogar = window.confirm("Você precisa estar logado para comprar. Deseja fazer login agora?");
-            if (desejaLogar) {
-                navigate("/login");
-            }
+            setActionType('login');
+            abrirModal("warning", "Login necessário", "Você precisa estar logado para comprar. Deseja fazer login agora?");
             return;
         }
 
@@ -45,15 +73,14 @@ export function InfoProduct({ produto }: InfoProductProps) {
             if (redirecionarImediatamente) {
                 navigate("/carrinho");
             } else {
-                const irParaCarrinho = window.confirm("Produto adicionado ao carrinho! Deseja finalizar a compra agora?");
-                if (irParaCarrinho) {
-                    navigate("/carrinho");
-                }
+                setActionType('carrinho');
+                abrirModal("success", "Sucesso!", "Produto adicionado ao carrinho! O que deseja fazer agora?");
             }
 
         } catch (error) {
             console.error("Erro ao adicionar ao carrinho:", error);
-            alert("Não foi possível adicionar o produto. Tente novamente.");
+
+            abrirModal("error", "Erro", "Não foi possível adicionar o produto. Tente novamente.");
         } finally {
             setLoading(false);
         }
@@ -157,6 +184,47 @@ export function InfoProduct({ produto }: InfoProductProps) {
 
                 <p className={`${style.id}`}>id: {produto.id}</p>
             </div>
+
+            <Modal 
+                isOpen={modalOpen} 
+                onClose={fecharModal} 
+                type={modalConfig.type} 
+                title={modalConfig.title}
+            >
+                <p>{modalConfig.message}</p>
+
+                {actionType ? (
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '10px', justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+                        <Button 
+                            border="arredondada" 
+                            color="cinza" 
+                            size="small" 
+                            text={actionType === 'carrinho' ? "Continuar comprando" : "Cancelar"} 
+                            theme="light" 
+                            onClick={fecharModal} 
+                        />
+                        <Button 
+                            border="arredondada" 
+                            color="laranja" 
+                            size="small" 
+                            text={actionType === 'carrinho' ? "Ir para o carrinho" : "Ir para Login"} 
+                            theme="light" 
+                            onClick={handleConfirmAction} 
+                        />
+                    </div>
+                ) : (
+                    <div style={{marginTop: '20px'}}>
+                        <Button 
+                            border="arredondada" 
+                            color="cinza" 
+                            size="small" 
+                            text="Fechar" 
+                            theme="light" 
+                            onClick={fecharModal} 
+                        />
+                    </div>
+                )}
+            </Modal>
         </div>
     )
 }

@@ -33,20 +33,16 @@ export function PayMethod({
         const v = String(valor).replace(/\D/g, "");
         
         const mascarado = v.replace(/(\d{4})(?=\d)/g, "$1 "); 
-    
+        
         onDadosCartaoChange("numero", mascarado.slice(0, 19));
     };
 
-    // 2. Máscara de CPF (000.000.000-00)
     const handleCpfChange = (valor: string | number) => {
         let v = String(valor).replace(/\D/g, "");
-        
-        if (v.length > 11) v = v.slice(0, 11); 
-
+        if (v.length > 11) v = v.slice(0, 11);
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
         v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-
         onDadosCartaoChange("cpf", v);
     };
 
@@ -96,7 +92,7 @@ export function PayMethod({
                     <Input
                         id="titular"
                         label="Nome do titular"
-                        placeholder="Como está no cartão"
+                        placeholder="COMO NO CARTÃO"
                         type="text"
                         value={dadosCartao.titular}
                         onChange={(val) => handleNomeChange(val)}

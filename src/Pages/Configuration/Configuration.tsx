@@ -1,17 +1,19 @@
-import { Input } from "../../components/Input/Input"
+import { useEffect, useState, useRef } from "react"
+import { useNavigate } from "react-router"
 import { Layout } from "../../components/Layout/Layout"
 import style from "./Configuration.module.css"
-import FotoPerfilDefault from "../../assets/images/icons/userDefault.svg"
+import FotoPerfilDefault from "../../assets/images/icons/userDefault.svg" 
 import { Button } from "../../components/Button/Button"
 import { Address } from "../../components/Address/Address"
-import { useNavigate } from "react-router"
-import { useEffect, useState, useRef } from "react"
+import { Input } from "../../components/Input/Input"
 import { Error } from "../../components/Error/Error"
 
 import { listarEnderecos, excluirEndereco, type EnderecoDTO } from "../../services/enderecoService"
 import { CardInfo } from "../../components/CardInfo/CardInfo"
 import { listarCartoes, excluirCartao, type CartaoResponseDTO } from "../../services/cartaoService"
 import { buscarClientePorId, atualizarCliente } from "../../services/authService"
+
+import { Modal } from "../../components/Modal/Modal"
 
 export function Configuration() {
     const navigate = useNavigate();
@@ -29,6 +31,15 @@ export function Configuration() {
     const [fileToUpload, setFileToUpload] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState({
+        type: "success" as "success" | "error" | "warning",
+        title: "",
+        message: ""
+    });
+    
+    const [itemParaExcluir, setItemParaExcluir] = useState<{ id: number, tipo: 'endereco' | 'cartao' } | null>(null);
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
@@ -63,6 +74,16 @@ export function Configuration() {
         }
     }
 
+    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+        setModalConfig({ type, title, message });
+        setModalOpen(true);
+    }
+
+    const fecharModal = () => {
+        setModalOpen(false);
+        setItemParaExcluir(null); 
+    }
+
     const handlePhoneChange = (valor: string | number) => {
         let v = String(valor).replace(/\D/g, "");
         if (v.length > 11) v = v.slice(0, 11);
@@ -75,7 +96,6 @@ export function Configuration() {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
             setFileToUpload(file);
-
             const objectUrl = URL.createObjectURL(file);
             setPreviewUrl(objectUrl);
         }
@@ -103,7 +123,6 @@ export function Configuration() {
             );
 
             localStorage.setItem("usuario_logado", JSON.stringify(dadosAtualizados));
-
             window.dispatchEvent(new Event('userUpdated'));
 
             setFileToUpload(null);
@@ -113,12 +132,13 @@ export function Configuration() {
             }
 
             setImageUrl(dadosAtualizados.imageUrl || "");
-
             setIsEditing(false);
-            alert("Dados atualizados com sucesso!");
+            
+            abrirModal("success", "Sucesso!", "Seus dados foram atualizados corretamente.");
+
         } catch (error) {
             console.error(error);
-            alert("Erro ao atualizar os dados.");
+            abrirModal("error", "Erro", "Não foi possível atualizar os dados. Tente novamente.");
         }
     };
 
@@ -127,38 +147,42 @@ export function Configuration() {
         navigate("/login");
     };
 
-    const handleExcluir = async (enderecoId: number) => {
-        if (window.confirm("Tem certeza que deseja excluir este endereço?")) {
-            try {
-                if (!enderecoId) return;
-
-                await excluirEndereco(enderecoId);
-
-                setEnderecos(prev => prev.filter(end => end.id !== enderecoId));
-
-            } catch {
-                alert("Erro ao excluir endereço.");
-            }
-        }
+    const solicitarExclusaoEndereco = (id: number) => {
+        setItemParaExcluir({ id, tipo: 'endereco' });
+        abrirModal("warning", "Excluir Endereço?", "Tem certeza que deseja excluir este endereço? Essa ação não pode ser desfeita.");
     }
 
-    const handleExcluirCartao = async (cartaoId: number) => {
-        if (window.confirm("Tem certeza que deseja remover este cartão?")) {
-            try {
-                if (!cartaoId) return; await excluirCartao(cartaoId); setCartoes(prev => prev.filter(c => c.id !== cartaoId));
+    const solicitarExclusaoCartao = (id: number) => {
+        setItemParaExcluir({ id, tipo: 'cartao' });
+        abrirModal("warning", "Remover Cartão?", "Tem certeza que deseja remover este cartão? Você precisará cadastrá-lo novamente.");
+    }
 
-            } catch {
-                alert("Erro ao excluir cartão.");
+    const confirmarExclusao = async () => {
+        if (!itemParaExcluir) return;
+
+        try {
+            if (itemParaExcluir.tipo === 'endereco') {
+                await excluirEndereco(itemParaExcluir.id);
+                setEnderecos(prev => prev.filter(end => end.id !== itemParaExcluir.id));
+            } else {
+                await excluirCartao(itemParaExcluir.id);
+                setCartoes(prev => prev.filter(c => c.id !== itemParaExcluir.id));
             }
+            
+            fecharModal();
+
+        } catch (error) {
+            fecharModal();
+            setTimeout(() => {
+                abrirModal("error", "Erro", "Ocorreu um erro ao tentar excluir o item.");
+            }, 200);
+
+            console.log(error)
         }
     }
 
     const handleEditar = (endereco: EnderecoDTO) => {
-        navigate("/configuracoes/adicionar-endereco", {
-            state: {
-                enderecoParaEditar: endereco
-            }
-        });
+        navigate("/configuracoes/adicionar-endereco", { state: { enderecoParaEditar: endereco } });
     }
 
     return (
@@ -183,8 +207,8 @@ export function Configuration() {
                         />
 
                         {isEditing && (
-                            <div className={style.imageUploadIcon} onClick={handleIconClick}>
-                                <Button border="arredondada" color="laranja" size="small" text="alterar foto" theme="light" />
+                            <div className={style.imageUploadIcon}>
+                                <Button border="arredondada" color="cinza" size="small" text="aletrar imagem" theme="light" onClick={handleIconClick} />
                             </div>
                         )}
                     </div>
@@ -231,7 +255,7 @@ export function Configuration() {
                 <div className={`${style.titulo}`}>
                     <div className={`row ${style.title}`}>
                         <i className="bi bi-geo-alt-fill"></i>
-                        <h3>Enderecos salvos</h3>
+                        <h3>Endereços salvos</h3>
                     </div>
 
                     <Button
@@ -245,13 +269,12 @@ export function Configuration() {
                 </div>
 
                 <section className={`${style.enderecos}`}>
-
                     {enderecos.length === 0 && <Error type="empty" />}
 
                     {enderecos.map((end) => (
                         <div className={`row ${style.enderecoCompleto}`} key={end.id}>
                             <div className={`row ${style.group}`}>
-                                <button onClick={() => handleExcluir(end.id!)}>
+                                <button onClick={() => solicitarExclusaoEndereco(end.id!)}>
                                     <i className="bi bi-trash-fill"></i>
                                 </button>
                                 <Address
@@ -268,7 +291,7 @@ export function Configuration() {
                             </div>
                             <div className={`row ${style.btns}`}>
                                 <Button border="arredondada" color="cinza" size="small" text="editar endereço" theme="light" onClick={() => handleEditar(end)} />
-                                <Button border="arredondada" color="transparente" size="small" text="apagar endereço" theme="light" onClick={() => handleExcluir(end.id!)} />
+                                <Button border="arredondada" color="transparente" size="small" text="apagar endereço" theme="light" onClick={() => solicitarExclusaoEndereco(end.id!)} />
                             </div>
                         </div>
                     ))}
@@ -282,14 +305,12 @@ export function Configuration() {
                 </div>
 
                 <section className={`${style.enderecos}`}>
-                    {cartoes.length === 0 && (
-                        <Error type="empty" />
-                    )}
+                    {cartoes.length === 0 && <Error type="empty" />}
 
                     {cartoes.map((card) => (
                         <div className={`row ${style.enderecoCompleto}`} key={card.id}>
                             <div className={`row ${style.group}`}>
-                                <button onClick={() => handleExcluirCartao(card.id)}>
+                                <button onClick={() => solicitarExclusaoCartao(card.id)}>
                                     <i className="bi bi-trash-fill"></i>
                                 </button>
 
@@ -309,7 +330,7 @@ export function Configuration() {
                                     size="small"
                                     text="remover cartão"
                                     theme="light"
-                                    onClick={() => handleExcluirCartao(card.id)}
+                                    onClick={() => solicitarExclusaoCartao(card.id)}
                                 />
                             </div>
                         </div>
@@ -318,6 +339,48 @@ export function Configuration() {
 
                 <Button border="arredondada" color="branco" size="big" text="sair da logologo" theme="light" onClick={handleLogout} />
             </div>
+            
+            <Modal 
+                isOpen={modalOpen} 
+                onClose={fecharModal} 
+                type={modalConfig.type} 
+                title={modalConfig.title}
+            >
+                <p>{modalConfig.message}</p>
+
+                {modalConfig.type === "warning" ? (
+                    <div style={{display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px'}}>
+                        <Button 
+                            border="arredondada" 
+                            color="cinza" 
+                            size="small" 
+                            text="Cancelar" 
+                            theme="light" 
+                            onClick={fecharModal} 
+                        />
+                        <Button 
+                            border="arredondada" 
+                            color="laranja" 
+                            size="small" 
+                            text="Sim" 
+                            theme="light" 
+                            onClick={confirmarExclusao} 
+                        />
+                    </div>
+                ) : (
+                    <div style={{marginTop: '20px'}}>
+                        <Button 
+                            border="arredondada" 
+                            color="cinza" 
+                            size="small" 
+                            text="Fechar" 
+                            theme="light" 
+                            onClick={fecharModal} 
+                        />
+                    </div>
+                )}
+            </Modal>
+
         </Layout>
     )
 }

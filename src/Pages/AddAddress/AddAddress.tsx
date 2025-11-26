@@ -7,6 +7,8 @@ import { Layout } from "../../components/Layout/Layout"
 import style from "./AddAddress.module.css"
 import { criarEndereco, atualizarEndereco, type EnderecoDTO } from "../../services/enderecoService"
 
+import { Modal } from "../../components/Modal/Modal"
+
 export function AddAddress() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,6 +26,16 @@ export function AddAddress() {
 
     const [nomeContato, setNomeContato] = useState("");
     const [telefoneContato, setTelefoneContato] = useState("");
+
+    // --- ESTADOS DO MODAL ---
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState({
+        type: "success" as "success" | "error" | "warning",
+        title: "",
+        message: ""
+    });
+
+    const [redirectOnClose, setRedirectOnClose] = useState(false);
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
@@ -50,27 +62,36 @@ export function AddAddress() {
         }
     }, [location, navigate]);
 
+    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+        setModalConfig({ type, title, message });
+        setModalOpen(true);
+    };
+
+    const fecharModal = () => {
+        setModalOpen(false);
+        if (redirectOnClose) {
+            navigate("/configuracoes");
+        }
+        setRedirectOnClose(false);
+    };
+
     const handleCepChange = (valor: string | number) => {
         let v = String(valor).replace(/\D/g, "");
         if (v.length > 8) v = v.slice(0, 8);
-        
         v = v.replace(/(\d{5})(\d)/, "$1-$2");
-        
         setCep(v);
     };
 
     const handlePhoneChange = (valor: string | number) => {
         let v = String(valor).replace(/\D/g, "");
         if (v.length > 11) v = v.slice(0, 11);
-
-        v = v.replace(/^(\d{2})(\d)/g, "($1) $2"); 
-        v = v.replace(/(\d)(\d{4})$/, "$1-$2"); 
-
+        v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+        v = v.replace(/(\d)(\d{4})$/, "$1-$2");
         setTelefoneContato(v);
     };
 
     const handleEstadoChange = (valor: string | number) => {
-        let v = String(valor).replace(/[^a-zA-Z]/g, ""); 
+        let v = String(valor).replace(/[^a-zA-Z]/g, "");
         if (v.length > 2) v = v.slice(0, 2);
         setEstado(v.toUpperCase());
     };
@@ -84,7 +105,7 @@ export function AddAddress() {
         if (!clienteId) return;
 
         if (!logradouro || !numero || !bairro || !cidade || !estado || !cep) {
-            alert("Preencha todos os campos obrigatórios!");
+            abrirModal("warning", "Atenção", "Preencha todos os campos obrigatórios!");
             return;
         }
 
@@ -102,16 +123,18 @@ export function AddAddress() {
         try {
             if (enderecoId) {
                 await atualizarEndereco(enderecoId, dados);
-                alert("Endereço atualizado com sucesso!");
+                setRedirectOnClose(true);
+                abrirModal("success", "Sucesso", "Endereço atualizado com sucesso!");
             } else {
                 await criarEndereco(dados);
-                alert("Endereço cadastrado com sucesso!");
+                setRedirectOnClose(true);
+                abrirModal("success", "Sucesso", "Endereço cadastrado com sucesso!");
             }
 
-            navigate("/configuracoes");
         } catch (error) {
             console.error(error);
-            alert("Erro ao salvar endereço. Verifique os dados.");
+            setRedirectOnClose(false);
+            abrirModal("error", "Erro", "Erro ao salvar endereço. Verifique os dados.");
         }
     }
 
@@ -126,7 +149,7 @@ export function AddAddress() {
                     <section className={`row ${style.inputs}`}>
                         <Input id="nome" label="Nome" type="text" placeholder="Digite seu nome completo"
                             value={nomeContato} enable={false} onChange={() => { }} />
-                        
+
                         <Input id="telefone" label="Telefone" type="text" placeholder="(XX) XXXXX-XXXX"
                             value={telefoneContato} enable={true} onChange={(val) => handlePhoneChange(val)} />
                     </section>
@@ -172,6 +195,27 @@ export function AddAddress() {
                     onClick={handleSalvar}
                 />
             </div>
+
+            <Modal
+                isOpen={modalOpen}
+                onClose={fecharModal}
+                type={modalConfig.type}
+                title={modalConfig.title}
+            >
+                <p>{modalConfig.message}</p>
+
+                <div style={{ marginTop: '20px' }}>
+                    <Button
+                        border="arredondada"
+                        color="cinza"
+                        size="small"
+                        text={redirectOnClose ? "voltar" : "Fechar"}
+                        theme="light"
+                        onClick={fecharModal}
+                    />
+                </div>
+            </Modal>
+
         </Layout>
     )
 }
