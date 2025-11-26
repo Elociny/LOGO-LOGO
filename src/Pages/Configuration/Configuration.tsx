@@ -1,7 +1,7 @@
 import { Input } from "../../components/Input/Input"
 import { Layout } from "../../components/Layout/Layout"
 import style from "./Configuration.module.css"
-import FotoPerfilDefault from "../../assets/images/foto-de-perfil.svg"
+import FotoPerfilDefault from "../../assets/images/icons/userDefault.svg"
 import { Button } from "../../components/Button/Button"
 import { Address } from "../../components/Address/Address"
 import { useNavigate } from "react-router"

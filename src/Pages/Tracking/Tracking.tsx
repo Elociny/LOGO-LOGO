@@ -5,7 +5,7 @@ import { Layout } from "../../components/Layout/Layout"
 import { TrackOrder } from "../../components/TrackOrder/TrackOrder"
 import User from "../../components/User/User"
 import style from "./Tracking.module.css"
-import FotoPerfil from "../../assets/images/foto-de-perfil.svg"
+import FotoPerfil from "../../assets/images/icons/userDefault.svg"
 import { Spinner } from "../../components/Spinner/Spinner"
 
 import { listarComprasDoCliente, type ComprarResponseDTO } from "../../services/compraService"
