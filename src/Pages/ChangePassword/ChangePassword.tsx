@@ -6,6 +6,8 @@ import style from "./ChangePassword.module.css"
 import { useEffect, useState, type ChangeEvent } from "react"
 import { alterarSenha } from "../../services/authService"
 
+import { Modal } from "../../components/Modal/Modal"
+
 export function ChangePassword() {
 
     const navigate = useNavigate()
@@ -13,8 +15,17 @@ export function ChangePassword() {
     const [email, setEmail] = useState("")
     const [novaSenha, setNovaSenha] = useState("")
     const [confirmarSenha, setConfirmarSenha] = useState("")
-
     const [loading, setLoading] = useState(false)
+
+    const [isEmailEditable, setIsEmailEditable] = useState(true)
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState({
+        type: "success" as "success" | "error" | "warning",
+        title: "",
+        message: ""
+    });
+    const [redirectOnClose, setRedirectOnClose] = useState(false);
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado")
@@ -22,29 +33,42 @@ export function ChangePassword() {
         if (usuarioSalvo) {
             const dados = JSON.parse(usuarioSalvo)
             setEmail(dados.email)
+            setIsEmailEditable(false)
         } else {
-            navigate("/login")
+            setIsEmailEditable(true)
         }
-    }, [navigate])
+    }, [])
+
+    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+        setModalConfig({ type, title, message });
+        setModalOpen(true);
+    }
+
+    const fecharModal = () => {
+        setModalOpen(false);
+        if (redirectOnClose) {
+            navigate("/login");
+        }
+    }
 
     async function handleAlterarSenha() {
-        if(!email) {
-            alert("Usuário não identificado")
+        if (!email) {
+            abrirModal("warning", "Atenção", "Por favor, informe o email.");
             return
         }
 
         if (!novaSenha || !confirmarSenha) {
-            alert("Preencha as duas senhas")
+            abrirModal("warning", "Atenção", "Preencha as duas senhas.");
             return
         }
 
         if (novaSenha !== confirmarSenha) {
-            alert("As senhas não coincidem!")
+            abrirModal("error", "Erro", "As senhas não coincidem!");
             return
         }
 
         if (novaSenha.length < 6) {
-            alert("Senha tem que ter no mínimo 6 caracteres")
+            abrirModal("warning", "Senha Curta", "A senha deve ter no mínimo 6 caracteres.");
             return
         }
 
@@ -52,22 +76,29 @@ export function ChangePassword() {
             setLoading(true)
             await alterarSenha(email, novaSenha)
 
-            alert("Senha alterada com sucesso! Por favor faça login novamente")
-
             localStorage.removeItem("usuario_logado")
-            navigate("/login")
+            setRedirectOnClose(true);
+            abrirModal("success", "Sucesso!", "Senha alterada com sucesso! Faça login com a nova senha.");
+
         } catch (error) {
             console.log(error)
-            alert("Erro ao alterar a senha. Tente novamente")
+            setRedirectOnClose(false);
+            abrirModal("error", "Erro", "Erro ao alterar a senha. Verifique se o email está correto.");
         } finally {
             setLoading(false)
         }
     }
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleAlterarSenha();
+        }
+    };
+
     return (
         <Layout theme="light">
             <div className={`row ${style.container}`}>
-                <div className={`row ${style.box}`}>
+                <div className={`row ${style.box}`} onKeyDown={handleKeyDown}>
                     <i className={`row bi bi-unlock ${style.icon}`}></i>
 
                     <h1>Redefinir senha</h1>
@@ -81,8 +112,9 @@ export function ChangePassword() {
                             theme="light"
                             type="text"
                             value={email}
-                            
-                            onChange={() => { }}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                if (isEmailEditable) setEmail(e.target.value)
+                            }}
                         />
                     </div>
 
@@ -124,6 +156,27 @@ export function ChangePassword() {
                     />
                 </div>
             </div>
+
+            <Modal
+                isOpen={modalOpen}
+                onClose={fecharModal}
+                type={modalConfig.type}
+                title={modalConfig.title}
+            >
+                <p>{modalConfig.message}</p>
+
+                <div style={{ marginTop: '20px' }}>
+                    <Button
+                        border="arredondada"
+                        color="cinza"
+                        size="small"
+                        text={redirectOnClose ? "Ir para Login" : "Fechar"}
+                        theme="light"
+                        onClick={fecharModal}
+                    />
+                </div>
+            </Modal>
+
         </Layout>
     )
 }

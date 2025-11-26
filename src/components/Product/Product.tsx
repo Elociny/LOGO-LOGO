@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"; // 1. Importar o hook
 import type { ProductAPI } from "../../types/ProductAPI";
 import { Button } from "../Button/Button";
 import style from "./Product.module.css";
@@ -7,14 +8,20 @@ interface ProductProps {
 }
 
 export function Product({ data }: ProductProps) {
+    const navigate = useNavigate();
+
     const calculateOldPrice = (currentPrice: number, discountPercent: number) => {
         return currentPrice / (1 - discountPercent / 100);
     };
 
     const safePrice = Number(data.preco ?? 0);
 
+    const handleCardClick = () => {
+        navigate(`/detalhes-do-produto/${data.id}`);
+    };
+
     return (
-        <div className={style.product}>
+        <div className={style.product} onClick={handleCardClick}>
             <img src={data.imageUrl} alt={`Imagem do produto ${data.nome}`} />
             <h3>{data.nome}</h3>
             
@@ -57,8 +64,7 @@ export function Product({ data }: ProductProps) {
                         size="small" 
                         color="laranja" 
                         border="arredondada" 
-                        text="Veja Mais" 
-                        navegation={`/detalhes-do-produto/${data.id}`}
+                        text="Veja Mais"
                     />
                 </div>
             </div>

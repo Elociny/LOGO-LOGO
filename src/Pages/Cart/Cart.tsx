@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router"; // ou react-router-dom
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CartProduct } from "../../components/CartProduct/CartProduct";
 import { Layout } from "../../components/Layout/Layout";
 import { ResumeOrder } from "../../components/ResumeOrder/ResumeOrder";
@@ -7,7 +7,9 @@ import { Button } from "../../components/Button/Button";
 import { Spinner } from "../../components/Spinner/Spinner";
 import EmptyCartImg from "../../assets/images/empty-cart.svg";
 import style from "./Cart.module.css";
-import type { Product } from "../../types/Product";
+import type { ProductAPI } from "../../types/ProductAPI";
+
+import { Modal } from "../../components/Modal/Modal";
 
 import {
     listarCarrinho,
@@ -17,9 +19,30 @@ import {
     type CarrinhoItemDTO
 } from "../../services/carrinhoService";
 
-interface ProductInCart extends Product {
+interface ProductInCart extends ProductAPI {
     cartItemId: number;
+    inStock: boolean;
+    estoqueTotal: number;
 }
+
+const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
+    return {
+        id: item.produtoId,
+        nome: item.nomeProduto,
+        imageUrl: item.imageUrl || "",
+        cor: item.cor,
+        tamanho: item.tamanho,
+        preco: item.preco,
+        quantidade: item.quantidade,
+        cartItemId: item.id,
+        inStock: item.estoqueTotal > 0, 
+        estoqueTotal: item.estoqueTotal, 
+        descricao: "",
+        categoria: "",
+        desconto: 0,
+        precoComDesconto: item.preco
+    };
+};
 
 export function Cart() {
     const navigate = useNavigate();
@@ -27,8 +50,46 @@ export function Cart() {
     const [produtos, setProdutos] = useState<ProductInCart[]>([]);
     const [loading, setLoading] = useState(true);
     const [clienteId, setClienteId] = useState<number | null>(null);
-
     const [selecionadosIds, setSelecionadosIds] = useState<number[]>([]);
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState({
+        type: "success" as "success" | "error" | "warning",
+        title: "",
+        message: ""
+    });
+    const [acaoConfirmacao, setAcaoConfirmacao] = useState<(() => void) | null>(null);
+
+    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+        setModalConfig({ type, title, message });
+        setModalOpen(true);
+    };
+
+    const fecharModal = () => {
+        setModalOpen(false);
+        setAcaoConfirmacao(null);
+    };
+
+    const carregarCarrinho = useCallback(async (id: number) => {
+        try {
+            setLoading(true);
+            const dados = await listarCarrinho(id);
+            const produtosFormatados = dados.itens.map(item => converterParaProduct(item));
+
+            setProdutos(produtosFormatados);
+
+            const idsDisponiveis = produtosFormatados
+                .filter(p => p.inStock)
+                .map(p => p.id);
+
+            setSelecionadosIds(idsDisponiveis);
+
+        } catch (error) {
+            console.error("Erro ao carregar carrinho", error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
@@ -39,40 +100,13 @@ export function Cart() {
         } else {
             navigate("/login");
         }
-    }, [navigate]);
+    }, [navigate, carregarCarrinho]);
 
-    async function carregarCarrinho(id: number) {
-        try {
-            setLoading(true);
-            const dados = await listarCarrinho(id);
+    const handleToggleProduto = (produto: ProductAPI, selecionado: boolean) => {
+        const item = produto as ProductInCart;
 
-            const produtosFormatados = dados.itens.map(item => converterParaProduct(item));
+        if (!item.inStock) return;
 
-            setProdutos(produtosFormatados);
-
-            setSelecionadosIds(produtosFormatados.map(p => p.id));
-        } catch (error) {
-            console.error("Erro ao carregar carrinho", error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
-        return {
-            id: item.produtoId,
-            name: item.nomeProduto,
-            image: item.imageUrl || "",
-            color: item.cor,
-            size: item.tamanho,
-            unitPrice: item.preco,
-            inStock: true,
-            quantity: item.quantidade,
-            cartItemId: item.id
-        };
-    };
-
-    const handleToggleProduto = (produto: Product, selecionado: boolean) => {
         if (selecionado) {
             setSelecionadosIds(prev => [...prev, produto.id]);
         } else {
@@ -80,70 +114,110 @@ export function Cart() {
         }
     };
 
-    const handleRemoverProduto = async (produto: Product) => {
+    const handleRemoverProduto = (produto: ProductAPI) => {
         if (!clienteId) return;
 
         const itemParaRemover = produto as ProductInCart;
 
-        try {
-            await removerItem(clienteId, itemParaRemover.cartItemId);
+        setAcaoConfirmacao(() => async () => {
+            try {
+                await removerItem(clienteId, itemParaRemover.cartItemId);
+                setProdutos(prev => prev.filter(p => p.cartItemId !== itemParaRemover.cartItemId));
+                setSelecionadosIds(prev => prev.filter(id => id !== produto.id));
+                fecharModal();
+            } catch (error) {
+                console.error(error);
+                fecharModal();
+                setTimeout(() => {
+                    abrirModal("error", "Erro", "Erro ao remover o produto.");
+                }, 200);
+            }
+        });
 
-            setProdutos(prev => prev.filter(p => p.id !== produto.id));
-            setSelecionadosIds(prev => prev.filter(id => id !== produto.id));
-        } catch (error) {
-            console.error(error);
-            alert("Erro ao remover produto.");
-        }
+        abrirModal("warning", "Remover item?", `Deseja remover "${produto.nome}" do seu carrinho?`);
     };
 
-    const handleChangeQuantity = async (produto: Product, novaQuantidade: number) => {
+    const handleChangeQuantity = async (produto: ProductAPI, novaQuantidade: number) => {
         if (!clienteId || novaQuantidade < 1) return;
 
         const itemParaAtualizar = produto as ProductInCart;
+        const produtosAnteriores = [...produtos];
+
+        if (novaQuantidade > itemParaAtualizar.estoqueTotal) {
+            abrirModal("warning", "Estoque Limite", `Apenas ${itemParaAtualizar.estoqueTotal} unidades disponíveis.`);
+            return;
+        }
+
+        setProdutos(prev =>
+            prev.map(p =>
+                p.cartItemId === itemParaAtualizar.cartItemId
+                    ? { ...p, quantidade: novaQuantidade }
+                    : p
+            )
+        );
 
         try {
             await atualizarQuantidade(clienteId, itemParaAtualizar.cartItemId, novaQuantidade);
-
-            setProdutos(prev =>
-                prev.map(p =>
-                    p.id === produto.id ? { ...p, quantity: novaQuantidade } : p
-                )
-            );
         } catch (error) {
             console.error("Erro ao atualizar quantidade", error);
+            setProdutos(produtosAnteriores);
+            abrirModal("error", "Erro", "Não foi possível atualizar a quantidade.");
         }
     };
 
+    const solicitarLimpezaCarrinho = () => {
+        if (!clienteId) return;
+
+        setAcaoConfirmacao(() => async () => {
+            try {
+                await limparCarrinhoCompleto(clienteId);
+                setProdutos([]);
+                setSelecionadosIds([]);
+                fecharModal();
+            } catch (error) {
+                console.error("Erro ao limpar carrinho", error);
+                fecharModal();
+                setTimeout(() => {
+                    abrirModal("error", "Erro", "Erro ao limpar o carrinho. Tente novamente.");
+                }, 200);
+            }
+        });
+
+        abrirModal("warning", "Limpar Carrinho?", "Tem certeza que deseja remover todos os itens do carrinho?");
+    };
+
+    const executarAcaoConfirmacao = () => {
+        if (acaoConfirmacao) {
+            acaoConfirmacao();
+        }
+    };
+
+    const handleIrParaPagamento = () => {
+        const itensParaComprar = produtos.filter(
+            p => selecionadosIds.includes(p.id) && p.inStock
+        );
+
+        if (itensParaComprar.length === 0) {
+            abrirModal("warning", "Carrinho Inválido", "Selecione pelo menos um produto com estoque disponível para continuar.");
+            return;
+        }
+
+        navigate("/compra", { state: { items: itensParaComprar } });
+    };
+
     const produtosParaResumo = produtos.filter(p => selecionadosIds.includes(p.id));
+    const produtosEmEstoque = produtos.filter(p => p.inStock);
+    const produtosSemEstoque = produtos.filter(p => !p.inStock);
 
     if (loading) {
         return (
             <Layout theme="light">
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>
+                <div className={`${style.spinner}`}>
                     <Spinner />
                 </div>
             </Layout>
         );
     }
-
-    const handleLimparCarrinho = async () => {
-        if (!clienteId) return;
-
-        const confirmacao = window.confirm("Tem certeza que deseja remover todos os itens do carrinho?");
-
-        if (confirmacao) {
-            try {
-                await limparCarrinhoCompleto(clienteId);
-
-                setProdutos([]);
-                setSelecionadosIds([]);
-
-            } catch (error) {
-                console.error("Erro ao limpar carrinho", error);
-                alert("Erro ao limpar o carrinho. Tente novamente.");
-            }
-        }
-    };
 
     return (
         <Layout theme="light">
@@ -159,9 +233,9 @@ export function Cart() {
                         </div>
                     ) : (
                         <>
-                            {produtos.map((produto) => (
+                            {produtosEmEstoque.map((produto) => (
                                 <CartProduct
-                                    key={`${produto.id}-${produto.size}`}
+                                    key={produto.cartItemId}
                                     produto={produto}
                                     onToggle={handleToggleProduto}
                                     selecionado={selecionadosIds.includes(produto.id)}
@@ -169,6 +243,23 @@ export function Cart() {
                                     onRemove={handleRemoverProduto}
                                 />
                             ))}
+
+                            {produtosSemEstoque.length > 0 && (
+                                <div className={style.outOfStockSection}>
+                                    <hr />
+                                    <br />
+                                    <h2>Produtos fora de estoque</h2>
+                                    {produtosSemEstoque.map((produto) => (
+                                        <CartProduct
+                                            key={produto.cartItemId}
+                                            produto={produto}
+                                            selecionado={false} 
+                                            onQuantityChange={handleChangeQuantity}
+                                            onRemove={handleRemoverProduto}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </>
                     )}
 
@@ -179,14 +270,38 @@ export function Cart() {
                             size="big"
                             text="limpar carinho"
                             theme="light"
-                            onClick={handleLimparCarrinho}
+                            onClick={solicitarLimpezaCarrinho}
                         />
                     )}
                 </div>
                 <div className={`${style.right}`}>
-                    <ResumeOrder produtos={produtosParaResumo} ativo={produtosParaResumo.length > 0} />
+                    <ResumeOrder 
+                        produtos={produtosParaResumo} 
+                        ativo={produtosParaResumo.length > 0}
+                        onClick={handleIrParaPagamento} 
+                    />
                 </div>
             </div>
+
+            <Modal
+                isOpen={modalOpen}
+                onClose={fecharModal}
+                type={modalConfig.type}
+                title={modalConfig.title}
+            >
+                <p>{modalConfig.message}</p>
+
+                {modalConfig.type === "warning" ? (
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
+                        <Button border="arredondada" color="cinza" size="small" text="Cancelar" theme="light" onClick={fecharModal} />
+                        <Button border="arredondada" color="laranja" size="small" text="Sim" theme="light" onClick={executarAcaoConfirmacao} />
+                    </div>
+                ) : (
+                    <div style={{ marginTop: '20px' }}>
+                        <Button border="arredondada" color="cinza" size="small" text="Fechar" theme="light" onClick={fecharModal} />
+                    </div>
+                )}
+            </Modal>
         </Layout>
     )
 }

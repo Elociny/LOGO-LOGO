@@ -9,6 +9,8 @@ import { FormInput } from "../../components/FormInput/FormInput";
 import { useState } from "react";
 import { login } from "../../services/authService";
 
+import { Modal } from "../../components/Modal/Modal";
+
 export function Login() {
   const navigate = useNavigate()
 
@@ -16,9 +18,25 @@ export function Login() {
   const [senha, setSenha] = useState("")
   const [loading, setLoading] = useState(false)
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+      type: "success" as "success" | "error" | "warning",
+      title: "",
+      message: ""
+  });
+
+  const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+      setModalConfig({ type, title, message });
+      setModalOpen(true);
+  }
+
+  const fecharModal = () => {
+      setModalOpen(false);
+  }
+
   const handleLogin = async () => {
     if(!email || !senha) {
-      alert("Por favor, prencha email e senha")
+      abrirModal("warning", "Campos vazios", "Por favor, preencha email e senha.");
       return
     }
 
@@ -32,12 +50,17 @@ export function Login() {
       navigate("/")
     } catch(error) {
       console.log(error)
-
-      alert("Email ou senha incorretos")
+      abrirModal("error", "Falha no Login", "Email ou senha incorretos. Verifique seus dados.");
     } finally {
       setLoading(false)
     }
   }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
 
   return (
     <div className={`row px-100 ${style.container}`}>
@@ -47,7 +70,7 @@ export function Login() {
           <Logo nome="logologo" />
         </div>
 
-        <div className={`row ${style.inputs}`}>
+        <div className={`row ${style.inputs}`} onKeyDown={handleKeyDown}>
           <FormInput
             icon="bi bi-envelope"
             id="email"
@@ -71,7 +94,7 @@ export function Login() {
           />
 
           <p>
-            <NavLink to="/ForgotPassword">Esqueceu a senha?</NavLink>
+            <NavLink to="/mudar-senha">Esqueceu a senha?</NavLink>
           </p>
         </div>
 
@@ -94,6 +117,27 @@ export function Login() {
       <div className={`row ${style.right}`}>
         <img src={LoginImage} alt="Imagem da página de login" />
       </div>
+      
+      <Modal 
+          isOpen={modalOpen} 
+          onClose={fecharModal} 
+          type={modalConfig.type} 
+          title={modalConfig.title}
+      >
+          <p>{modalConfig.message}</p>
+          
+          <div style={{marginTop: '20px'}}>
+              <Button 
+                  border="arredondada" 
+                  color="cinza" 
+                  size="small" 
+                  text="Fechar" 
+                  theme="light" 
+                  onClick={fecharModal} 
+              />
+          </div>
+      </Modal>
+
     </div>
   );
 }

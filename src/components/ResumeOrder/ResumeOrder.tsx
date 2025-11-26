@@ -1,19 +1,33 @@
 import { Button } from "../Button/Button";
 import style from "./ResumeOrder.module.css";
-import type { Product } from "../../types/Product";
+import type { ProductAPI } from "../../types/ProductAPI";
 
 interface ResumeOrderProps {
-  produtos: Product[];
+  produtos: ProductAPI[];
   ativo: boolean;
+  // Nova prop opcional: função para executar ao clicar
+  onClick?: () => void; 
+  // Nova prop opcional: texto do botão (padrão "comprar")
+  textoBotao?: string;
+  // Nova prop opcional: estado de loading
+  loading?: boolean;
 }
 
-export function ResumeOrder({ produtos, ativo }: ResumeOrderProps) {
+export function ResumeOrder({ 
+    produtos, 
+    ativo, 
+    onClick, 
+    textoBotao = "comprar",
+    loading = false
+}: ResumeOrderProps) {
+    
   const quantidadeTotal = produtos.reduce(
-    (acc, p) => acc + (p.quantity ?? 1),
+    (acc, p) => acc + (p.quantidade ?? 1),
     0
   );
+  
   const total = produtos.reduce(
-    (acc, p) => acc + p.unitPrice * (p.quantity ?? 1),
+    (acc, p) => acc + p.preco * (p.quantidade ?? 1),
     0
   );
 
@@ -48,10 +62,11 @@ export function ResumeOrder({ produtos, ativo }: ResumeOrderProps) {
         <Button
           border="quadrada"
           color="branco"
-          navegation="/"
+          navegation={onClick ? undefined : "/compra"} 
           size="big"
-          text="comprar"
+          text={loading ? "processando..." : textoBotao}
           theme="dark"
+          onClick={onClick}
         />
       )}
     </div>

@@ -9,6 +9,7 @@ export interface CarrinhoItemDTO {
     cor: string;
     tamanho: string;
     quantidade: number;
+    estoqueTotal: number;
 }
 
 export interface CarrinhoResponseDTO {

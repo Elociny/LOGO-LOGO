@@ -12,6 +12,12 @@
     align-self: flex-start;
 }
 
+.botoesFiltro {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
 .cinza {
     border: 1px solid var(--cinza-claro);
 }

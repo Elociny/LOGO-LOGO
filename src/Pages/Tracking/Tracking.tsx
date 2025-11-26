@@ -1,106 +1,131 @@
+import { useEffect, useState, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 import { Button } from "../../components/Button/Button"
 import { Layout } from "../../components/Layout/Layout"
 import { TrackOrder } from "../../components/TrackOrder/TrackOrder"
 import User from "../../components/User/User"
 import style from "./Tracking.module.css"
-
-import ProductImg1 from "../../assets/images/products/produto1.svg";
-import ProductImg2 from "../../assets/images/products/produto2.svg";
-import ProductImg3 from "../../assets/images/products/produto3.svg";
-
 import FotoPerfil from "../../assets/images/foto-de-perfil.svg"
+import { Spinner } from "../../components/Spinner/Spinner"
 
+import { listarComprasDoCliente, type ComprarResponseDTO } from "../../services/compraService"
+import { listarEnderecos } from "../../services/enderecoService"
+import { Error } from "../../components/Error/Error"
 
-import { useState } from "react"
+type TrackItensData = {
+    image: string
+    name: string
+    size: string
+    color: string
+    quantity: number
+    unitPrice: number
+}
+
+interface PedidoFormatado {
+    trackingCode: string
+    status: string
+    customerName: string
+    customerPhone: string
+    address: string
+    items: TrackItensData[]
+}
+
+const converterCompraParaVisual = (
+    compra: ComprarResponseDTO,
+    enderecoFormatado: string,
+    name: string,
+    phone: string
+): PedidoFormatado => {
+    const itensAgrupados = new Map<string, TrackItensData>();
+
+    compra.itens.forEach((item) => {
+        const key = `${item.id}-${item.tamanho}-${item.cor}`;
+
+        if (itensAgrupados.has(key)) {
+            const existente = itensAgrupados.get(key)!;
+            existente.quantity += 1;
+        } else {
+            itensAgrupados.set(key, {
+                image: item.imageUrl,
+                name: item.nome,
+                size: item.tamanho,
+                color: item.cor,
+                quantity: 1,
+                unitPrice: item.preco
+            });
+        }
+    });
+
+    const listaItensVisuais = Array.from(itensAgrupados.values());
+
+    let statusVisual = "preparando";
+    if (compra.status === "ENVIADO") statusVisual = "em rota de entrega";
+    if (compra.status === "ENTREGUE") statusVisual = "entregue";
+    if (compra.status === "CANCELADO") statusVisual = "cancelado";
+
+    return {
+        trackingCode: `PED-${compra.id.toString().padStart(6, '0')}`,
+        status: statusVisual,
+        customerName: name,
+        customerPhone: phone,
+        address: enderecoFormatado,
+        items: listaItensVisuais
+    };
+}
 
 export function Tracking() {
+    const navigate = useNavigate();
     const [filtro, setFiltro] = useState<string>("mostrar todos")
+    const [pedidos, setPedidos] = useState<PedidoFormatado[]>([])
+    const [loading, setLoading] = useState(true)
 
-    const cliente = {
-        nome: "Nicole Lins Coelho",
-        email: "nicole.lcoelho@logologo.com"
-    }
+    const [dadosUsuario, setDadosUsuario] = useState({ nome: "", email: "", telefone: "", imageUrl: "" })
 
-    const pedidos = [
-        {
-            trackingCode: "BR123456789",
-            status: "preparando",
-            customerName: cliente.nome,
-            customerPhone: "+55 (11) 9 7048-7095",
-            address:
-                "Rua Nicole Linda Perfeita Maravilhosa E Tudo De Bom No Universo, 53, Jardim Nicole Perfeita (Zona Linda), São Paulo/SP - 04852-012",
-            items: [
-                {
-                    image: ProductImg3,
-                    name: "Bermuda Jeans",
-                    size: "M",
-                    color: "Azul",
-                    quantity: 2,
-                    unitPrice: 90,
-                },
-                {
-                    image: ProductImg1,
-                    name: "Camiseta Oversized",
-                    size: "G",
-                    color: "Preta",
-                    quantity: 1,
-                    unitPrice: 120,
-                },
-            ],
-        },
-        {
-            trackingCode: "BR987654321",
-            status: "em rota de entrega",
-            customerName: cliente.nome,
-            customerPhone: "+55 (11) 9 7048-7095",
-            address:
-                "Av. das Desenvolvedoras Incríveis, 42, Jardim do Código, São Paulo/SP - 04855-020",
-            items: [
-                {
-                    image: ProductImg2,
-                    name: "Tênis Esportivo",
-                    size: "38",
-                    color: "Branco",
-                    quantity: 1,
-                    unitPrice: 280,
-                },
-                {
-                    image: ProductImg3,
-                    name: "Jaqueta Jeans",
-                    size: "M",
-                    color: "Azul Claro",
-                    quantity: 1,
-                    unitPrice: 200,
-                },
-            ],
-        },
-        {
-            trackingCode: "BR1122334455",
-            status: "entregue",
-            customerName: cliente.nome,
-            customerPhone: "+55 (11) 9 7048-7095",
-            address:
-                "Rua React Typescript, 15, Bairro Front-End Feliz, São Paulo/SP - 04856-090",
-            items: [
-                {
-                    image: ProductImg1,
-                    name: "Vestido Floral",
-                    size: "P",
-                    color: "Rosa",
-                    quantity: 1,
-                    unitPrice: 180,
-                },
-                {
-                    image: ProductImg2,
-                    name: "Sandália Couro",
-                    size: "37",
-                    color: "Bege",
-                    quantity: 2,
-                    unitPrice: 150,
-                },
-            ],
-        },
-    ]
+    const carregarDados = useCallback(async (clienteId: number, usuarioLocal: { nome: string, telefone: string }) => {
+        try {
+            setLoading(true);
+
+            const [listaCompras, listaEnderecos] = await Promise.all([
+                listarComprasDoCliente(clienteId),
+                listarEnderecos(clienteId)
+            ]);
+
+            let enderecoString = "Endereço não encontrado";
+            if (listaEnderecos.length > 0) {
+                const end = listaEnderecos[0];
+                enderecoString = `${end.logradouro}, ${end.numero}${end.complemento ? ' - ' + end.complemento : ''} - ${end.bairro}, ${end.cidade}/${end.estado} - CEP: ${end.cep}`;
+            }
+
+            const pedidosFormatados = listaCompras.map(compra =>
+                converterCompraParaVisual(compra, enderecoString, usuarioLocal.nome, usuarioLocal.telefone)
+            );
+
+            setPedidos(pedidosFormatados.reverse());
+        } catch (error) {
+            console.error("Erro ao carregar dados", error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        const usuarioSalvo = localStorage.getItem("usuario_logado");
+        if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+            const telefone = usuario.telefone || "+55 (11) 9 9999-9999";
+
+            setDadosUsuario({
+                nome: usuario.nome,
+                email: usuario.email,
+                telefone: telefone,
+                imageUrl: usuario.imageUrl || ""
+            });
+
+            carregarDados(usuario.id, { nome: usuario.nome, telefone });
+        } else {
+            navigate("/login");
+        }
+    }, [navigate, carregarDados]);
 
     const pedidosFiltrados = filtro === "mostrar todos" ? pedidos : pedidos.filter((p) => p.status === filtro)
 
@@ -108,47 +133,33 @@ export function Tracking() {
         <Layout theme="light">
             <div className={`row ${style.tracking}`}>
                 <div className={`${style.left}`}>
-                    <User nome={cliente.nome} email={cliente.email} foto={FotoPerfil} theme="light" />
+                    <User
+                        nome={dadosUsuario.nome}
+                        email={dadosUsuario.email}
+                        foto={dadosUsuario.imageUrl || FotoPerfil}
+                        theme="light"
+                    />
                     <hr className={`${style.cinza}`} />
-                    <Button
-                        border="arredondada"
-                        color={filtro === "mostrar todos" ? "cinza" : "transparente"}
-                        size="big"
-                        text="mostrar todos"
-                        theme="light"
-                        onClick={() => setFiltro("mostrar todos")}
-                    />
-                    <Button
-                        border="arredondada"
-                        color={filtro === "preparando" ? "cinza" : "transparente"}
-                        size="big"
-                        text="preparando"
-                        theme="light"
-                        onClick={() => setFiltro("preparando")}
-                    />
-                    <Button
-                        border="arredondada"
-                        color={filtro === "em rota de entrega" ? "cinza" : "transparente"}
-                        size="big"
-                        text="a caminho"
-                        theme="light"
-                        onClick={() => setFiltro("em rota de entrega")}
-                    />
-                    <Button
-                        border="arredondada"
-                        color={filtro === "entregue" ? "cinza" : "transparente"}
-                        size="big"
-                        text="finalizado"
-                        theme="light"
-                        onClick={() => setFiltro("entregue")}
-                    />
+
+                    <div className={style.botoesFiltro}>
+                        <Button border="arredondada" color={filtro === "mostrar todos" ? "cinza" : "transparente"} size="big" text="mostrar todos" theme="light" onClick={() => setFiltro("mostrar todos")} />
+                        <Button border="arredondada" color={filtro === "preparando" ? "cinza" : "transparente"} size="big" text="preparando" theme="light" onClick={() => setFiltro("preparando")} />
+                        <Button border="arredondada" color={filtro === "em rota de entrega" ? "cinza" : "transparente"} size="big" text="a caminho" theme="light" onClick={() => setFiltro("em rota de entrega")} />
+                        <Button border="arredondada" color={filtro === "entregue" ? "cinza" : "transparente"} size="big" text="finalizado" theme="light" onClick={() => setFiltro("entregue")} />
+                    </div>
                 </div>
+
                 <div className={`${style.right}`}>
                     <h2>Meus pedidos</h2>
 
-                    <div className={`${style.pedidos}`}>
-                        {pedidosFiltrados.map((pedido, index) => {
+                    {loading && <div className={style.spinnerContainer}><Spinner /></div>}
 
+                    {!loading && pedidosFiltrados.length === 0 && (
+                        <Error type="empty" />
+                    )}
+
+                    <div className={`${style.pedidos}`}>
+                        {!loading && pedidosFiltrados.map((pedido, index) => {
                             return (
                                 <TrackOrder
                                     key={index}

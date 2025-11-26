@@ -6,6 +6,8 @@
     justify-content: space-between;
     width: 15rem;
     height: 30rem;
+
+    cursor: pointer;
 }
 
 .product img {

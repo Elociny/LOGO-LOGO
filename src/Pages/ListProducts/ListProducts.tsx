@@ -63,7 +63,11 @@ export function ListProducts() {
               </>
             )}
 
-            {isLoading && <Spinner />}
+            {isLoading && (
+              <div className={`${style.sticky}`}>
+                <Spinner />
+              </div>
+            )}
 
             {isError && (
               <div className={`${style.sticky}`}>

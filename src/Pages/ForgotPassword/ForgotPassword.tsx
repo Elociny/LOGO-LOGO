@@ -19,7 +19,7 @@ export function ForgotPassword() {
                         <FormInput icon="bi bi-envelope" id="email" label="Endereço de email" placeholder="Digite aqui seu email" theme="light" type="text" />
                     </div>
 
-                    <Button border="quadrada" color="cinza" navegation="/changePassword" size="big" text="redefinir senha" theme="light" />
+                    <Button border="quadrada" color="cinza" navegation="/mudar-senha" size="big" text="redefinir senha" theme="light" />
 
                     <span>Após redefinir a senha, você receberá um link em seu e-mail para concluir o processo.</span>
                 </div>
