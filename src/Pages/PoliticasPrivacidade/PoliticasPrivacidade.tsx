@@ -7,7 +7,6 @@ export function PoliticasPrivacidade() {
       <div className={style.container}>
         <h1 className={style.mainTitle}>Política de Privacidade LOGOLOGO</h1>
 
-        {/* 1. INTRODUÇÃO */}
         <section className={style.section}>
           <h2 className={style.sectionTitle}>1. INTRODUÇÃO</h2>
           
@@ -20,7 +19,6 @@ export function PoliticasPrivacidade() {
           </p>
         </section>
 
-        {/* 2. QUANDO COLETAMOS DADOS PESSOAIS? */}
         <section className={style.section}>
           <h2 className={style.sectionTitle}>2. QUANDO COLETAMOS DADOS PESSOAIS?</h2>
           
@@ -35,7 +33,6 @@ export function PoliticasPrivacidade() {
           </p>
         </section>
 
-        {/* 3. QUE DADOS PESSOAIS COLETAMOS? */}
         <section className={style.section}>
           <h2 className={style.sectionTitle}>3. QUE DADOS PESSOAIS COLETAMOS?</h2>
           
@@ -52,7 +49,6 @@ export function PoliticasPrivacidade() {
           </p>
         </section>
 
-        {/* 4. COOKIES */}
         <section className={style.section}>
           <h2 className={style.sectionTitle}>4. COOKIES</h2>
           
@@ -64,7 +60,6 @@ export function PoliticasPrivacidade() {
           </p>
         </section>
 
-        {/* 5. COMO USAMOS AS INFORMAÇÕES QUE VOCÊ NOS FORNECE? */}
         <section className={style.section}>
           <h2 className={style.sectionTitle}>5. COMO USAMOS AS INFORMAÇÕES QUE VOCÊ NOS FORNECE?</h2>
           
@@ -81,7 +76,6 @@ export function PoliticasPrivacidade() {
           </p>
         </section>
         
-        {/* 6. PROTEÇÃO E RETENÇÃO */}
         <section className={style.section}>
           <h2 className={style.sectionTitle}>6. PROTEÇÃO E RETENÇÃO</h2>
           

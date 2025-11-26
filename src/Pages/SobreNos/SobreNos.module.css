@@ -32,13 +32,15 @@
 
 .valueItem {
     padding: 1.5rem;
-    border: 2px solid #e0e0e0; 
+    border: 2px solid var(--cinza-claro); 
     border-radius: 0.5rem;
     transition: box-shadow 0.3s;
 }
 
 .valueItem:hover {
-    box-shadow: 0 8px 16px rgba(var(--laranja-rgb), 0.1);
+    box-shadow: 0 0 2rem var(--laranja);
+
+    cursor: pointer;
 }
 
 .valueItem h3 {
@@ -64,7 +66,7 @@
     gap: 3rem;
     margin-top: 4rem;
     padding: 3rem 0;
-    background-color: white; 
+    background-color: var(--branco); 
     border-radius: 1rem;
     text-align: left;
 }

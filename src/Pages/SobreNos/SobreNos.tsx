@@ -1,9 +1,6 @@
 import { Layout } from "../../components/Layout/Layout";
 import style from "./SobreNos.module.css"; 
-// Importação da imagem da equipe salva (garanta que o caminho esteja correto)
 import TeamImage from "../../assets/images/SobreNos.png"; 
-
-// O placeholder da imagem de história foi removido/substituído.
 
 export function SobreNos() {
   return (
@@ -15,7 +12,6 @@ export function SobreNos() {
           Conheça os pilares que guiam cada decisão que tomamos.
         </p>
 
-        {/* SEÇÃO DE VALORES (MANTIDA) */}
         <div className={style.valuesGrid}>
           
           <div className={style.valueItem}>

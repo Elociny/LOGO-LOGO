@@ -27,10 +27,10 @@
 
 .contactItem {
     padding: 2rem;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--cinza-claro);
     border-radius: 0.75rem;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: var(--branco);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
     text-align: center;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .contactItem p {
-    color: #555;
+    color: var(--cinza);
     margin-bottom: 0.5rem;
 }
 
@@ -57,7 +57,6 @@
 }
 
 .addressSection {
-    background-color: #f8f8f8;
     padding: 2rem;
     border-radius: 0.75rem;
     margin-top: 2rem;
@@ -70,7 +69,7 @@
 }
 
 .attention {
-    color: #888;
+    color: var(--cinza-claro);
     font-size: 0.9rem;
     margin-top: 1rem;
     font-style: italic;
