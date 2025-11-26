@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "../../components/Button/Button"
 import { Layout } from "../../components/Layout/Layout"
 import { TrackOrder } from "../../components/TrackOrder/TrackOrder"
 import User from "../../components/User/User"
 import style from "./Tracking.module.css"
-import FotoPerfil from "../../assets/images/icons/userDefault.svg"
+import FotoPerfil from "../../assets/images/foto-de-perfil.svg"
 import { Spinner } from "../../components/Spinner/Spinner"
 
 import { listarComprasDoCliente, type ComprarResponseDTO } from "../../services/compraService"
@@ -30,38 +30,58 @@ interface PedidoFormatado {
     items: TrackItensData[]
 }
 
+const converterCompraParaVisual = (
+    compra: ComprarResponseDTO,
+    enderecoFormatado: string,
+    name: string,
+    phone: string
+): PedidoFormatado => {
+    const itensAgrupados = new Map<string, TrackItensData>();
+
+    compra.itens.forEach((item) => {
+        const key = `${item.id}-${item.tamanho}-${item.cor}`;
+
+        if (itensAgrupados.has(key)) {
+            const existente = itensAgrupados.get(key)!;
+            existente.quantity += 1;
+        } else {
+            itensAgrupados.set(key, {
+                image: item.imageUrl,
+                name: item.nome,
+                size: item.tamanho,
+                color: item.cor,
+                quantity: 1,
+                unitPrice: item.preco
+            });
+        }
+    });
+
+    const listaItensVisuais = Array.from(itensAgrupados.values());
+
+    let statusVisual = "preparando";
+    if (compra.status === "ENVIADO") statusVisual = "em rota de entrega";
+    if (compra.status === "ENTREGUE") statusVisual = "entregue";
+    if (compra.status === "CANCELADO") statusVisual = "cancelado";
+
+    return {
+        trackingCode: `PED-${compra.id.toString().padStart(6, '0')}`,
+        status: statusVisual,
+        customerName: name,
+        customerPhone: phone,
+        address: enderecoFormatado,
+        items: listaItensVisuais
+    };
+}
+
 export function Tracking() {
     const navigate = useNavigate();
     const [filtro, setFiltro] = useState<string>("mostrar todos")
     const [pedidos, setPedidos] = useState<PedidoFormatado[]>([])
     const [loading, setLoading] = useState(true)
 
-    const [dadosUsuario, setDadosUsuario] = useState({ 
-        nome: "", 
-        email: "", 
-        telefone: "", 
-        imageUrl: "" 
-    })
+    const [dadosUsuario, setDadosUsuario] = useState({ nome: "", email: "", telefone: "", imageUrl: "" })
 
-    useEffect(() => {
-        const usuarioSalvo = localStorage.getItem("usuario_logado");
-        if (usuarioSalvo) {
-            const usuario = JSON.parse(usuarioSalvo);
-            
-            setDadosUsuario({
-                nome: usuario.nome,
-                email: usuario.email,
-                telefone: usuario.telefone || "(11) 9 9999-9999",
-                imageUrl: usuario.imageUrl || "" 
-            });
-
-            carregarDados(usuario.id);
-        } else {
-            navigate("/login");
-        }
-    }, [navigate]);
-
-    async function carregarDados(clienteId: number) {
+    const carregarDados = useCallback(async (clienteId: number, usuarioLocal: { nome: string, telefone: string }) => {
         try {
             setLoading(true);
 
@@ -76,7 +96,9 @@ export function Tracking() {
                 enderecoString = `${end.logradouro}, ${end.numero}${end.complemento ? ' - ' + end.complemento : ''} - ${end.bairro}, ${end.cidade}/${end.estado} - CEP: ${end.cep}`;
             }
 
-            const pedidosFormatados = listaCompras.map(compra => converterCompraParaVisual(compra, enderecoString));
+            const pedidosFormatados = listaCompras.map(compra =>
+                converterCompraParaVisual(compra, enderecoString, usuarioLocal.nome, usuarioLocal.telefone)
+            );
 
             setPedidos(pedidosFormatados.reverse());
         } catch (error) {
@@ -84,45 +106,26 @@ export function Tracking() {
         } finally {
             setLoading(false);
         }
-    }
+    }, []);
 
-    const converterCompraParaVisual = (compra: ComprarResponseDTO, enderecoFormatado: string): PedidoFormatado => {
-        const itensAgrupados = new Map<string, TrackItensData>();
+    useEffect(() => {
+        const usuarioSalvo = localStorage.getItem("usuario_logado");
+        if (usuarioSalvo) {
+            const usuario = JSON.parse(usuarioSalvo);
+            const telefone = usuario.telefone || "+55 (11) 9 9999-9999";
 
-        compra.itens.forEach((item) => {
-            const key = `${item.id}-${item.tamanho}-${item.cor}`;
+            setDadosUsuario({
+                nome: usuario.nome,
+                email: usuario.email,
+                telefone: telefone,
+                imageUrl: usuario.imageUrl || ""
+            });
 
-            if (itensAgrupados.has(key)) {
-                const existente = itensAgrupados.get(key)!;
-                existente.quantity += 1;
-            } else {
-                itensAgrupados.set(key, {
-                    image: item.imageUrl,
-                    name: item.nome,
-                    size: item.tamanho,
-                    color: item.cor,
-                    quantity: 1,
-                    unitPrice: item.preco
-                });
-            }
-        });
-
-        const listaItensVisuais = Array.from(itensAgrupados.values());
-
-        let statusVisual = "preparando";
-        if (compra.status === "ENVIADO") statusVisual = "em rota de entrega";
-        if (compra.status === "ENTREGUE") statusVisual = "entregue";
-        if (compra.status === "CANCELADO") statusVisual = "cancelado";
-
-        return {
-            trackingCode: `PED-${compra.id.toString().padStart(6, '0')}`,
-            status: statusVisual,
-            customerName: dadosUsuario.nome,
-            customerPhone: dadosUsuario.telefone,
-            address: enderecoFormatado,
-            items: listaItensVisuais
-        };
-    }
+            carregarDados(usuario.id, { nome: usuario.nome, telefone });
+        } else {
+            navigate("/login");
+        }
+    }, [navigate, carregarDados]);
 
     const pedidosFiltrados = filtro === "mostrar todos" ? pedidos : pedidos.filter((p) => p.status === filtro)
 
@@ -130,59 +133,26 @@ export function Tracking() {
         <Layout theme="light">
             <div className={`row ${style.tracking}`}>
                 <div className={`${style.left}`}>
-                    <User 
-                        nome={dadosUsuario.nome} 
-                        email={dadosUsuario.email} 
-                        foto={dadosUsuario.imageUrl || FotoPerfil} 
-                        theme="light" 
+                    <User
+                        nome={dadosUsuario.nome}
+                        email={dadosUsuario.email}
+                        foto={dadosUsuario.imageUrl || FotoPerfil}
+                        theme="light"
                     />
-                    
                     <hr className={`${style.cinza}`} />
 
                     <div className={style.botoesFiltro}>
-                        <Button
-                            border="arredondada"
-                            color={filtro === "mostrar todos" ? "cinza" : "transparente"}
-                            size="big"
-                            text="mostrar todos"
-                            theme="light"
-                            onClick={() => setFiltro("mostrar todos")}
-                        />
-                        <Button
-                            border="arredondada"
-                            color={filtro === "preparando" ? "cinza" : "transparente"}
-                            size="big"
-                            text="preparando"
-                            theme="light"
-                            onClick={() => setFiltro("preparando")}
-                        />
-                        <Button
-                            border="arredondada"
-                            color={filtro === "em rota de entrega" ? "cinza" : "transparente"}
-                            size="big"
-                            text="a caminho"
-                            theme="light"
-                            onClick={() => setFiltro("em rota de entrega")}
-                        />
-                        <Button
-                            border="arredondada"
-                            color={filtro === "entregue" ? "cinza" : "transparente"}
-                            size="big"
-                            text="finalizado"
-                            theme="light"
-                            onClick={() => setFiltro("entregue")}
-                        />
+                        <Button border="arredondada" color={filtro === "mostrar todos" ? "cinza" : "transparente"} size="big" text="mostrar todos" theme="light" onClick={() => setFiltro("mostrar todos")} />
+                        <Button border="arredondada" color={filtro === "preparando" ? "cinza" : "transparente"} size="big" text="preparando" theme="light" onClick={() => setFiltro("preparando")} />
+                        <Button border="arredondada" color={filtro === "em rota de entrega" ? "cinza" : "transparente"} size="big" text="a caminho" theme="light" onClick={() => setFiltro("em rota de entrega")} />
+                        <Button border="arredondada" color={filtro === "entregue" ? "cinza" : "transparente"} size="big" text="finalizado" theme="light" onClick={() => setFiltro("entregue")} />
                     </div>
                 </div>
 
                 <div className={`${style.right}`}>
                     <h2>Meus pedidos</h2>
 
-                    {loading && (
-                        <div className={style.spinnerContainer}>
-                            <Spinner />
-                        </div>
-                    )}
+                    {loading && <div className={style.spinnerContainer}><Spinner /></div>}
 
                     {!loading && pedidosFiltrados.length === 0 && (
                         <Error type="empty" />

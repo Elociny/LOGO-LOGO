@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AxiosError } from "axios";
 import { Address } from "../../components/Address/Address";
 import { Layout } from "../../components/Layout/Layout";
@@ -14,7 +14,7 @@ import {
     listarCarrinho,
     removerItem,
     atualizarQuantidade,
-    type CarrinhoItemDTO,
+    type CarrinhoItemDTO
 } from "../../services/carrinhoService";
 import { cadastrarCartao } from "../../services/cartaoService";
 import { salvarCompra } from "../../services/compraService";
@@ -29,9 +29,28 @@ interface ProductAPIInCart extends ProductAPI {
     inStock: boolean;
 }
 
+const converterParaProductAPI = (item: CarrinhoItemDTO): ProductAPIInCart => {
+    return {
+        id: item.produtoId,
+        nome: item.nomeProduto,
+        imageUrl: item.imageUrl || "",
+        cor: item.cor,
+        tamanho: item.tamanho,
+        preco: item.preco,
+        quantidade: item.quantidade,
+        cartItemId: item.id,
+        estoqueTotal: item.estoqueTotal,
+        inStock: item.estoqueTotal > 0,
+        categoria: "",
+        descricao: "",
+        desconto: 0,
+        precoComDesconto: item.preco
+    };
+};
+
 export function Payment() {
     const navigate = useNavigate();
-    const location = useLocation(); 
+    const location = useLocation();
 
     const [enderecos, setEnderecos] = useState<EnderecoDTO[]>([]);
     const [enderecoSelecionadoId, setEnderecoSelecionadoId] = useState<number | null>(null);
@@ -66,6 +85,34 @@ export function Payment() {
         setModalOpen(false);
     };
 
+    const carregarDados = useCallback(async (userId: number, itensVindosDaNavegacao?: ProductAPIInCart[]) => {
+        try {
+            setLoading(true);
+            const [listaEnderecos, dadosCarrinho] = await Promise.all([
+                listarEnderecos(userId),
+                listarCarrinho(userId)
+            ]);
+
+            setEnderecos(listaEnderecos);
+
+            if (listaEnderecos.length > 0) {
+                setEnderecoSelecionadoId(listaEnderecos[0].id || null);
+            }
+
+            if (itensVindosDaNavegacao && itensVindosDaNavegacao.length > 0) {
+                const validos = itensVindosDaNavegacao.filter(p => p.estoqueTotal > 0);
+                setProdutos(validos);
+            } else {
+                const produtosFormatados = dadosCarrinho.itens.map(converterParaProductAPI);
+                setProdutos(produtosFormatados.filter(p => p.estoqueTotal > 0));
+            }
+        } catch (error) {
+            console.error("Erro ao carregar dados", error);
+        } finally {
+            setLoading(false);
+        }
+    }, []); 
+
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
         if (usuarioSalvo) {
@@ -77,52 +124,8 @@ export function Payment() {
         } else {
             navigate("/login");
         }
-    }, [navigate, location.state]); 
-
-    async function carregarDados(userId: number, itensVindosDaNavegacao?: ProductAPIInCart[]) {
-        try {
-            setLoading(true);
-
-            const listaEnderecos = await listarEnderecos(userId);
-            setEnderecos(listaEnderecos);
-            if (listaEnderecos.length > 0) {
-                setEnderecoSelecionadoId(listaEnderecos[0].id || null);
-            }
-
-            if (itensVindosDaNavegacao && itensVindosDaNavegacao.length > 0) {
-                const validos = itensVindosDaNavegacao.filter(p => p.estoqueTotal > 0);
-                setProdutos(validos);
-            } else {
-                const dadosCarrinho = await listarCarrinho(userId);
-                const todosProdutos = dadosCarrinho.itens.map(converterParaProductAPI);
-                setProdutos(todosProdutos.filter(p => p.estoqueTotal > 0));
-            }
-
-        } catch (error) {
-            console.error("Erro ao carregar dados", error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const converterParaProductAPI = (item: CarrinhoItemDTO): ProductAPIInCart => {
-        return {
-            id: item.produtoId,
-            nome: item.nomeProduto,
-            imageUrl: item.imageUrl || "",
-            cor: item.cor,
-            tamanho: item.tamanho,
-            preco: item.preco,
-            quantidade: item.quantidade,
-            cartItemId: item.id,
-            estoqueTotal: item.estoqueTotal,
-            inStock: item.estoqueTotal > 0,
-            categoria: "",
-            descricao: "",
-            desconto: 0,
-            precoComDesconto: item.preco
-        };
-    };
+        
+    }, [navigate, location.state, carregarDados]);
 
     const handleDadosCartaoChange = (campo: keyof DadosCartao, valor: string) => {
         setDadosCartao(prev => ({ ...prev, [campo]: valor }));
@@ -134,11 +137,15 @@ export function Payment() {
         try {
             await removerItem(clienteId, item.cartItemId);
             setProdutos(prev => prev.filter(p => p.cartItemId !== item.cartItemId));
-        } catch (error) { console.error(error); abrirModal("error", "Erro", "Erro ao remover produto."); }
+        } catch (error) {
+            console.error(error);
+            abrirModal("error", "Erro", "Erro ao remover produto.");
+        }
     };
 
     const handleChangeQuantity = async (produto: ProductAPI, novaQuantidade: number) => {
         if (!clienteId || novaQuantidade < 1) return;
+
         const itemParaAtualizar = produto as ProductAPIInCart;
 
         if (novaQuantidade > itemParaAtualizar.estoqueTotal) {
@@ -147,12 +154,19 @@ export function Payment() {
         }
 
         const produtosAnteriores = [...produtos];
-        setProdutos(prev => prev.map(p => p.cartItemId === itemParaAtualizar.cartItemId ? { ...p, quantidade: novaQuantidade } : p));
+
+        setProdutos(prev =>
+            prev.map(p =>
+                p.cartItemId === itemParaAtualizar.cartItemId
+                    ? { ...p, quantidade: novaQuantidade }
+                    : p
+            )
+        );
 
         try {
             await atualizarQuantidade(clienteId, itemParaAtualizar.cartItemId, novaQuantidade);
         } catch (error) {
-            console.error(error);
+            console.error("Erro ao atualizar quantidade", error);
             setProdutos(produtosAnteriores);
             abrirModal("error", "Erro", "Não foi possível atualizar a quantidade.");
         }
@@ -181,6 +195,7 @@ export function Payment() {
                     setLoading(false);
                     return;
                 }
+
                 const validadeFormatada = `${dadosCartao.validadeMes}/${dadosCartao.validadeAno}`;
                 const numeroLimpo = dadosCartao.numero.replace(/\s/g, "");
 
@@ -193,6 +208,7 @@ export function Payment() {
                     tipo: "CREDITO",
                     bandeira: "MASTERCARD"
                 });
+
                 idCartaoParaCompra = cartaoSalvo.id;
             }
 
@@ -219,19 +235,36 @@ export function Payment() {
         } catch (error) {
             const err = error as AxiosError;
             console.error("Erro detalhado:", err);
+
             let mensagemErro = "Erro ao processar o pedido.";
+
             if (err.response && err.response.data) {
                 const dadosErro = err.response.data;
-                interface SpringValidationError { errors?: Array<{ defaultMessage: string }>; message?: string; error?: string; }
+
+                interface SpringValidationError {
+                    errors?: Array<{ defaultMessage: string }>;
+                    message?: string;
+                    error?: string;
+                }
+
                 if (typeof dadosErro === 'string') {
-                    if (dadosErro.trim().startsWith("<") || dadosErro.length > 200) mensagemErro = "Ocorreu um erro interno.";
-                    else mensagemErro = dadosErro;
+                    if (dadosErro.trim().startsWith("<") || dadosErro.length > 200) {
+                        mensagemErro = "Ocorreu um erro interno no servidor.";
+                    } else {
+                        mensagemErro = dadosErro;
+                    }
                 } else if (typeof dadosErro === 'object' && dadosErro !== null) {
                     const erroObjeto = dadosErro as SpringValidationError;
-                    if (erroObjeto.errors && Array.isArray(erroObjeto.errors) && erroObjeto.errors.length > 0) mensagemErro = erroObjeto.errors[0].defaultMessage;
-                    else mensagemErro = erroObjeto.message || erroObjeto.error || JSON.stringify(dadosErro);
+
+                    if (erroObjeto.errors && Array.isArray(erroObjeto.errors) && erroObjeto.errors.length > 0) {
+                        mensagemErro = erroObjeto.errors[0].defaultMessage;
+                    }
+                    else {
+                        mensagemErro = erroObjeto.message || erroObjeto.error || JSON.stringify(dadosErro);
+                    }
                 }
             }
+
             abrirModal("error", "Atenção", mensagemErro);
         } finally {
             setLoading(false);
@@ -239,7 +272,13 @@ export function Payment() {
     };
 
     if (loading) {
-        return <Layout><div style={{ display: 'flex', justifyContent: 'center', padding: '100px' }}><Spinner /></div></Layout>
+        return (
+            <Layout>
+                <div style={{ display: 'flex', justifyContent: 'center', padding: '100px' }}>
+                    <Spinner />
+                </div>
+            </Layout>
+        )
     }
 
     return (
@@ -254,7 +293,7 @@ export function Payment() {
                         </div>
                     ) : (
                         <div className={`${style.endereco}`}>
-                            {enderecos.map((end, index) => (
+                            {enderecos.map((end) => (
                                 <div key={end.id} className={style.radioOption}>
                                     <Address
                                         nome={dadosUsuario.nome}
@@ -268,7 +307,12 @@ export function Payment() {
                                         complemento={end.complemento}
                                     />
                                     <label>
-                                        <input type="radio" name="enderecoSelecionado" checked={enderecoSelecionadoId === end.id} onChange={() => setEnderecoSelecionadoId(end.id || null)} />
+                                        <input
+                                            type="radio"
+                                            name="enderecoSelecionado"
+                                            checked={enderecoSelecionadoId === end.id}
+                                            onChange={() => setEnderecoSelecionadoId(end.id || null)}
+                                        />
                                         Entregar aqui
                                     </label>
                                 </div>
@@ -315,10 +359,23 @@ export function Payment() {
                 </div>
             </div>
 
-            <Modal isOpen={modalOpen} onClose={fecharModal} type={modalConfig.type} title={modalConfig.title}>
+            <Modal
+                isOpen={modalOpen}
+                onClose={fecharModal}
+                type={modalConfig.type}
+                title={modalConfig.title}
+            >
                 <p>{modalConfig.message}</p>
+
                 <div style={{ marginTop: '20px' }}>
-                    <Button border="arredondada" color="cinza" size="small" text="Fechar" theme="light" onClick={fecharModal} />
+                    <Button
+                        border="arredondada"
+                        color="cinza"
+                        size="small"
+                        text="Fechar"
+                        theme="light"
+                        onClick={fecharModal}
+                    />
                 </div>
             </Modal>
         </Layout>
