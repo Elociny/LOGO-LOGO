@@ -9,7 +9,6 @@ import FotoPerfil from "../../assets/images/foto-de-perfil.svg"
 import { Spinner } from "../../components/Spinner/Spinner"
 
 import { listarComprasDoCliente, type ComprarResponseDTO } from "../../services/compraService"
-// 1. Importe o serviço de endereço
 import { listarEnderecos } from "../../services/enderecoService"
 import { Error } from "../../components/Error/Error"
 
@@ -37,16 +36,23 @@ export function Tracking() {
     const [pedidos, setPedidos] = useState<PedidoFormatado[]>([])
     const [loading, setLoading] = useState(true)
 
-    const [dadosUsuario, setDadosUsuario] = useState({ nome: "", email: "", telefone: "" })
+    const [dadosUsuario, setDadosUsuario] = useState({ 
+        nome: "", 
+        email: "", 
+        telefone: "", 
+        imageUrl: "" 
+    })
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
         if (usuarioSalvo) {
             const usuario = JSON.parse(usuarioSalvo);
+            
             setDadosUsuario({
                 nome: usuario.nome,
                 email: usuario.email,
-                telefone: usuario.telefone || "+55 (11) 9 9999-9999"
+                telefone: usuario.telefone || "(11) 9 9999-9999",
+                imageUrl: usuario.imageUrl || "" 
             });
 
             carregarDados(usuario.id);
@@ -124,7 +130,13 @@ export function Tracking() {
         <Layout theme="light">
             <div className={`row ${style.tracking}`}>
                 <div className={`${style.left}`}>
-                    <User nome={dadosUsuario.nome} email={dadosUsuario.email} foto={FotoPerfil} theme="light" />
+                    <User 
+                        nome={dadosUsuario.nome} 
+                        email={dadosUsuario.email} 
+                        foto={dadosUsuario.imageUrl || FotoPerfil} 
+                        theme="light" 
+                    />
+                    
                     <hr className={`${style.cinza}`} />
 
                     <div className={style.botoesFiltro}>

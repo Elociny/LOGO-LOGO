@@ -1,29 +1,24 @@
-import { NavLink } from "react-router"
-import { SearchInput } from "../SearchInput/SearchInput"
-import { Logo } from "../Logo/Logo"
-import { Nav } from "../Nav/Nav"
-import User from "../User/User"
-import { useState, useEffect } from "react"
+import { NavLink } from "react-router-dom";
+import { SearchInput } from "../SearchInput/SearchInput";
+import { Logo } from "../Logo/Logo";
+import { Nav } from "../Nav/Nav";
+import User from "../User/User";
+import { useState, useEffect } from "react";
 
-import styles from "./Header.module.css"
+import styles from "./Header.module.css";
 
+// 1. Adicione imageUrl aqui
 interface UsuarioLogado {
     nome: string;
     email: string;
+    imageUrl?: string; 
 }
 
 export function Header() {
     const [isMobile, setIsMobile] = useState(false)
     const [usuario, setUsuario] = useState<UsuarioLogado | null>(null)
 
-    useEffect(() => {
-        const checkScreenSize = () => {
-            setIsMobile(window.innerWidth <= 768)
-        };
-
-        checkScreenSize();
-        window.addEventListener('resize', checkScreenSize)
-
+    const carregarUsuario = () => {
         const usuarioSalvo = localStorage.getItem("usuario_logado")
         if (usuarioSalvo) {
             try {
@@ -32,8 +27,21 @@ export function Header() {
                 console.error("Erro ao ler usuário", error)
             }
         }
+    }
 
-        return () => window.removeEventListener('resize', checkScreenSize)
+    useEffect(() => {
+        const checkScreenSize = () => setIsMobile(window.innerWidth <= 768);
+
+        checkScreenSize();
+        carregarUsuario();
+
+        window.addEventListener('resize', checkScreenSize)
+        window.addEventListener('userUpdated', carregarUsuario);
+
+        return () => {
+            window.removeEventListener('resize', checkScreenSize)
+            window.removeEventListener('userUpdated', carregarUsuario);
+        }
     }, []);
 
     return (
@@ -49,14 +57,15 @@ export function Header() {
                             <NavLink to="/configuracoes">
                                 <User 
                                     nome={usuario.nome} 
-                                    email={usuario.email} 
+                                    email={usuario.email}
+                                    foto={usuario.imageUrl} 
                                     theme="dark"
                                 />
                             </NavLink>
                         ) : (
                             <NavLink to="/login">
                                 <User 
-                                    nome="Sejá bem vindo!" 
+                                    nome="Seja bem vindo!" 
                                     email="entre ou cadastre-se" 
                                     theme="dark"
                                 />

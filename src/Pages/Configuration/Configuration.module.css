@@ -8,14 +8,6 @@
     gap: 1rem;
 }
 
-.fotoPerfil {
-    border: 1px solid var(--cinza);
-    border-radius: 100px;
-
-    width: 12.5rem;
-    height: fit-content;
-}
-
 .perfil {
     display: flex;
     flex-direction: column;
@@ -26,6 +18,21 @@
 .inputs {
     gap: 1rem;
     align-items: end;
+}
+
+.titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    gap: .5rem;
+    align-items: center;
+
+    i {
+        font-size: 1.5rem;
+    }
 }
 
 .enderecoCompleto {
@@ -58,4 +65,35 @@
 
 .btns {
     gap: .75rem;
+}
+
+.imageContainer {
+    position: relative;
+    width: 350px; 
+
+    display: flex;
+}
+
+.fotoPerfil {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    object-fit: cover;
+
+    border: 2px solid var(--cinza);
+}
+
+.imageUploadIcon {
+    position: absolute;
+
+    bottom: 0;
+    right: 40px;
+    
+    height: 40px;
+    padding: 0 .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    transition: background-color 0.2s;
 }
