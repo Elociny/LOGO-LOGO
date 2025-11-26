@@ -50,10 +50,33 @@ export function Home() {
       </div>
 
       <div className={`row ${style.botoes}`}>
-        <Button theme="light" size="big" color="cinza" border="quadrada" text="cupons" navegation="cupons" />
-        <Button theme="light" size="big" color="cinza" border="quadrada" text="fale conosco" navegation="fale-conosco" />
-        <Button theme="light" size="big" color="cinza" border="quadrada" text="frete grátis" navegation="frete-gratis" />
+
+        <Button
+          theme="light"
+          size="big"
+          color="cinza"
+          border="quadrada"
+          text="sobre nós"              
+          navegation="sobre-nos"         
+        />
+
+        <Button
+          theme="light"
+          size="big"
+          color="cinza"
+          border="quadrada"
+          text="fale conosco"
+          navegation="fale-conosco"     
+        />
+
+        <Button
+          theme="light"
+          size="big"
+          color="cinza"
+          border="quadrada"
+          text="políticas de privacidade" 
+          navegation="politicas-privacidade" 
+        />
       </div>
-    </Layout>
-  );
+      );
 }
