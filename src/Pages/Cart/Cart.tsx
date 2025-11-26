@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { CartProduct } from "../../components/CartProduct/CartProduct";
 import { Layout } from "../../components/Layout/Layout";
 import { ResumeOrder } from "../../components/ResumeOrder/ResumeOrder";
@@ -21,7 +21,8 @@ import {
 
 interface ProductInCart extends ProductAPI {
     cartItemId: number;
-    inStock: boolean
+    inStock: boolean;
+    estoqueTotal: number;
 }
 
 const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
@@ -35,6 +36,7 @@ const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
         quantidade: item.quantidade,
         cartItemId: item.id,
         inStock: true,
+        estoqueTotal: item.estoqueTotal,
         descricao: "",
         categoria: "",
         desconto: 0,
@@ -110,7 +112,8 @@ export function Cart() {
             try {
                 await removerItem(clienteId, itemParaRemover.cartItemId);
 
-                setProdutos(prev => prev.filter(p => p.id !== produto.id));
+                setProdutos(prev => prev.filter(p => p.cartItemId !== itemParaRemover.cartItemId));
+                
                 setSelecionadosIds(prev => prev.filter(id => id !== produto.id));
 
                 fecharModal();
@@ -129,15 +132,16 @@ export function Cart() {
     const handleChangeQuantity = async (produto: ProductAPI, novaQuantidade: number) => {
         if (!clienteId || novaQuantidade < 1) return;
 
+        const itemParaAtualizar = produto as ProductInCart;
         const produtosAnteriores = [...produtos];
 
         setProdutos(prev =>
             prev.map(p =>
-                p.id === produto.id ? { ...p, quantidade: novaQuantidade } : p
+                p.cartItemId === itemParaAtualizar.cartItemId
+                    ? { ...p, quantidade: novaQuantidade }
+                    : p
             )
         );
-
-        const itemParaAtualizar = produto as ProductInCart;
 
         try {
             await atualizarQuantidade(clienteId, itemParaAtualizar.cartItemId, novaQuantidade);
@@ -203,7 +207,7 @@ export function Cart() {
                         <>
                             {produtos.map((produto) => (
                                 <CartProduct
-                                    key={`${produto.id}-${produto.tamanho}`}
+                                    key={produto.cartItemId}
                                     produto={produto}
                                     onToggle={handleToggleProduto}
                                     selecionado={selecionadosIds.includes(produto.id)}

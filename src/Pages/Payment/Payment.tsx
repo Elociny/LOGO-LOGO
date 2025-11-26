@@ -4,8 +4,6 @@ import { AxiosError } from "axios";
 import { Address } from "../../components/Address/Address";
 import { Layout } from "../../components/Layout/Layout";
 import { ResumeOrder } from "../../components/ResumeOrder/ResumeOrder";
-import { Button } from "../../components/Button/Button";
-import { Spinner } from "../../components/Spinner/Spinner";
 import style from "./Payment.module.css";
 
 import type { ProductAPI } from "../../types/ProductAPI";
@@ -22,11 +20,14 @@ import { salvarCompra } from "../../services/compraService";
 
 import { PayProduct } from "../../components/PayProduct/PayProduct";
 import { PayMethod, type DadosCartao } from "../../components/PayMethod/PayMethod";
+import { Button } from "../../components/Button/Button";
+import { Spinner } from "../../components/Spinner/Spinner";
 
 import { Modal } from "../../components/Modal/Modal";
 
 interface ProductAPIInCart extends ProductAPI {
     cartItemId: number;
+    estoqueTotal: number;
 }
 
 export function Payment() {
@@ -110,6 +111,7 @@ export function Payment() {
             preco: item.preco,
             quantidade: item.quantidade,
             cartItemId: item.id,
+            estoqueTotal: item.estoqueTotal, 
             categoria: "",
             descricao: "",
             desconto: 0,
@@ -151,7 +153,8 @@ export function Payment() {
             await atualizarQuantidade(clienteId, itemParaAtualizar.cartItemId, novaQuantidade);
         } catch (error) {
             console.error("Erro ao atualizar quantidade", error);
-            setProdutos(produtosAnteriores);
+            setProdutos(produtosAnteriores); 
+            abrirModal("error", "Erro", "Não foi possível atualizar a quantidade.");
         }
     };
 
@@ -201,7 +204,7 @@ export function Payment() {
                     listaIdsProdutos.push(p.id);
                 }
             });
-
+            
             const compraRealizada = await salvarCompra({
                 clienteId: clienteId,
                 produtosIds: listaIdsProdutos,
@@ -230,7 +233,7 @@ export function Payment() {
 
                 if (typeof dadosErro === 'string') {
                     if (dadosErro.trim().startsWith("<") || dadosErro.length > 200) {
-                        mensagemErro = "Ocorreu um erro interno no servidor.";
+                        mensagemErro = "Ocorreu um erro interno no servidor. Tente novamente.";
                     } else {
                         mensagemErro = dadosErro;
                     }
@@ -239,7 +242,7 @@ export function Payment() {
 
                     if (erroObjeto.errors && Array.isArray(erroObjeto.errors) && erroObjeto.errors.length > 0) {
                         mensagemErro = erroObjeto.errors[0].defaultMessage;
-                    } 
+                    }
                     else {
                         mensagemErro = erroObjeto.message || erroObjeto.error || JSON.stringify(dadosErro);
                     }

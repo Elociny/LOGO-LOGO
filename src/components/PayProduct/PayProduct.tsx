@@ -2,8 +2,12 @@ import style from "./PayProduct.module.css"
 import { Counter } from "../Counter/Counter"
 import type { ProductAPI } from "../../types/ProductAPI" 
 
+interface ProductWithStock extends ProductAPI {
+    estoqueTotal?: number;
+}
+
 interface PayProductProps {
-    produto: ProductAPI;
+    produto: ProductWithStock;
     onRemove?: (produto: ProductAPI) => void; 
     onQuantityChange?: (produto: ProductAPI, qtd: number) => void; 
 }
@@ -12,10 +16,19 @@ export function PayProduct({ produto, onRemove, onQuantityChange }: PayProductPr
     
     const totalItem = (produto.preco * produto.quantidade);
 
+    const handleQuantityChange = (novaQtd: number) => {
+        if (produto.estoqueTotal && novaQtd > produto.estoqueTotal) return;
+        
+        if (onQuantityChange) {
+            onQuantityChange(produto, novaQtd);
+        }
+    }
+
     return(
         <div className={`row ${style.payProduct}`}>
             <i 
                 className="bi bi-x-lg" 
+                style={{ cursor: 'pointer' }}
                 onClick={() => onRemove && onRemove(produto)}
             ></i>
 
@@ -32,16 +45,17 @@ export function PayProduct({ produto, onRemove, onQuantityChange }: PayProductPr
             </div>
 
             <div className={`${style.preco}`}>
-                <p>R$ {produto.preco.toFixed(2)}</p>
+                <p>R$ {produto.preco.toFixed(2).replace(".", ",")}</p>
             </div>
 
             <Counter 
                 inicio={produto.quantidade}
-                onChange={(novaQtd) => onQuantityChange && onQuantityChange(produto, novaQtd)}
+                maximo={produto.estoqueTotal}
+                onChange={handleQuantityChange}
             />
 
             <div className={`${style.precoTotal}`}>
-                <p><b>R$ {totalItem.toFixed(2)}</b></p>
+                <p><b>R$ {totalItem.toFixed(2).replace(".", ",")}</b></p>
             </div>
         </div>
     )

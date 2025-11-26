@@ -3,28 +3,29 @@ import { Counter } from "../Counter/Counter";
 import { useState, useEffect } from "react";
 import type { ProductAPI } from "../../types/ProductAPI";
 
-interface ProductWithStock extends ProductAPI {
-    inStock?: boolean; 
+interface ProductWithDetails extends ProductAPI {
+    inStock?: boolean;
+    estoqueTotal?: number;
 }
 
 interface CartProductProps {
-    produto: ProductWithStock
+    produto: ProductWithDetails
     selecionado?: boolean
     onToggle?: (produto: ProductAPI, selecionado: boolean) => void
     onQuantityChange?: (produto: ProductAPI, novaQuantidade: number) => void
     onRemove?: (produto: ProductAPI) => void
 }
 
-export function CartProduct({ 
+export function CartProduct({
     produto,
     selecionado = true,
     onToggle,
     onQuantityChange,
     onRemove
 }: CartProductProps) {
-        
+
     const [quantity, setQuantity] = useState(produto.quantidade || 1)
-    
+
     useEffect(() => {
         setQuantity(produto.quantidade || 1);
     }, [produto.quantidade]);
@@ -36,6 +37,8 @@ export function CartProduct({
     }
 
     const handleQuantityChange = (novaQtd: number) => {
+        if (produto.estoqueTotal && novaQtd > produto.estoqueTotal) return;
+
         setQuantity(novaQtd)
         onQuantityChange?.(produto, novaQtd)
     }
@@ -48,13 +51,13 @@ export function CartProduct({
 
     return (
         <div className={`row ${style.cartProduct} ${!isInStock ? style.outOfStock : ""}`}>
-            <input 
-                type="checkbox" 
-                name={`product-${produto.id}`} 
-                id={`product-${produto.id}`} 
-                checked={selecionado} 
-                disabled={!isInStock} 
-                onChange={handleCheckboxChange} 
+            <input
+                type="checkbox"
+                name={`product-${produto.id}`}
+                id={`product-${produto.id}`}
+                checked={selecionado}
+                disabled={!isInStock}
+                onChange={handleCheckboxChange}
             />
             <label htmlFor={`product-${produto.id}`} className={`row ${style.label}`}>
                 <img src={produto.imageUrl} alt={`Imagem do produto ${produto.nome}`} className={`${style.cartImage}`} />
@@ -72,7 +75,12 @@ export function CartProduct({
                         <p>Cor</p>
                         <div className={`${style.circle}`} style={{ backgroundColor: produto.cor }}></div>
                     </div>
-                    <Counter inicio={quantity} onChange={handleQuantityChange} />
+                    
+                    <Counter 
+                        inicio={quantity} 
+                        maximo={produto.estoqueTotal} 
+                        onChange={handleQuantityChange} 
+                    />
                 </div>
 
                 <div className={`${style.price}`}>
