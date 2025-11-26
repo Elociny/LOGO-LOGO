@@ -35,8 +35,8 @@ const converterParaProduct = (item: CarrinhoItemDTO): ProductInCart => {
         preco: item.preco,
         quantidade: item.quantidade,
         cartItemId: item.id,
-        inStock: true,
-        estoqueTotal: item.estoqueTotal,
+        inStock: item.estoqueTotal > 0, 
+        estoqueTotal: item.estoqueTotal, 
         descricao: "",
         categoria: "",
         desconto: 0,
@@ -75,8 +75,15 @@ export function Cart() {
             setLoading(true);
             const dados = await listarCarrinho(id);
             const produtosFormatados = dados.itens.map(item => converterParaProduct(item));
+
             setProdutos(produtosFormatados);
-            setSelecionadosIds(produtosFormatados.map(p => p.id));
+
+            const idsDisponiveis = produtosFormatados
+                .filter(p => p.inStock)
+                .map(p => p.id);
+
+            setSelecionadosIds(idsDisponiveis);
+
         } catch (error) {
             console.error("Erro ao carregar carrinho", error);
         } finally {
@@ -96,6 +103,10 @@ export function Cart() {
     }, [navigate, carregarCarrinho]);
 
     const handleToggleProduto = (produto: ProductAPI, selecionado: boolean) => {
+        const item = produto as ProductInCart;
+
+        if (!item.inStock) return;
+
         if (selecionado) {
             setSelecionadosIds(prev => [...prev, produto.id]);
         } else {
@@ -111,11 +122,8 @@ export function Cart() {
         setAcaoConfirmacao(() => async () => {
             try {
                 await removerItem(clienteId, itemParaRemover.cartItemId);
-
                 setProdutos(prev => prev.filter(p => p.cartItemId !== itemParaRemover.cartItemId));
-                
                 setSelecionadosIds(prev => prev.filter(id => id !== produto.id));
-
                 fecharModal();
             } catch (error) {
                 console.error(error);
@@ -134,6 +142,11 @@ export function Cart() {
 
         const itemParaAtualizar = produto as ProductInCart;
         const produtosAnteriores = [...produtos];
+
+        if (novaQuantidade > itemParaAtualizar.estoqueTotal) {
+            abrirModal("warning", "Estoque Limite", `Apenas ${itemParaAtualizar.estoqueTotal} unidades disponíveis.`);
+            return;
+        }
 
         setProdutos(prev =>
             prev.map(p =>
@@ -179,7 +192,22 @@ export function Cart() {
         }
     };
 
+    const handleIrParaPagamento = () => {
+        const itensParaComprar = produtos.filter(
+            p => selecionadosIds.includes(p.id) && p.inStock
+        );
+
+        if (itensParaComprar.length === 0) {
+            abrirModal("warning", "Carrinho Inválido", "Selecione pelo menos um produto com estoque disponível para continuar.");
+            return;
+        }
+
+        navigate("/compra", { state: { items: itensParaComprar } });
+    };
+
     const produtosParaResumo = produtos.filter(p => selecionadosIds.includes(p.id));
+    const produtosEmEstoque = produtos.filter(p => p.inStock);
+    const produtosSemEstoque = produtos.filter(p => !p.inStock);
 
     if (loading) {
         return (
@@ -205,7 +233,7 @@ export function Cart() {
                         </div>
                     ) : (
                         <>
-                            {produtos.map((produto) => (
+                            {produtosEmEstoque.map((produto) => (
                                 <CartProduct
                                     key={produto.cartItemId}
                                     produto={produto}
@@ -215,6 +243,23 @@ export function Cart() {
                                     onRemove={handleRemoverProduto}
                                 />
                             ))}
+
+                            {produtosSemEstoque.length > 0 && (
+                                <div className={style.outOfStockSection}>
+                                    <hr />
+                                    <br />
+                                    <h2>Produtos fora de estoque</h2>
+                                    {produtosSemEstoque.map((produto) => (
+                                        <CartProduct
+                                            key={produto.cartItemId}
+                                            produto={produto}
+                                            selecionado={false} 
+                                            onQuantityChange={handleChangeQuantity}
+                                            onRemove={handleRemoverProduto}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </>
                     )}
 
@@ -230,7 +275,11 @@ export function Cart() {
                     )}
                 </div>
                 <div className={`${style.right}`}>
-                    <ResumeOrder produtos={produtosParaResumo} ativo={produtosParaResumo.length > 0} />
+                    <ResumeOrder 
+                        produtos={produtosParaResumo} 
+                        ativo={produtosParaResumo.length > 0}
+                        onClick={handleIrParaPagamento} 
+                    />
                 </div>
             </div>
 
@@ -244,33 +293,12 @@ export function Cart() {
 
                 {modalConfig.type === "warning" ? (
                     <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px' }}>
-                        <Button
-                            border="arredondada"
-                            color="cinza"
-                            size="small"
-                            text="Cancelar"
-                            theme="light"
-                            onClick={fecharModal}
-                        />
-                        <Button
-                            border="arredondada"
-                            color="laranja"
-                            size="small"
-                            text="Sim"
-                            theme="light"
-                            onClick={executarAcaoConfirmacao}
-                        />
+                        <Button border="arredondada" color="cinza" size="small" text="Cancelar" theme="light" onClick={fecharModal} />
+                        <Button border="arredondada" color="laranja" size="small" text="Sim" theme="light" onClick={executarAcaoConfirmacao} />
                     </div>
                 ) : (
                     <div style={{ marginTop: '20px' }}>
-                        <Button
-                            border="arredondada"
-                            color="cinza"
-                            size="small"
-                            text="Fechar"
-                            theme="light"
-                            onClick={fecharModal}
-                        />
+                        <Button border="arredondada" color="cinza" size="small" text="Fechar" theme="light" onClick={fecharModal} />
                     </div>
                 )}
             </Modal>
