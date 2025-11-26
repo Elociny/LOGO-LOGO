@@ -1,0 +1,83 @@
+.container {
+    max-width: 1000px;
+    margin: 4rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.title {
+    color: var(--laranja);
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: var(--cinza);
+    font-size: 1.2rem;
+    margin-bottom: 4rem;
+}
+
+.contactGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.contactItem {
+    padding: 2rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.contactIcon {
+    font-size: 3rem;
+    color: var(--laranja);
+    margin-bottom: 0.75rem;
+}
+
+.contactItem h3 {
+    color: var(--cinza);
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.contactItem p {
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.info {
+    font-weight: 600;
+    color: var(--laranja); 
+}
+
+.addressSection {
+    background-color: #f8f8f8;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    margin-top: 2rem;
+}
+
+.addressSection h2 {
+    color: var(--cinza);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.attention {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .contactGrid {
+        grid-template-columns: 1fr;
+    }
+}

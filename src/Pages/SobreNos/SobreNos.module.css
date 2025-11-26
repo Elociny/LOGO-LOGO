@@ -1,0 +1,119 @@
+.container {
+    max-width: 1200px; 
+    margin: 4rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.title {
+    color: var(--laranja);
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.subtitle {
+    color: var(--cinza);
+    font-size: 1.2rem;
+    margin-bottom: 4rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.valuesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-top: 3rem;
+    margin-bottom: 5rem;
+    text-align: left;
+}
+
+.valueItem {
+    padding: 1.5rem;
+    border: 2px solid #e0e0e0; 
+    border-radius: 0.5rem;
+    transition: box-shadow 0.3s;
+}
+
+.valueItem:hover {
+    box-shadow: 0 8px 16px rgba(var(--laranja-rgb), 0.1);
+}
+
+.valueItem h3 {
+    color: var(--laranja);
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.valueIcon {
+    font-size: 2.5rem;
+    color: var(--laranja);
+}
+
+.valueItem p {
+    color: var(--cinza);
+    line-height: 1.6;
+}
+
+.historySection {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 4rem;
+    padding: 3rem 0;
+    background-color: white; 
+    border-radius: 1rem;
+    text-align: left;
+}
+
+.historySection img {
+    width: 40%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 0 1rem 1rem 0;
+}
+
+.historyContent {
+    width: 60%;
+    padding: 0 3rem;
+}
+
+.historyContent h2 {
+    color: var(--laranja);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 900px) {
+    .valuesGrid {
+        grid-template-columns: 1fr; 
+    }
+
+    .historySection {
+        flex-direction: column;
+    }
+
+    .historySection img,
+    .historyContent {
+        width: 100%;
+        padding: 1rem;
+    }
+}
+
+.teamPhotoContainer {
+    margin: 4rem auto;
+    width: 100%;
+    max-width: 1000px; 
+    padding: 0 1rem;
+}
+
+.teamPhoto {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px; 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); 
+}

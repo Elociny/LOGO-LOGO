@@ -9,6 +9,9 @@ import { Register } from "./Pages/Register/Register";
 import { ForgotPassword } from "./Pages/ForgotPassword/ForgotPassword";
 import { ChangePassword } from "./Pages/ChangePassword/ChangePassword";
 import { Maintenance } from "./Pages/Maintenance/Maintenance";
+import { SobreNos } from "./Pages/SobreNos/SobreNos";
+import { Contato } from "./Pages/Contato/Contato";
+import { PoliticasPrivacidade } from "./Pages/PoliticasPrivacidade/PoliticasPrivacidade";
 
 import { Tracking } from "./Pages/Tracking/Tracking";
 import { Configuration } from "./Pages/Configuration/Configuration";
@@ -33,6 +36,10 @@ export function App() {
           <Route path="/maintenance" element={<Maintenance />}></Route>
           <Route path="/detalhes-do-produto/:id" element={<ProductDetails />}></Route>
           <Route path="/busca" element={<ListProducts />}></Route>
+          <Route path="/sobre-nos" element={<SobreNos />}></Route>
+          <Route path="/fale-conosco" element={<Contato />}></Route>
+          <Route path="/politicas-privacidade" element={<PoliticasPrivacidade />}></Route>
+          
 
           <Route element={<PrivateRoute />}>
             <Route path="/configuracoes" element={<Configuration />}></Route>

@@ -78,5 +78,8 @@ export function Home() {
           navegation="politicas-privacidade" 
         />
       </div>
+
+      </Layout>
+      
       );
 }
