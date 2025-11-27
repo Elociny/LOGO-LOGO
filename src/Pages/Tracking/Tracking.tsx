@@ -5,7 +5,7 @@ import { Layout } from "../../components/Layout/Layout"
 import { TrackOrder } from "../../components/TrackOrder/TrackOrder"
 import User from "../../components/User/User"
 import style from "./Tracking.module.css"
-import FotoPerfil from "../../assets/images/foto-de-perfil.svg"
+import FotoPerfilDefault from "../../assets/images/icons/userDefault.svg"
 import { Spinner } from "../../components/Spinner/Spinner"
 
 import { listarComprasDoCliente, type ComprarResponseDTO } from "../../services/compraService"
@@ -115,7 +115,7 @@ export function Tracking() {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
         if (usuarioSalvo) {
             const usuario = JSON.parse(usuarioSalvo);
-            const telefone = usuario.telefone || "+55 (11) 9 9999-9999";
+            const telefone = usuario.telefone || "sem telefone cadastrado";
 
             setDadosUsuario({
                 nome: usuario.nome,
@@ -139,7 +139,7 @@ export function Tracking() {
                     <User
                         nome={dadosUsuario.nome}
                         email={dadosUsuario.email}
-                        foto={dadosUsuario.imageUrl || FotoPerfil}
+                        foto={dadosUsuario.imageUrl || FotoPerfilDefault}
                         theme="light"
                     />
                     <hr className={`${style.cinza}`} />

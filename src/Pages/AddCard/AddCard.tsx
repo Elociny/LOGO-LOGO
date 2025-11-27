@@ -202,7 +202,6 @@ export function AddCard() {
                     </section>
 
                     <section className={`row ${style.inputs}`}>
-                        {/* Campo Bandeira Bloqueado (Detectado) */}
                         <div style={{width: '100%'}}>
                             <label className={style.label}>Bandeira (Detectada)</label>
                             <input 
@@ -213,7 +212,6 @@ export function AddCard() {
                             />
                         </div>
 
-                        {/* Select para Tipo */}
                         <div style={{width: '100%'}}>
                             <label className={style.label}>Tipo</label>
                             <select 
