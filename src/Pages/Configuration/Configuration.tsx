@@ -202,7 +202,7 @@ export function Configuration() {
 
                         {isEditing && (
                             <div className={style.imageUploadIcon}>
-                                <Button border="arredondada" color="cinza" size="small" text="aletrar imagem" theme="light" onClick={handleIconClick} />
+                                <Button border="arredondada" color="cinza" size="small" text="alterar imagem" theme="light" onClick={handleIconClick} />
                             </div>
                         )}
                     </div>
