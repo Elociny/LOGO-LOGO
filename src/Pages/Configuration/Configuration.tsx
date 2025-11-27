@@ -10,7 +10,7 @@ import { Error } from "../../components/Error/Error"
 
 import { listarEnderecos, excluirEndereco, type EnderecoDTO } from "../../services/enderecoService"
 import { CardInfo } from "../../components/CardInfo/CardInfo"
-import { listarCartoes, excluirCartao, type CartaoResponseDTO } from "../../services/cartaoService"
+import { listarCartoes, type CartaoResponseDTO } from "../../services/cartaoService"
 import { buscarClientePorId, atualizarCliente } from "../../services/authService"
 
 import { Modal } from "../../components/Modal/Modal"
@@ -39,7 +39,7 @@ export function Configuration() {
         message: ""
     });
     
-    const [itemParaExcluir, setItemParaExcluir] = useState<{ id: number, tipo: 'endereco' | 'cartao' } | null>(null);
+    const [enderecoParaExcluir, setEnderecoParaExcluir] = useState<number | null>(null);
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
@@ -81,7 +81,7 @@ export function Configuration() {
 
     const fecharModal = () => {
         setModalOpen(false);
-        setItemParaExcluir(null); 
+        setEnderecoParaExcluir(null); 
     }
 
     const handlePhoneChange = (valor: string | number) => {
@@ -148,33 +148,23 @@ export function Configuration() {
     };
 
     const solicitarExclusaoEndereco = (id: number) => {
-        setItemParaExcluir({ id, tipo: 'endereco' });
+        setEnderecoParaExcluir(id);
         abrirModal("warning", "Excluir Endereço?", "Tem certeza que deseja excluir este endereço? Essa ação não pode ser desfeita.");
     }
 
-    const solicitarExclusaoCartao = (id: number) => {
-        setItemParaExcluir({ id, tipo: 'cartao' });
-        abrirModal("warning", "Remover Cartão?", "Tem certeza que deseja remover este cartão? Você precisará cadastrá-lo novamente.");
-    }
-
     const confirmarExclusao = async () => {
-        if (!itemParaExcluir) return;
+        if (!enderecoParaExcluir) return;
 
         try {
-            if (itemParaExcluir.tipo === 'endereco') {
-                await excluirEndereco(itemParaExcluir.id);
-                setEnderecos(prev => prev.filter(end => end.id !== itemParaExcluir.id));
-            } else {
-                await excluirCartao(itemParaExcluir.id);
-                setCartoes(prev => prev.filter(c => c.id !== itemParaExcluir.id));
-            }
+            await excluirEndereco(enderecoParaExcluir);
+            setEnderecos(prev => prev.filter(end => end.id !== enderecoParaExcluir));
             
             fecharModal();
 
         } catch (error) {
             fecharModal();
             setTimeout(() => {
-                abrirModal("error", "Erro", "Ocorreu um erro ao tentar excluir o item.");
+                abrirModal("error", "Erro", "Ocorreu um erro ao tentar excluir o endereço.");
             }, 200);
 
             console.log(error)
@@ -310,28 +300,18 @@ export function Configuration() {
                     {cartoes.map((card) => (
                         <div className={`row ${style.enderecoCompleto}`} key={card.id}>
                             <div className={`row ${style.group}`}>
-                                <button onClick={() => solicitarExclusaoCartao(card.id)}>
-                                    <i className="bi bi-trash-fill"></i>
-                                </button>
-
-                                <CardInfo
-                                    bandeira={card.bandeira}
-                                    tipo={card.tipo}
-                                    numeroMascarado={card.numeroMascarado}
-                                    nomeTitular={card.nomeTitular}
-                                    validade={card.validade}
-                                />
+                                <div> 
+                                    <CardInfo
+                                        bandeira={card.bandeira}
+                                        tipo={card.tipo}
+                                        numeroMascarado={card.numeroMascarado}
+                                        nomeTitular={card.nomeTitular}
+                                        validade={card.validade}
+                                    />
+                                </div>
                             </div>
 
                             <div className={`row ${style.btns}`}>
-                                <Button
-                                    border="arredondada"
-                                    color="transparente"
-                                    size="small"
-                                    text="remover cartão"
-                                    theme="light"
-                                    onClick={() => solicitarExclusaoCartao(card.id)}
-                                />
                             </div>
                         </div>
                     ))}

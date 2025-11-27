@@ -27,15 +27,22 @@ export function AddAddress() {
     const [nomeContato, setNomeContato] = useState("");
     const [telefoneContato, setTelefoneContato] = useState("");
 
-    // --- ESTADOS DO MODAL ---
+    const [isLoadingCep, setIsLoadingCep] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalConfig, setModalConfig] = useState({
         type: "success" as "success" | "error" | "warning",
         title: "",
         message: ""
     });
-
     const [redirectOnClose, setRedirectOnClose] = useState(false);
+
+    const formatarTelefone = (valor: string | number) => {
+        let v = String(valor).replace(/\D/g, "");
+        if (v.length > 11) v = v.slice(0, 11);
+        v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+        v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+        return v;
+    };
 
     useEffect(() => {
         const usuarioSalvo = localStorage.getItem("usuario_logado");
@@ -43,6 +50,10 @@ export function AddAddress() {
             const dados = JSON.parse(usuarioSalvo);
             setClienteId(dados.id);
             setNomeContato(dados.nome);
+            
+            if (dados.telefone) {
+                setTelefoneContato(formatarTelefone(dados.telefone));
+            }
         } else {
             navigate("/login");
             return;
@@ -62,32 +73,37 @@ export function AddAddress() {
         }
     }, [location, navigate]);
 
-    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
-        setModalConfig({ type, title, message });
-        setModalOpen(true);
-    };
+    const buscarEnderecoPorCep = async (cepDigitado: string) => {
+        try {
+            setIsLoadingCep(true);
+            const response = await fetch(`https://viacep.com.br/ws/${cepDigitado}/json/`);
+            const data = await response.json();
 
-    const fecharModal = () => {
-        setModalOpen(false);
-        if (redirectOnClose) {
-            navigate("/configuracoes");
+            if (data.erro) {
+                console.warn("CEP não encontrado");
+            } else {
+                setLogradouro(data.logradouro);
+                setBairro(data.bairro);
+                setCidade(data.localidade);
+                setEstado(data.uf);
+            }
+        } catch (error) {
+            console.error("Erro ao buscar CEP", error);
+        } finally {
+            setIsLoadingCep(false);
         }
-        setRedirectOnClose(false);
     };
 
     const handleCepChange = (valor: string | number) => {
         let v = String(valor).replace(/\D/g, "");
         if (v.length > 8) v = v.slice(0, 8);
+
+        if (v.length === 8) {
+            buscarEnderecoPorCep(v);
+        }
+
         v = v.replace(/(\d{5})(\d)/, "$1-$2");
         setCep(v);
-    };
-
-    const handlePhoneChange = (valor: string | number) => {
-        let v = String(valor).replace(/\D/g, "");
-        if (v.length > 11) v = v.slice(0, 11);
-        v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
-        v = v.replace(/(\d)(\d{4})$/, "$1-$2");
-        setTelefoneContato(v);
     };
 
     const handleEstadoChange = (valor: string | number) => {
@@ -101,11 +117,24 @@ export function AddAddress() {
         setNumero(v);
     };
 
+    const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
+        setModalConfig({ type, title, message });
+        setModalOpen(true);
+    };
+
+    const fecharModal = () => {
+        setModalOpen(false);
+        if (redirectOnClose) {
+            navigate("/configuracoes");
+        }
+        setRedirectOnClose(false);
+    };
+
     async function handleSalvar() {
         if (!clienteId) return;
 
-        if (!logradouro || !numero || !bairro || !cidade || !estado || !cep) {
-            abrirModal("warning", "Atenção", "Preencha todos os campos obrigatórios!");
+        if (!logradouro || !numero || !bairro || !cidade || !estado || !cep || !complemento) {
+            abrirModal("warning", "Atenção", "Todos os campos, incluindo o complemento, são obrigatórios!");
             return;
         }
 
@@ -113,7 +142,7 @@ export function AddAddress() {
             clienteId: clienteId,
             logradouro,
             numero: Number(numero),
-            complemento,
+            complemento, 
             bairro,
             cidade,
             estado,
@@ -130,11 +159,10 @@ export function AddAddress() {
                 setRedirectOnClose(true);
                 abrirModal("success", "Sucesso", "Endereço cadastrado com sucesso!");
             }
-
         } catch (error) {
             console.error(error);
             setRedirectOnClose(false);
-            abrirModal("error", "Erro", "Erro ao salvar endereço. Verifique os dados.");
+            abrirModal("error", "Erro", "Erro ao salvar endereço no sistema.");
         }
     }
 
@@ -151,14 +179,35 @@ export function AddAddress() {
                             value={nomeContato} enable={false} onChange={() => { }} />
 
                         <Input id="telefone" label="Telefone" type="text" placeholder="(XX) XXXXX-XXXX"
-                            value={telefoneContato} enable={true} onChange={(val) => handlePhoneChange(val)} />
+                            value={telefoneContato} enable={false} onChange={() => { }} />
                     </section>
 
                     <h3>Endereço</h3>
 
                     <section className={`row ${style.inputs}`}>
-                        <Input id="cep" label="CEP" type="text" placeholder="00000-000" enable={true}
-                            value={cep} onChange={(val) => handleCepChange(val)} />
+                        <div style={{ position: 'relative', width: '100%' }}>
+                            <Input 
+                                id="cep" 
+                                label="CEP" 
+                                type="text" 
+                                placeholder="00000-000" 
+                                enable={true}
+                                value={cep} 
+                                onChange={(val) => handleCepChange(val)} 
+                            />
+                            {isLoadingCep && (
+                                <span style={{ 
+                                    position: 'absolute', 
+                                    right: '10px', 
+                                    top: '38px', 
+                                    fontSize: '0.8rem', 
+                                    color: 'var(--laranja)',
+                                    fontWeight: 'bold'
+                                }}>
+                                    Buscando...
+                                </span>
+                            )}
+                        </div>
 
                         <Input id="estado" label="Estado" type="text" placeholder="UF" enable={true}
                             value={estado} onChange={(val) => handleEstadoChange(val)} />
@@ -181,7 +230,7 @@ export function AddAddress() {
                         <Input id="bairro" label="Bairro" type="text" placeholder="Seu bairro" enable={true}
                             value={bairro} onChange={(val) => setBairro(String(val))} />
 
-                        <Input id="complemento" label="Complemento" type="text" placeholder="Apto, Bloco..." enable={true}
+                        <Input id="complemento" label="Complemento" type="text" placeholder="Apto, Bloco... (Obrigatório)" enable={true}
                             value={complemento} onChange={(val) => setComplemento(String(val))} />
                     </section>
                 </div>
@@ -203,7 +252,6 @@ export function AddAddress() {
                 title={modalConfig.title}
             >
                 <p>{modalConfig.message}</p>
-
                 <div style={{ marginTop: '20px' }}>
                     <Button
                         border="arredondada"
@@ -215,7 +263,6 @@ export function AddAddress() {
                     />
                 </div>
             </Modal>
-
         </Layout>
     )
 }
