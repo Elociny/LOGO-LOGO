@@ -43,3 +43,119 @@
         color: var(--lilas);
     }
 }
+
+.product_details {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.headerAvaliacoes {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+
+    p {
+        font-size: 1.5rem;
+    };
+}
+
+.resumoNota {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.starIconHeader {
+    color: var(--amarelo);
+}
+
+.notaTexto {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.notaTexto span {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: var(--cinza-claro);
+}
+
+.botaoAvaliarContainer {
+    margin-bottom: 30px;
+}
+
+.listaVazia {
+    color: var(--cinza-claro);
+    font-style: italic;
+}
+
+.modalContent {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.nota {
+    align-items: center;
+    gap: .5rem;
+}
+
+.label {
+    display: block;
+    font-weight: bold;
+    color: var(--cinza);
+}
+
+.contador {
+    justify-content: space-between;
+}
+
+.labelSecondary {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: var(--cinza-claro);
+}
+
+.starsContainer {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.starIcon {
+    font-size: 1.5rem;
+    transition: color 0.2s;
+}
+
+.starFilled {
+    color: var(--amarelo);
+}
+
+.starEmpty {
+    color: #ddd;
+}
+
+.textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid var(--cinza);
+    font-family: inherit;
+    resize: vertical;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.feedbackButtonContainer {
+    margin-top: 1rem;
+}

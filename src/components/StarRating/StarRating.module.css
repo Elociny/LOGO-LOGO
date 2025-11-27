@@ -1,0 +1,34 @@
+.container {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
+.starIcon {
+    font-size: 1.2rem;
+    transition: color 0.2s ease, transform 0.1s;
+}
+
+.small {
+    font-size: 1rem;
+}
+
+.medium, .large {
+    font-size: 1.5rem;
+}
+
+.interactive .starIcon {
+    cursor: pointer;
+}
+
+.interactive .starIcon:hover {
+    transform: scale(1.2);
+}
+
+.filled {
+    color: var(--amarelo);
+}
+
+.empty {
+    color: var(--cinza-claro);
+}

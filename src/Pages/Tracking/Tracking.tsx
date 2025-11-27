@@ -11,14 +11,10 @@ import { Spinner } from "../../components/Spinner/Spinner"
 import { listarComprasDoCliente, type ComprarResponseDTO } from "../../services/compraService"
 import { listarEnderecos } from "../../services/enderecoService"
 import { Error } from "../../components/Error/Error"
+import type { ProductAPI } from "../../types/ProductAPI"
 
 type TrackItensData = {
-    image: string
-    name: string
-    size: string
-    color: string
-    quantity: number
-    unitPrice: number
+    data: ProductAPI
 }
 
 interface PedidoFormatado {
@@ -43,15 +39,22 @@ const converterCompraParaVisual = (
 
         if (itensAgrupados.has(key)) {
             const existente = itensAgrupados.get(key)!;
-            existente.quantity += 1;
+            existente.data.quantidade += 1;
         } else {
             itensAgrupados.set(key, {
-                image: item.imageUrl,
-                name: item.nome,
-                size: item.tamanho,
-                color: item.cor,
-                quantity: 1,
-                unitPrice: item.preco
+                data: {
+                    id: item.id,
+                    nome: item.nome,
+                    descricao: "",
+                    preco: item.preco,
+                    desconto: 0,
+                    precoComDesconto: item.preco,
+                    quantidade: 1,
+                    cor: item.cor,
+                    tamanho: item.tamanho,
+                    categoria: "",
+                    imageUrl: item.imageUrl
+                }
             });
         }
     });
@@ -118,7 +121,7 @@ export function Tracking() {
                 nome: usuario.nome,
                 email: usuario.email,
                 telefone: telefone,
-                imageUrl: usuario.imageUrl || ""
+                imageUrl: usuario.imageUrl || "" 
             });
 
             carregarDados(usuario.id, { nome: usuario.nome, telefone });
@@ -162,7 +165,7 @@ export function Tracking() {
                         {!loading && pedidosFiltrados.map((pedido, index) => {
                             return (
                                 <TrackOrder
-                                    key={index}
+                                    key={index} 
                                     {...pedido}
                                 />
                             )

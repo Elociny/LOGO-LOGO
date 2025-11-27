@@ -5,14 +5,15 @@
     align-items: center;
     justify-content: space-between;
     width: 15rem;
-    height: 30rem;
+    height: auto;
+    gap: .5rem;
 
     cursor: pointer;
 }
 
 .product img {
-    width: 15rem;
-    height: 60%;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     
     border-radius: 1rem;
@@ -23,7 +24,6 @@
     text-transform: uppercase;
     font-size: 1.2rem;
 
-
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
@@ -31,35 +31,12 @@
     text-align: center;
 }
 
-.avaliacao {
-    gap: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.avaliacao .stars {
-    color: var(--amarelo);
-}
-
-.avaliacao p,
-.avaliacao span {
-    font-family: "Abhaya Libre", serif;
-}
-
-.avaliacao span {
-    color: var(--lilas);
-}
-
 .preco {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
     width: 100%;
-    max-width: 280px; 
 }
-
 
 .linhaPreco {
     display: flex;
@@ -92,7 +69,6 @@
     font-family: "Abhaya Libre", serif;
     font-size: 0.9rem;
     font-weight: bold;
-    margin-top: -5px;
 }
 
 .precoSemDesconto {
@@ -104,24 +80,7 @@
     width: 100%;
 }
 
-.botaoComprar {
-    margin-top: 0.5rem;
-}
-
 @media (max-width: 1400px) {
-    .product img {
-        width: 18vw;
-    }
-    
-    .product h3 {
-        max-width: 18vw;
-    }
-    
-    .preco {
-        width: 18vw;
-    }
-    
-   
     .precoAtual {
         font-size: 1.5rem;
     }

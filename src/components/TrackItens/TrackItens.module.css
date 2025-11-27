@@ -5,6 +5,8 @@
 
     border: 1px solid var(--cinza-claro);
     border-radius: .5rem;
+
+    cursor: pointer;
 }
 
 .trackItens .infos {

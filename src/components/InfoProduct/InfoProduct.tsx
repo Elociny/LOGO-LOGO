@@ -5,6 +5,7 @@ import { AxiosError } from "axios";
 import type { ProductAPI } from "../../types/ProductAPI";
 import { Button } from "../Button/Button";
 import { Counter } from "../Counter/Counter";
+import { StarRating } from "../StarRating/StarRating";
 import { adicionarAoCarrinho } from "../../services/carrinhoService";
 
 import style from "./InfoProduct.module.css";
@@ -12,10 +13,12 @@ import style from "./InfoProduct.module.css";
 import { Modal } from "../Modal/Modal";
 
 interface InfoProductProps {
-    produto: ProductAPI
+    produto: ProductAPI;
+    mediaNota: number;
+    totalAvaliacoes: number;
 }
 
-export function InfoProduct({ produto }: InfoProductProps) {
+export function InfoProduct({ produto, mediaNota, totalAvaliacoes }: InfoProductProps) {
     const navigate = useNavigate();
 
     const [quantidade, setQuantidade] = useState(1);
@@ -27,7 +30,6 @@ export function InfoProduct({ produto }: InfoProductProps) {
         title: "",
         message: ""
     });
-
     const [actionType, setActionType] = useState<'login' | 'carrinho' | null>(null);
 
     const abrirModal = (type: "success" | "error" | "warning", title: string, message: string) => {
@@ -68,7 +70,6 @@ export function InfoProduct({ produto }: InfoProductProps) {
 
         try {
             setLoading(true);
-
             const carrinhoAtualizado = await adicionarAoCarrinho(usuario.id, produto.id, quantidade);
 
             if (redirecionarImediatamente) {
@@ -91,12 +92,10 @@ export function InfoProduct({ produto }: InfoProductProps) {
                         desconto: 0,
                         precoComDesconto: itemNoCarrinho.preco
                     };
-
                     navigate("/compra", { state: { items: [itemFormatado] } });
                 } else {
                     navigate("/carrinho");
                 }
-
             } else {
                 setActionType('carrinho');
                 abrirModal("success", "Sucesso!", "Produto adicionado ao carrinho! O que deseja fazer agora?");
@@ -104,7 +103,6 @@ export function InfoProduct({ produto }: InfoProductProps) {
 
         } catch (error) {
             console.error("Erro ao adicionar ao carrinho:", error);
-
             const err = error as AxiosError;
             let mensagem = "Não foi possível adicionar o produto. Tente novamente.";
             let tipoModal: "error" | "warning" = "error";
@@ -112,7 +110,6 @@ export function InfoProduct({ produto }: InfoProductProps) {
 
             if (err.response && err.response.data) {
                 const dadosErro = err.response.data;
-
                 if (typeof dadosErro === 'string') {
                     mensagem = dadosErro;
                 }
@@ -130,7 +127,6 @@ export function InfoProduct({ produto }: InfoProductProps) {
                 tipoModal = "warning";
                 tituloModal = "Estoque Insuficiente";
             }
-
             abrirModal(tipoModal, tituloModal, mensagem);
         } finally {
             setLoading(false);
@@ -154,14 +150,10 @@ export function InfoProduct({ produto }: InfoProductProps) {
                 <h2>{produto.nome}</h2>
 
                 <div className={`row ${style.avaliacao}`}>
-                    <div className={`row ${style.stars}`}>
-                        <i className="bi bi-star-fill"></i>
-                        <i className="bi bi-star-fill"></i>
-                        <i className="bi bi-star-fill"></i>
-                        <i className="bi bi-star-fill"></i>
-                        <i className="bi bi-star-half"></i>
+                    <div className={style.stars}>
+                        <StarRating rating={mediaNota} readOnly size="medium" />
                     </div>
-                    <p>4.5<span>/5</span></p>
+                    <p>{mediaNota > 0 ? mediaNota.toFixed(1) : "N/A"}<span>/5 ({totalAvaliacoes} av.)</span></p>
                 </div>
 
                 <p className={`${style.descricao}`}>{produto.descricao}</p>
@@ -202,7 +194,6 @@ export function InfoProduct({ produto }: InfoProductProps) {
                                 maximo={produto.quantidade}
                                 onChange={(novaQtd) => setQuantidade(novaQtd)}
                             />
-
                             <Button
                                 border="arredondada"
                                 color="cinza"
@@ -211,7 +202,6 @@ export function InfoProduct({ produto }: InfoProductProps) {
                                 theme="light"
                                 onClick={() => handleAdicionar(false)}
                             />
-
                             <Button
                                 border="arredondada"
                                 color="laranja"
@@ -235,7 +225,7 @@ export function InfoProduct({ produto }: InfoProductProps) {
             <Modal isOpen={modalOpen} onClose={fecharModal} type={modalConfig.type} title={modalConfig.title}>
                 <p>{modalConfig.message}</p>
                 {actionType ? (
-                    <div style={{display: 'flex', flexDirection: 'column', gap: '10px', justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
                         <Button border="arredondada" color="cinza" size="small" text={actionType === 'carrinho' ? "Continuar comprando" : "Cancelar"} theme="light" onClick={fecharModal} />
                         <Button border="arredondada" color="laranja" size="small" text={actionType === 'carrinho' ? "Ir para o carrinho" : "Ir para Login"} theme="light" onClick={handleConfirmAction} />
                     </div>

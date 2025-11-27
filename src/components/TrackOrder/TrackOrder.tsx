@@ -2,14 +2,10 @@ import { useState } from "react"
 import { Button } from "../Button/Button"
 import { TrackItens } from "../TrackItens/TrackItens"
 import style from "./TrackOrder.module.css"
+import type { ProductAPI } from "../../types/ProductAPI"
 
 type TrackItensData = {
-    image: string
-    name: string
-    size: string
-    color: string
-    quantity: number
-    unitPrice: number
+    data: ProductAPI
 }
 
 interface TrackOrderProps {
@@ -33,7 +29,7 @@ export function TrackOrder({
 }: TrackOrderProps) {
     const [copied, setCopied] = useState(false)
 
-    const total = items.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
+    const total = items.reduce((acc, item) => acc + item.data.preco * item.data.quantidade, 0);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(trackingCode)
@@ -85,9 +81,9 @@ export function TrackOrder({
             <section className={`${style.itens}`}>
                 <h3>Itens pedidos</h3>
 
-                {items.map((item, index) => (
+                {items.map((item) => (
                     <TrackItens
-                        key={index}
+                        key={item.data.id}
 
                         {...item}
                     />

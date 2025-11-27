@@ -1,31 +1,50 @@
-import style from "./Comment.module.css"
+import style from "./Comment.module.css";
 
 import Blusa from "../../assets/images/products/produto1.svg";
+import type { AvaliacaoResponseDTO } from "../../services/avaliacaoService";
+import { StarRating } from "../StarRating/StarRating";
 
-export function Comment() {
+interface CommentProps {
+    data: AvaliacaoResponseDTO;
+}
+
+export function Comment({ data }: CommentProps) {
+
+    const dataFormatada = new Date(data.dataAvaliacao).toLocaleDateString("pt-BR");
+
     return (
         <div className={`${style.comentario}`}>
-            <div className={`row ${style.perfil}`}>
-                <img src={Blusa} alt="Imagem de usuario" />
-                <p className={`${style.nome}`}>Nome do cliente</p>
+            <div className={`row ${style.cabecalho}`}>
+                <div className={`row ${style.perfil}`}>
+                    <img
+                        src={data.imagemCliente || Blusa}
+                        alt="Foto do cliente"
+                        className={style.avatar}
+                    />
+                    <div>
+                        <h4>{data.nomeCliente}</h4>
+                    </div>
+                </div>
+
+                <span className={style.data}>{dataFormatada}</span>
             </div>
 
             <div className={`row ${style.avaliacao}`}>
                 <div className={style.stars}>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-fill"></i>
-                    <i className="bi bi-star-half"></i>
+                    <StarRating 
+                        rating={data.nota} 
+                        readOnly 
+                        size="small" 
+                    />
                 </div>
-                <p>4.5<span>/5</span></p>
             </div>
 
             <div className={`${style.comment}`}>
-                <h4>Titulo comentario</h4>
-
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod culpa alias blanditiis autem hic iste quisquam, animi, cupiditate illum sequi, ut error aspernatur amet voluptas repellat ipsum ea fugiat est.</p>
+                <h4>{data.titulo}</h4>
+                <p>{data.descricao}</p>
             </div>
+
+            <hr />
         </div>
-    )
+    );
 }
