@@ -23,6 +23,7 @@ import { PrivateRoute } from "./guards/PrivateRoute/PrivateRoute";
 import { Payment } from "./Pages/Payment/Payment";
 import { ScrollToTop } from "./utils/ScrollToTop";
 import { PaymentConclued } from "./Pages/PaymentConclued/PaymentConclued";
+import { AddCard } from "./Pages/AddCard/AddCard";
 
 const queryClient = new QueryClient()
 
@@ -50,6 +51,7 @@ export function App() {
             <Route path="/configuracoes" element={<Configuration />}></Route>
             <Route path="/carrinho" element={<Cart />}></Route>
             <Route path="/configuracoes/adicionar-endereco" element={<AddAddress />}></Route>
+            <Route path="/configuracoes/adicionar-cartao" element={<AddCard />}></Route>
             <Route path="/rastreio" element={<Tracking />}></Route>
             <Route path="/compra" element={<Payment />}></Route>
             <Route path="/pagamento-concluido/:pedidoId" element={<PaymentConclued />}></Route>

@@ -16,7 +16,7 @@ import {
     atualizarQuantidade,
     type CarrinhoItemDTO
 } from "../../services/carrinhoService";
-import { cadastrarCartao } from "../../services/cartaoService";
+import { cadastrarCartao, listarCartoes, type CartaoResponseDTO } from "../../services/cartaoService";
 import { salvarCompra } from "../../services/compraService";
 
 import { PayProduct } from "../../components/PayProduct/PayProduct";
@@ -60,6 +60,10 @@ export function Payment() {
     const [clienteId, setClienteId] = useState<number | null>(null);
 
     const [metodoPagamento, setMetodoPagamento] = useState<"cartao" | "pix">("cartao");
+    
+    const [cartoesSalvos, setCartoesSalvos] = useState<CartaoResponseDTO[]>([]);
+    const [idCartaoSelecionado, setIdCartaoSelecionado] = useState<number | null>(null);
+
     const [dadosCartao, setDadosCartao] = useState<DadosCartao>({
         titular: "",
         cpf: "",
@@ -88,12 +92,15 @@ export function Payment() {
     const carregarDados = useCallback(async (userId: number, itensVindosDaNavegacao?: ProductAPIInCart[]) => {
         try {
             setLoading(true);
-            const [listaEnderecos, dadosCarrinho] = await Promise.all([
+            
+            const [listaEnderecos, dadosCarrinho, listaCartoes] = await Promise.all([
                 listarEnderecos(userId),
-                listarCarrinho(userId)
+                listarCarrinho(userId),
+                listarCartoes(userId) 
             ]);
 
             setEnderecos(listaEnderecos);
+            setCartoesSalvos(listaCartoes); 
 
             if (listaEnderecos.length > 0) {
                 setEnderecoSelecionadoId(listaEnderecos[0].id || null);
@@ -124,7 +131,6 @@ export function Payment() {
         } else {
             navigate("/login");
         }
-        
     }, [navigate, location.state, carregarDados]);
 
     const handleDadosCartaoChange = (campo: keyof DadosCartao, valor: string) => {
@@ -190,26 +196,36 @@ export function Payment() {
             let idCartaoParaCompra: number | null = null;
 
             if (metodoPagamento === "cartao") {
-                if (!dadosCartao.numero || !dadosCartao.titular || !dadosCartao.validadeMes || !dadosCartao.validadeAno || !dadosCartao.codigoSeguranca) {
-                    abrirModal("warning", "Dados do Cartão", "Preencha todos os dados do cartão.");
-                    setLoading(false);
-                    return;
+                if (!idCartaoSelecionado) {
+                    if (!dadosCartao.numero || !dadosCartao.titular || !dadosCartao.validadeMes || !dadosCartao.validadeAno || !dadosCartao.codigoSeguranca) {
+                        abrirModal("warning", "Dados do Cartão", "Preencha todos os dados do cartão.");
+                        setLoading(false);
+                        return;
+                    }
+
+                    const validadeFormatada = `${dadosCartao.validadeMes}/${dadosCartao.validadeAno}`;
+                    const numeroLimpo = dadosCartao.numero.replace(/\s/g, "");
+
+                    const novoCartao = await cadastrarCartao({
+                        clienteId: clienteId,
+                        numero: numeroLimpo,
+                        nomeTitular: dadosCartao.titular,
+                        validade: validadeFormatada,
+                        cvv: dadosCartao.codigoSeguranca,
+                        tipo: "CREDITO",
+                        bandeira: "MASTERCARD"
+                    });
+
+                    idCartaoParaCompra = novoCartao.id;
+                } else {
+                    idCartaoParaCompra = idCartaoSelecionado;
+                    
+                    if (!dadosCartao.codigoSeguranca) {
+                         abrirModal("warning", "CVV Obrigatório", "Por segurança, informe o CVV do cartão selecionado.");
+                         setLoading(false);
+                         return;
+                    }
                 }
-
-                const validadeFormatada = `${dadosCartao.validadeMes}/${dadosCartao.validadeAno}`;
-                const numeroLimpo = dadosCartao.numero.replace(/\s/g, "");
-
-                const cartaoSalvo = await cadastrarCartao({
-                    clienteId: clienteId,
-                    numero: numeroLimpo,
-                    nomeTitular: dadosCartao.titular,
-                    validade: validadeFormatada,
-                    cvv: dadosCartao.codigoSeguranca,
-                    tipo: "CREDITO",
-                    bandeira: "MASTERCARD"
-                });
-
-                idCartaoParaCompra = cartaoSalvo.id;
             }
 
             const listaIdsProdutos: number[] = [];
@@ -218,7 +234,7 @@ export function Payment() {
                     listaIdsProdutos.push(p.id);
                 }
             });
-
+            
             const compraRealizada = await salvarCompra({
                 clienteId: clienteId,
                 produtosIds: listaIdsProdutos,
@@ -344,6 +360,8 @@ export function Payment() {
                             dadosCartao={dadosCartao}
                             onDadosCartaoChange={handleDadosCartaoChange}
                             valorTotal={produtos.reduce((acc, p) => acc + (p.preco * p.quantidade), 0)}
+                            cartoesSalvos={cartoesSalvos}
+                            onSelecionarCartaoSalvo={(id) => setIdCartaoSelecionado(id)}
                         />
                     </div>
                 </div>

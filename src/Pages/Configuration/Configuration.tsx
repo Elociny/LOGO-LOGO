@@ -171,8 +171,12 @@ export function Configuration() {
         }
     }
 
-    const handleEditar = (endereco: EnderecoDTO) => {
+    const handleEditarEndereco = (endereco: EnderecoDTO) => {
         navigate("/configuracoes/adicionar-endereco", { state: { enderecoParaEditar: endereco } });
+    }
+
+    const handleEditarCartao = (cartao: CartaoResponseDTO) => {
+        navigate("/configuracoes/adicionar-cartao", { state: { cartaoParaEditar: cartao } });
     }
 
     return (
@@ -242,6 +246,7 @@ export function Configuration() {
 
                 <hr />
 
+                {/* ENDEREÇOS */}
                 <div className={`${style.titulo}`}>
                     <div className={`row ${style.title}`}>
                         <i className="bi bi-geo-alt-fill"></i>
@@ -280,7 +285,7 @@ export function Configuration() {
                                 />
                             </div>
                             <div className={`row ${style.btns}`}>
-                                <Button border="arredondada" color="cinza" size="small" text="editar endereço" theme="light" onClick={() => handleEditar(end)} />
+                                <Button border="arredondada" color="cinza" size="small" text="editar endereço" theme="light" onClick={() => handleEditarEndereco(end)} />
                                 <Button border="arredondada" color="transparente" size="small" text="apagar endereço" theme="light" onClick={() => solicitarExclusaoEndereco(end.id!)} />
                             </div>
                         </div>
@@ -289,9 +294,20 @@ export function Configuration() {
 
                 <hr />
 
-                <div className={`row ${style.title}`}>
-                    <i className="bi bi-credit-card-2-front-fill"></i>
-                    <h3>Cartões salvos</h3>
+                <div className={`${style.titulo}`}>
+                    <div className={`row ${style.title}`}>
+                        <i className="bi bi-credit-card-2-front-fill"></i>
+                        <h3>Cartões salvos</h3>
+                    </div>
+
+                    <Button
+                        border="quadrada"
+                        color="laranja"
+                        size="big"
+                        text="adicionar novo cartão"
+                        theme="light"
+                        navegation="/configuracoes/adicionar-cartao"
+                    />
                 </div>
 
                 <section className={`${style.enderecos}`}>
@@ -312,6 +328,14 @@ export function Configuration() {
                             </div>
 
                             <div className={`row ${style.btns}`}>
+                                <Button 
+                                    border="arredondada" 
+                                    color="cinza" 
+                                    size="small" 
+                                    text="editar cartão" 
+                                    theme="light" 
+                                    onClick={() => handleEditarCartao(card)} 
+                                />
                             </div>
                         </div>
                     ))}
