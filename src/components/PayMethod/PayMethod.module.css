@@ -158,8 +158,6 @@
     align-items: center;
     gap: 1.5rem;
     padding: 1rem;
-    border: 1px dashed var(--cinza-claro);
-    border-radius: .5rem;
 }
 
 .pixBox img {
@@ -182,6 +180,11 @@
     font-size: 0.9rem;
     color: var(--cinza-escuro);
     margin: 0;
+}
+
+.qrcode {
+    border: 2px solid var(--laranja);
+    border-radius: .75rem;
 }
 
 @keyframes fadeIn {

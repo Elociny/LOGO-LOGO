@@ -3,7 +3,7 @@ import { Input } from "../Input/Input";
 import style from "./PayMethod.module.css";
 
 import PixIcon from "../../assets/images/icons/pixIcon.svg";
-import QrCode from "../../assets/images/qrcode.svg";
+import QrCode from "../../assets/images/qr-code.svg";
 
 import type { CartaoResponseDTO } from "../../services/cartaoService";
 
@@ -236,7 +236,7 @@ export function PayMethod({
 
             {metodo === "pix" && (
                 <div className={`${style.pixBox}`}>
-                    <img src={QrCode} alt="QrCode" />
+                    <img className={`${style.qrcode}`} src={QrCode} alt="QrCode" />
 
                     <div className={`${style.texts}`}>
                         <h3>Escaneie o Qr Code com seu celular</h3>
